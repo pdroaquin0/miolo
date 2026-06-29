@@ -193,6 +193,44 @@
   @keyframes miopop{0%{transform:scale(.35); opacity:0;} 60%{transform:scale(1.12);} 100%{transform:scale(1); opacity:1;}}
   @keyframes miring{0%{transform:scale(.55); opacity:.7;} 100%{transform:scale(2); opacity:0;}}
   @media (prefers-reduced-motion:reduce){.miocelebrate .mio.big,.miocelebrate .ring{animation:none;}}
+
+  .sim-card{display:flex;align-items:center;gap:12px;margin-bottom:11px;cursor:pointer;
+    background:linear-gradient(120deg,rgba(91,62,255,.20),rgba(0,212,255,.08));border:1px solid var(--edge);border-radius:14px;padding:14px 16px;}
+  .sim-card:active{transform:scale(.99);}
+  .sim-card .rl{flex:1;}
+  .sim-card .rt{font-weight:800;font-size:15px;color:#fff;}
+  .sim-card .rd{font-size:11.5px;color:var(--mute);margin-top:3px;}
+  .sim-card .rn{flex:0 0 auto;font-size:18px;color:var(--accent);}
+  .simnote{font-size:12.5px;color:var(--mute);line-height:1.45;background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:11px 13px;margin-bottom:14px;}
+  .simcard{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:15px;margin-bottom:10px;cursor:pointer;}
+  .simcard:active{background:var(--panel2);}
+  .simt{font-weight:800;font-size:15px;}
+  .simd{font-size:11.5px;color:var(--mute);margin-top:3px;}
+  .simb{flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--accent);text-transform:uppercase;}
+  .simarea{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--coral);margin:16px 0 9px 2px;font-weight:700;}
+  .cartao{display:flex;flex-direction:column;gap:7px;}
+  .qrow{display:flex;align-items:center;gap:10px;}
+  .qn{flex:0 0 26px;text-align:right;font-family:var(--mono);font-size:13px;color:var(--mute);}
+  .qopts{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;flex:1;}
+  .qo{font-family:var(--mono);font-weight:700;font-size:14px;color:var(--txt);background:var(--tile);border:1px solid var(--edge);border-radius:9px;padding:9px 0;cursor:pointer;transition:transform .15s,background .15s;}
+  .qo:active{transform:scale(.93);}
+  .qo.sel{background:linear-gradient(135deg,#00D4FF,var(--coral));border-color:transparent;color:#fff;}
+  .bigscore{font-family:var(--display);font-weight:800;font-size:54px;line-height:1;color:var(--accent);}
+  .bigscore span{font-size:24px;color:var(--mute);}
+  .resbox{background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:4px 14px;margin:6px 0 14px;}
+  .resrow{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--edge);font-size:14px;}
+  .resrow:last-child{border-bottom:none;}
+  .resrow b{font-family:var(--mono);font-size:16px;color:var(--accent);}
+  .reslist{display:flex;flex-direction:column;gap:5px;margin-top:6px;}
+  .reschk{display:flex;align-items:center;gap:10px;font-size:13px;padding:7px 11px;border-radius:9px;border:1px solid var(--edge);background:var(--panel);}
+  .reschk .rq{font-family:var(--mono);color:var(--mute);flex:0 0 24px;}
+  .reschk.ok{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.30);}
+  .reschk.ok .ri{color:var(--mint);}
+  .reschk.er{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.30);}
+  .reschk.er .ri{color:var(--wrong);}
+  .reschk.bl .ri{color:var(--mute);}
+  .reschk.an{background:rgba(250,204,21,.08);border-color:rgba(250,204,21,.30);}
+  .reschk.an .ri{color:var(--gold);}
 </style>
 </head>
 <body>
@@ -1905,18 +1943,92 @@ function recordMiss(lv,p){
 function updateProg(){$("progN").textContent=ALL_TOPICS.filter(t=>mastered.has(t.code)).length;$("progT").textContent=ALL_TOPICS.length;}
 
 /* ===================== TELAS ===================== */
+
+/* ===================== SIMULADOS ===================== */
+const SIMULADOS=[{
+  id:"ita2026", nome:"ITA 2026 · 1ª fase", n:48,
+  areas:[{nome:"Matemática",a:1,b:12},{nome:"Física",a:13,b:24},{nome:"Química",a:25,b:36},{nome:"Inglês",a:37,b:48}],
+  gab:["D","B","E","C","D","*","A","B","D","E","A","B","B","A","D","C","A","E","B","C","D","E","C","C","A","E","D","B","E","B","E","A","B","A","A","C","D","C","C","B","A","D","C","B","B","B","D","C"]
+}];
+let simStore={};
+try{simStore=JSON.parse(localStorage.getItem("miolo.sim")||"{}");}catch(e){simStore={};}
+function simSave(){try{localStorage.setItem("miolo.sim",JSON.stringify(simStore));}catch(e){}}
+
+function renderSimList(){
+  let h=`<button class="back" id="bk">‹ matérias</button><div class="crumb">🎯 Simulados</div>`;
+  h+=`<div class="simnote">Faça a prova no papel (ou olhando o PDF) e marque suas respostas aqui. O Miolo corrige na hora, com placar por área. Não dá pra mostrar as questões — só o cartão-resposta e o gabarito oficial.</div>`;
+  SIMULADOS.forEach(sm=>{
+    const ans=simStore[sm.id]||[]; const done=ans.filter(x=>x).length;
+    h+=`<div class="simcard" data-id="${sm.id}"><div><div class="simt">${sm.nome}</div><div class="simd">${sm.n} questões · Matemática, Física, Química e Inglês</div></div><div class="simb">${done?done+'/'+sm.n+' marcadas':'começar'} →</div></div>`;
+  });
+  view.innerHTML=h; $("bk").onclick=renderHome;
+  view.querySelectorAll(".simcard").forEach(el=>el.onclick=()=>renderCartao(el.dataset.id));
+  view.scrollTop=0;
+}
+function renderCartao(id){
+  const sim=SIMULADOS.find(x=>x.id===id);
+  let ans=simStore[id]||new Array(sim.n).fill(null); simStore[id]=ans;
+  let h=`<button class="back" id="bk">‹ simulados</button><div class="crumb">${sim.nome}</div>`;
+  h+=`<div class="simnote">Marque a alternativa que você respondeu. Não precisa marcar todas pra corrigir.</div>`;
+  sim.areas.forEach(ar=>{
+    h+=`<div class="simarea">${ar.nome}</div><div class="cartao">`;
+    for(let q=ar.a;q<=ar.b;q++){
+      h+=`<div class="qrow"><div class="qn">${q}</div><div class="qopts" data-q="${q}">`;
+      ["A","B","C","D","E"].forEach(L=>{ h+=`<button class="qo${ans[q-1]===L?' sel':''}" data-l="${L}">${L}</button>`; });
+      h+=`</div></div>`;
+    }
+    h+=`</div>`;
+  });
+  h+=`<button class="cta" id="corr" style="margin-top:18px">Corrigir simulado</button>`;
+  view.innerHTML=h; $("bk").onclick=renderSimList;
+  view.querySelectorAll(".qopts").forEach(row=>{
+    const q=+row.dataset.q;
+    row.querySelectorAll(".qo").forEach(b=>{
+      b.onclick=()=>{ const L=b.dataset.l; ans[q-1]=(ans[q-1]===L?null:L);
+        row.querySelectorAll(".qo").forEach(x=>x.classList.toggle("sel",x.dataset.l===ans[q-1])); simSave(); };
+    });
+  });
+  $("corr").onclick=()=>renderSimResult(id);
+  view.scrollTop=0;
+}
+function renderSimResult(id){
+  const sim=SIMULADOS.find(x=>x.id===id); const ans=simStore[id]||[];
+  let tot=0,totQ=0,areaHtml="";
+  sim.areas.forEach(ar=>{ let ac=0,t=0;
+    for(let q=ar.a;q<=ar.b;q++){t++; const g=sim.gab[q-1]; if(g==="*"||ans[q-1]===g)ac++;}
+    tot+=ac; totQ+=t; areaHtml+=`<div class="resrow"><span>${ar.nome}</span><b>${ac}/${t}</b></div>`;
+  });
+  let listHtml="";
+  for(let q=1;q<=sim.n;q++){ const g=sim.gab[q-1],a=ans[q-1]; let cls,info;
+    if(g==="*"){cls="an";info="anulada · vale ponto";}
+    else if(a===g){cls="ok";info="✓ "+g;}
+    else if(!a){cls="bl";info="— em branco · era "+g;}
+    else{cls="er";info="✗ marcou "+a+" · era "+g;}
+    listHtml+=`<div class="reschk ${cls}"><span class="rq">${q}</span><span class="ri">${info}</span></div>`;
+  }
+  view.innerHTML=`<button class="back" id="bk">‹ refazer</button><div class="crumb">${sim.nome} · resultado</div>
+    <div style="text-align:center;padding:6px 0 2px"><div class="bigscore">${tot}<span>/${totQ}</span></div><p style="color:var(--mute);margin:4px 0 0;font-size:13px">acertos no total</p></div>
+    <div class="resbox">${areaHtml}</div>
+    <div class="simnote">No ITA, as notas de Matemática, Física e Química compõem a média da 1ª fase. A questão 6 foi anulada e vale ponto pra todos.</div>
+    <div class="reslist">${listHtml}</div>
+    <button class="cta" id="again" style="margin-top:16px">Refazer marcações</button>`;
+  $("bk").onclick=()=>renderCartao(id);
+  $("again").onclick=()=>renderCartao(id);
+  view.scrollTop=0;
+}
 function renderHome(){
   updateProg();
   let html=`<div class="hero"><svg class="mio big" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="mg" x1="6" y1="6" x2="58" y2="58" gradientUnits="userSpaceOnUse"><stop stop-color="#5B3EFF"/><stop offset="1" stop-color="#00D4FF"/></linearGradient></defs><path d="M32 7C25 5 17 8 16 16C9 18 7 27 12 32C8 38 13 48 22 47C26 51 38 51 42 47C51 48 56 38 52 32C57 27 55 18 48 16C47 8 39 5 32 7Z" stroke="url(#mg)" stroke-width="2.6" fill="rgba(91,62,255,.10)" stroke-linejoin="round"/><path d="M32 8C30 16 34 22 31 28C28 34 33 40 32 47" stroke="url(#mg)" stroke-width="2.2" stroke-linecap="round"/><path d="M19 20C23 22 23 27 19 28" stroke="url(#mg)" stroke-width="2.2" stroke-linecap="round"/><path d="M45 20C41 22 41 27 45 28" stroke="url(#mg)" stroke-width="2.2" stroke-linecap="round"/><path d="M16 35C20 35 22 39 19 41" stroke="url(#mg)" stroke-width="2.2" stroke-linecap="round"/><path d="M48 35C44 35 42 39 45 41" stroke="url(#mg)" stroke-width="2.2" stroke-linecap="round"/><circle class="pulse" cx="22" cy="13" r="2.4" fill="#00D4FF"/><circle class="pulse p2" cx="44" cy="12" r="2" fill="#00D4FF"/></svg><div class="htext"><div class="hh">Estudar sem travar.<br>Simples assim.</div><div class="hs">Escolhe a matéria e bora. Errou? Ajusta e segue.</div></div></div>`;
   if(missed.length) html+=`<div class="review-card" id="revcard"><div class="rl"><div class="rt">↺ Revisar erros</div><div class="rd">${missed.length} questão${missed.length>1?'ões':''} que você errou · acerte 2× pra sair da pilha</div></div><div class="rn">${missed.length}</div></div>`;
+  html+=`<div class="sim-card" id="simcard"><div class="rl"><div class="rt">🎯 Simulados</div><div class="rd">Corrija sua prova · ITA 2026 disponível</div></div><div class="rn">▶</div></div>`;
   html+=`<div class="grid">`;
   SUBJECTS.forEach(s=>{
-    const tag=s.content?`<div class="tg on">● preenchida</div>`:`<div class="tg off">○ estrutura</div>`;
-    html+=`<div class="subj ${s.content?'':'soon'}" data-s="${s.id}"><div class="ico">${s.ico}</div><div class="nm">${s.name}</div>${tag}</div>`;
+    html+=`<div class="subj ${s.content?'':'soon'}" data-s="${s.id}"><div class="ico">${s.ico}</div><div class="nm">${s.name}</div></div>`;
   });
   html+=`</div>`;
   view.innerHTML=html;
   if(missed.length)$("revcard").onclick=renderReview;
+  $("simcard").onclick=renderSimList;
   view.querySelectorAll(".subj").forEach(el=>el.onclick=()=>renderSubject(el.dataset.s));
   view.scrollTop=0;
 }
