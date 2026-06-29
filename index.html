@@ -160,6 +160,7 @@
   .key{font-family:var(--mono); font-weight:700; font-size:21px; color:var(--txt); background:var(--tile);
     border:1px solid var(--edge); border-radius:13px; padding:15px 0; cursor:pointer;}
   .key:active{transform:scale(.96);}
+  .key.del{grid-column:1/-1;}
   .key.ok{grid-column:1/-1; background:linear-gradient(180deg,#ff9580,var(--coral) 60%,var(--coral-d)); color:var(--bg);}
   .key.del,.key.sign{color:var(--coral);}
   .done-screen{text-align:center; padding:34px 16px;}
@@ -194,6 +195,7 @@ const sup=n=>String(n).split('').map(c=>SUP[c]||c).join('');
 const SB={'0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉'};
 const sub=n=>String(n).split('').map(c=>SB[c]||c).join('');
 const neg=n=>n<0?'−'+(-n):String(n);
+const fmtNum=v=>{let t=String(v).replace('.',',');return v<0?'−'+t.slice(1):t;};
 function term(a,n){if(n===0)return String(a);const base=n===1?'x':'x'+sup(n);if(a===1)return base;if(a===-1)return '−'+base;return a+base;}
 function fr(n,d){const g=gcd(n,d);return `${n/g}/${d/g}`;}
 function fracH(n,d){return `<span class="frac"><i>${n}</i><i>${d}</i></span>`;}
@@ -1214,6 +1216,74 @@ medio:[
   concept:`<p><b>Oxidação</b>: perde elétrons (Nox aumenta). <b>Redução</b>: ganha elétrons (Nox diminui).</p>`,
   ex:{q:"Perder elétrons é...",steps:["Nox aumenta","oxidação"],a:"oxidação"},
   gen:()=>clsGen(s=>`"${s}"`,[["Perde elétrons.","oxidação"],["Ganha elétrons.","redução"],["O número de oxidação aumenta.","oxidação"],["O número de oxidação diminui.","redução"],["O ferro enferruja ao reagir com o oxigênio.","oxidação"]],["oxidação","redução"])},
+ {code:"Q3D",ano:"1ª série",title:"Modelos atômicos",
+  concept:`<p><b>Dalton</b> (bola maciça), <b>Thomson</b> (pudim de passas), <b>Rutherford</b> (núcleo + eletrosfera) e <b>Bohr</b> (níveis de energia).</p>`,
+  ex:{q:"'Pudim de passas' com cargas negativas:",steps:["modelo de Thomson","Thomson"],a:"Thomson"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Esfera maciça e indivisível, a 'bola de bilhar'.","Dalton"],["Massa positiva com elétrons incrustados (pudim de passas).","Thomson"],["Núcleo pequeno e denso com elétrons ao redor.","Rutherford"],["Elétrons em níveis (órbitas) de energia definida.","Bohr"],["Experimento da lâmina de ouro.","Rutherford"]],["Dalton","Thomson","Rutherford","Bohr"])},
+ {code:"Q3E",ano:"1ª série",title:"Isótopos, isóbaros, isótonos",
+  concept:`<p><b>Isótopos</b>: mesmo Z (prótons). <b>Isóbaros</b>: mesmo A (massa). <b>Isótonos</b>: mesmo número de nêutrons.</p>`,
+  ex:{q:"Mesmo número de prótons:",steps:["mesmo Z","isótopos"],a:"isótopos"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Átomos com o mesmo número de prótons (Z).","isótopos"],["Átomos com o mesmo número de massa (A).","isóbaros"],["Átomos com o mesmo número de nêutrons.","isótonos"],["Carbono-12 e Carbono-14.","isótopos"]],["isótopos","isóbaros","isótonos"])},
+ {code:"Q3F",ano:"1ª série",title:"Famílias da tabela periódica",
+  concept:`<p><b>1A</b> alcalinos (Na, K), <b>2A</b> alcalino-terrosos (Ca, Mg), <b>7A</b> halogênios (Cl, F), <b>8A</b> gases nobres (He, Ne).</p>`,
+  ex:{q:"Cloro e flúor são da família dos...",steps:["7A","halogênios"],a:"halogênios"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Sódio e potássio (família 1A).","alcalinos"],["Cálcio e magnésio (família 2A).","alcalino-terrosos"],["Cloro e flúor (família 7A).","halogênios"],["Hélio e neônio (família 8A).","gases nobres"]],["alcalinos","alcalino-terrosos","halogênios","gases nobres"])},
+ {code:"Q3G",ano:"2ª série",title:"Propriedades periódicas",
+  concept:`<p>O <b>raio atômico</b> cresce para baixo e para a esquerda; a <b>eletronegatividade</b> cresce para cima e para a direita (o flúor é o mais eletronegativo).</p>`,
+  ex:{q:"Elemento mais eletronegativo:",steps:["canto superior direito","flúor"],a:"flúor"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Cresce para baixo e para a esquerda na tabela.","raio atômico"],["Cresce para cima e para a direita; o flúor é o maior.","eletronegatividade"],["Energia para arrancar um elétron do átomo.","energia de ionização"],["O maior átomo fica embaixo, à esquerda.","raio atômico"]],["raio atômico","eletronegatividade","energia de ionização"])},
+ {code:"Q3H",ano:"1ª série",title:"Massa molar",typed:true,
+  concept:`<p>A massa molar é a soma das massas atômicas da fórmula (em g/mol).</p>`,
+  ex:{q:"H₂O (H=1, O=16)",steps:["2·1 + 16","= 18 g/mol"],a:"18"},
+  gen:()=>{const b=[["H₂O (H=1, O=16)",18],["CO₂ (C=12, O=16)",44],["O₂ (O=16)",32],["NH₃ (N=14, H=1)",17],["NaCl (Na=23, Cl=35,5)",58.5],["H₂SO₄ (H=1, S=32, O=16)",98],["CaCO₃ (Ca=40, C=12, O=16)",100],["HCl (H=1, Cl=35,5)",36.5],["NaOH (Na=23, O=16, H=1)",40]];const c=choice(b);return{prompt:`Massa molar de ${c[0]}?`,small:true,answer:c[1]};}},
+ {code:"Q3I",ano:"1ª série",title:"Volume molar (CNTP)",typed:true,
+  concept:`<p>Nas CNTP, 1 mol de qualquer gás ocupa 22,4 litros.</p><div class="formula">V = n · 22,4</div>`,
+  ex:{q:"2 mol de gás",steps:["2 · 22,4","= 44,8 L"],a:"44,8"},
+  gen:()=>{const n=rint(1,5);return{prompt:`Volume de ${n} mol de gás nas CNTP?<br>(V_m = 22,4 L/mol)`,small:true,answer:Math.round(n*22.4*10)/10};}},
+ {code:"Q3J",ano:"2ª série",title:"Estequiometria: massa",typed:true,
+  concept:`<p>A massa é a quantidade de mols vezes a massa molar.</p><div class="formula">m = n · M</div>`,
+  ex:{q:"3 mol de água (M=18)",steps:["3 · 18","= 54 g"],a:"54"},
+  gen:()=>{const b=[["água",18],["gás carbônico",44],["gás oxigênio",32],["metano",16]],c=choice(b),n=rint(2,8);return{prompt:`Massa de ${n} mol de ${c[0]} (M=${c[1]} g/mol)?`,small:true,answer:n*c[1]};}},
+ {code:"Q3K",ano:"2ª série",title:"Diluição",typed:true,
+  concept:`<p>Ao diluir, a quantidade de soluto não muda.</p><div class="formula">C₁·V₁ = C₂·V₂</div>`,
+  ex:{q:"C₁=6, V₁=2, V₂=4",steps:["6·2/4","= 3 g/L"],a:"3"},
+  gen:()=>{const f=rint(2,4),C2=rint(1,6),C1=C2*f,V1=rint(1,4),V2=V1*f;return{prompt:`Solução C₁=${C1} g/L, V₁=${V1} L é diluída até V₂=${V2} L.<br>Nova concentração C₂ (g/L)?`,small:true,answer:C2};}},
+ {code:"Q3L",ano:"3ª série",title:"Entalpia da reação",typed:true,
+  concept:`<p>A variação de entalpia é a diferença entre produtos e reagentes.</p><div class="formula">ΔH = H_produtos − H_reagentes</div>`,
+  ex:{q:"H_prod=30, H_reag=50",steps:["30 − 50","= −20 kJ"],a:"−20"},
+  gen:()=>{const hp=rint(10,80),hr=rint(10,80);return{prompt:`Entalpia dos produtos = ${hp} kJ,<br>dos reagentes = ${hr} kJ. ΔH (kJ)?`,small:true,answer:hp-hr};}},
+ {code:"Q3M",ano:"3ª série",title:"pH e [H⁺]",typed:true,
+  concept:`<p>O pH é o expoente negativo da concentração de H⁺.</p><div class="formula">se [H⁺] = 1×10⁻ⁿ → pH = n</div>`,
+  ex:{q:"[H⁺] = 1×10⁻³",steps:["expoente 3","pH = 3"],a:"3"},
+  gen:()=>{const n=rint(1,13);return{prompt:`Solução com [H⁺] = 1×10⁻${n} mol/L.<br>Qual o pH?`,small:true,answer:n};}},
+ {code:"Q3N",ano:"3ª série",title:"Equilíbrio: Le Chatelier",
+  concept:`<p>Perturbar o equilíbrio o desloca para anular a perturbação: + concentração, + pressão (p/ menor volume), + temperatura (favorece o sentido endotérmico).</p>`,
+  ex:{q:"Aumentar reagente desloca para...",steps:["consome o excesso","produtos"],a:"para os produtos"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Adicionar mais reagente desloca o equilíbrio...","para os produtos"],["Adicionar mais produto desloca o equilíbrio...","para os reagentes"],["Aumentar a pressão desloca para o lado de...","menor volume"],["Aumentar a temperatura favorece o sentido...","endotérmico"]],["para os produtos","para os reagentes","menor volume","endotérmico"])},
+ {code:"Q3O",ano:"3ª série",title:"Número de oxidação (Nox)",
+  concept:`<p>Nox de referência: oxigênio <b>−2</b>, hidrogênio <b>+1</b>, metal alcalino <b>+1</b>, alcalino-terroso <b>+2</b>, elemento puro <b>0</b>.</p>`,
+  ex:{q:"Nox do oxigênio (geral):",steps:["padrão","−2"],a:"−2"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Nox do oxigênio na maioria dos compostos.","−2"],["Nox do hidrogênio (com ametais).","+1"],["Nox de um metal alcalino (Na, K).","+1"],["Nox de um alcalino-terroso (Ca, Mg).","+2"],["Nox de um elemento na forma pura (O₂, Fe).","0"]],["−2","+1","+2","0"])},
+ {code:"Q3P",ano:"3ª série",title:"Pilhas (eletroquímica)",
+  concept:`<p>Na pilha: <b>ânodo</b> sofre oxidação (polo −); <b>cátodo</b> sofre redução (polo +). O agente <b>redutor</b> se oxida; o <b>oxidante</b> se reduz.</p>`,
+  ex:{q:"Eletrodo onde ocorre oxidação:",steps:["polo negativo","ânodo"],a:"ânodo"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Eletrodo onde ocorre a oxidação (polo −).","ânodo"],["Eletrodo onde ocorre a redução (polo +).","cátodo"],["Espécie que se oxida e doa elétrons.","agente redutor"],["Espécie que se reduz e recebe elétrons.","agente oxidante"]],["ânodo","cátodo","agente redutor","agente oxidante"])},
+ {code:"Q3Q",ano:"3ª série",title:"Cadeias carbônicas",
+  concept:`<p>Classificação: <b>saturada</b> (só simples) ou <b>insaturada</b> (dupla/tripla); <b>aberta</b> (acíclica) ou <b>fechada</b> (cíclica).</p>`,
+  ex:{q:"Cadeia só com ligações simples:",steps:["sem duplas","saturada"],a:"saturada"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Só ligações simples entre carbonos.","saturada"],["Tem pelo menos uma ligação dupla ou tripla.","insaturada"],["Cadeia em linha, sem fechar ciclo.","aberta"],["Cadeia que forma um anel (ciclo).","fechada"]],["saturada","insaturada","aberta","fechada"])},
+ {code:"Q3R",ano:"3ª série",title:"Reações orgânicas",
+  concept:`<p><b>Adição</b> (quebra a dupla e adiciona), <b>substituição</b> (troca um átomo por outro) e <b>eliminação</b> (forma dupla, sai um grupo).</p>`,
+  ex:{q:"Quebra a dupla ligação e adiciona átomos:",steps:["alceno → alcano","adição"],a:"adição"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Quebra a ligação dupla e adiciona novos átomos.","adição"],["Um átomo (ex.: H) é trocado por outro grupo.","substituição"],["Forma-se uma dupla ligação, saindo um grupo.","eliminação"],["Hidrogenação de um alceno.","adição"]],["adição","substituição","eliminação"])},
+ {code:"Q3S",ano:"3ª série",title:"Radioatividade",
+  concept:`<p><b>Alfa (α)</b>: núcleo de hélio (2p + 2n). <b>Beta (β)</b>: elétron. <b>Gama (γ)</b>: radiação eletromagnética (energia).</p>`,
+  ex:{q:"Partícula igual a um núcleo de hélio:",steps:["2 prótons, 2 nêutrons","alfa"],a:"alfa (α)"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Equivale a um núcleo de hélio (2p + 2n).","alfa (α)"],["É um elétron emitido pelo núcleo.","beta (β)"],["Radiação eletromagnética de alta energia.","gama (γ)"],["A mais penetrante; não tem carga nem massa.","gama (γ)"],["A de menor poder de penetração, carga +2.","alfa (α)"]],["alfa (α)","beta (β)","gama (γ)"])},
+ {code:"Q3T",ano:"3ª série",title:"Meia-vida",typed:true,
+  concept:`<p>A cada meia-vida, a quantidade de material radioativo cai pela metade.</p>`,
+  ex:{q:"100 g, meia-vida 5 anos, após 15 anos",steps:["3 meias-vidas: 100→50→25→12,5","= 12,5 g"],a:"12,5"},
+  gen:()=>{const m0=100*rint(1,4),T=rint(2,8),k=rint(1,4);return{prompt:`Amostra de ${m0} g, meia-vida ${T} anos.<br>Massa restante após ${k*T} anos?`,small:true,answer:Math.round(m0/Math.pow(2,k)*100)/100};}},
 ],
 };
 const BIO={
@@ -1290,6 +1360,78 @@ medio:[
   concept:`<p>No sistema ABO/Rh: <b>O negativo</b> é o doador universal; <b>AB positivo</b> é o receptor universal.</p>`,
   ex:{q:"Doador universal:",steps:["sem antígenos, Rh−","O negativo"],a:"O negativo"},
   gen:()=>clsGen(s=>`"${s}"`,[["Doador universal de sangue.","O negativo"],["Receptor universal de sangue.","AB positivo"],["Tem antígenos A e B nas hemácias.","tipo AB"],["Não tem antígenos A nem B nas hemácias.","tipo O"]],["O negativo","AB positivo","tipo AB","tipo O"])},
+ {code:"B3E",ano:"1ª série",title:"Membrana e transporte",
+  concept:`<p><b>Difusão</b> (a favor do gradiente), <b>osmose</b> (passagem de água) e <b>transporte ativo</b> (contra o gradiente, gasta energia).</p>`,
+  ex:{q:"Passagem de água pela membrana:",steps:["do menos para o mais concentrado","osmose"],a:"osmose"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Movimento de água através da membrana.","osmose"],["Soluto passa a favor do gradiente, sem gastar energia.","difusão"],["Soluto passa contra o gradiente, gastando ATP.","transporte ativo"],["A bomba de sódio e potássio.","transporte ativo"]],["osmose","difusão","transporte ativo"])},
+ {code:"B3F",ano:"1ª série",title:"Biomoléculas",
+  concept:`<p><b>Carboidratos</b> (energia rápida), <b>lipídios</b> (reserva e membranas), <b>proteínas</b> (estrutura e enzimas) e <b>ácidos nucleicos</b> (informação genética).</p>`,
+  ex:{q:"Principal função dos carboidratos:",steps:["combustível celular","energia"],a:"carboidrato"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Fonte de energia rápida (glicose, amido).","carboidrato"],["Reserva de energia e parte das membranas.","lipídio"],["Formam enzimas e estruturas do corpo.","proteína"],["Guardam e transmitem a informação genética.","ácido nucleico"]],["carboidrato","lipídio","proteína","ácido nucleico"])},
+ {code:"B3G",ano:"2ª série",title:"Enzimas",
+  concept:`<p>Enzimas são catalisadores biológicos: aceleram reações com modelo <b>chave-fechadura</b> e dependem de <b>temperatura</b> e <b>pH</b> ideais.</p>`,
+  ex:{q:"Enzimas atuam como...",steps:["aceleram sem se consumir","catalisadores"],a:"catalisador biológico"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Aceleram reações sem serem consumidas.","catalisador biológico"],["O encaixe específico enzima-substrato.","chave-fechadura"],["Fatores que alteram a atividade enzimática.","temperatura e pH"],["Acima de certa temperatura, a enzima desnatura.","temperatura e pH"]],["catalisador biológico","chave-fechadura","temperatura e pH"])},
+ {code:"B3H",ano:"2ª série",title:"Síntese de proteínas",
+  concept:`<p><b>Transcrição</b>: DNA → RNA (no núcleo). <b>Tradução</b>: RNA → proteína (no ribossomo), lendo os códons.</p>`,
+  ex:{q:"DNA virando RNA mensageiro:",steps:["no núcleo","transcrição"],a:"transcrição"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Cópia da informação do DNA para o RNA.","transcrição"],["Leitura do RNA para montar a proteína.","tradução"],["Ocorre no ribossomo, lendo os códons.","tradução"],["Ocorre no núcleo da célula.","transcrição"]],["transcrição","tradução"])},
+ {code:"B3I",ano:"2ª série",title:"Tecidos do corpo",
+  concept:`<p>Quatro tipos: <b>epitelial</b> (reveste), <b>conjuntivo</b> (preenche/sustenta), <b>muscular</b> (contrai) e <b>nervoso</b> (conduz impulsos).</p>`,
+  ex:{q:"Tecido que reveste superfícies:",steps:["pele e mucosas","epitelial"],a:"epitelial"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Reveste superfícies e cavidades (pele).","epitelial"],["Preenche e sustenta (osso, sangue, gordura).","conjuntivo"],["Realiza contração e movimento.","muscular"],["Conduz impulsos elétricos.","nervoso"]],["epitelial","conjuntivo","muscular","nervoso"])},
+ {code:"B3J",ano:"2ª série",title:"2ª lei de Mendel",
+  concept:`<p>A <b>segregação independente</b>: dois pares de genes se separam de forma independente. O cruzamento di-híbrido (AaBb × AaBb) dá <b>9:3:3:1</b>.</p>`,
+  ex:{q:"Proporção do di-híbrido AaBb × AaBb:",steps:["segregação independente","9:3:3:1"],a:"9:3:3:1"},
+  gen:()=>{if(Math.random()<.5)return{prompt:`Cruzamento di-híbrido AaBb × AaBb.<br>Proporção fenotípica?`,small:true,opts:strOpts("9:3:3:1",["3:1","1:2:1","9:7"])};return{prompt:`A 2ª lei de Mendel trata da...`,small:true,opts:strOpts("segregação independente dos genes",["dominância completa","ligação gênica","mutação"])};}},
+ {code:"B3K",ano:"2ª série",title:"Cruzamentos: probabilidade",
+  concept:`<p>Cada cruzamento gera proporções previsíveis. Em <b>Aa × aa</b>, metade é dominante e metade recessivo (1:1).</p>`,
+  ex:{q:"Aa × aa: % de recessivos?",steps:["1:1","50%"],a:"50%"},
+  gen:()=>{const b=[["Aa × aa","50%"],["Aa × Aa","25%"],["AA × aa","0%"],["aa × aa","100%"]],c=choice(b);return{prompt:`Cruzamento ${c[0]}.<br>% de descendentes recessivos (aa)?`,small:true,opts:strOpts(c[1],["0%","25%","50%","75%","100%"].filter(x=>x!==c[1]).slice(0,3))};}},
+ {code:"B3L",ano:"3ª série",title:"Herança ligada ao sexo",
+  concept:`<p>Genes no cromossomo <b>X</b>: <b>daltonismo</b> e <b>hemofilia</b> são recessivos ligados ao X, por isso mais comuns em homens (XY).</p>`,
+  ex:{q:"Daltonismo e hemofilia ficam no cromossomo...",steps:["recessivo ligado ao X","X"],a:"cromossomo X"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Daltonismo e hemofilia, recessivos ligados ao sexo.","cromossomo X"],["Mais frequentes em homens, pois têm um só X.","cromossomo X"],["Característica determinada por genes nos autossomos.","autossômica"],["Cor dos olhos, não ligada ao sexo.","autossômica"]],["cromossomo X","autossômica"])},
+ {code:"B3M",ano:"3ª série",title:"Mutações",
+  concept:`<p><b>Gênica</b> (altera a sequência de bases do DNA) e <b>cromossômica</b> (altera número ou estrutura dos cromossomos, como a trissomia do 21).</p>`,
+  ex:{q:"Síndrome de Down (trissomia do 21) é mutação...",steps:["cromossomo extra","cromossômica"],a:"cromossômica"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Troca de uma base no DNA (ponto).","gênica"],["Cromossomo a mais, como na síndrome de Down.","cromossômica"],["Alteração na sequência de um único gene.","gênica"],["Mudança no número ou estrutura dos cromossomos.","cromossômica"]],["gênica","cromossômica"])},
+ {code:"B3N",ano:"3ª série",title:"Provas da evolução",
+  concept:`<p><b>Fósseis</b>, órgãos <b>homólogos</b> (mesma origem, função diferente), <b>análogos</b> (função igual, origem diferente) e <b>vestigiais</b> (sem função atual).</p>`,
+  ex:{q:"Asa de morcego e braço humano (mesma origem):",steps:["mesma estrutura","homólogos"],a:"órgãos homólogos"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Restos preservados de seres do passado.","fósseis"],["Braço humano e asa de morcego: mesma origem.","órgãos homólogos"],["Asa de inseto e de ave: função igual, origem diferente.","órgãos análogos"],["Apêndice humano, sem função clara.","órgãos vestigiais"]],["fósseis","órgãos homólogos","órgãos análogos","órgãos vestigiais"])},
+ {code:"B3O",ano:"1ª série",title:"Sistema digestório",
+  concept:`<p>Caminho do alimento: boca → esôfago → <b>estômago</b> (suco gástrico) → <b>intestino delgado</b> (absorção) → intestino grosso.</p>`,
+  ex:{q:"Onde ocorre a maior absorção de nutrientes:",steps:["vilosidades","intestino delgado"],a:"intestino delgado"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Produz suco gástrico e digere proteínas.","estômago"],["Absorve a maior parte dos nutrientes.","intestino delgado"],["Produz bile para emulsionar gorduras.","fígado"],["Absorve água e forma as fezes.","intestino grosso"]],["estômago","intestino delgado","fígado","intestino grosso"])},
+ {code:"B3P",ano:"1ª série",title:"Sistema circulatório",
+  concept:`<p>O <b>coração</b> tem 4 câmaras. <b>Artérias</b> levam sangue para fora do coração; <b>veias</b> trazem de volta.</p>`,
+  ex:{q:"Vasos que saem do coração:",steps:["levam o sangue","artérias"],a:"artérias"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Vasos que levam sangue para fora do coração.","artérias"],["Vasos que trazem sangue de volta ao coração.","veias"],["Vasos microscópicos onde há trocas com as células.","capilares"],["A câmara que bombeia sangue para o corpo.","ventrículo esquerdo"]],["artérias","veias","capilares","ventrículo esquerdo"])},
+ {code:"B3Q",ano:"2ª série",title:"Sistema nervoso",
+  concept:`<p><b>SNC</b> (encéfalo e medula) processa; <b>SNP</b> (nervos) conduz. O <b>neurônio</b> transmite o impulso pela sinapse.</p>`,
+  ex:{q:"Cérebro e medula formam o...",steps:["central","SNC"],a:"sistema nervoso central"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Encéfalo e medula espinhal.","sistema nervoso central"],["Os nervos que percorrem o corpo.","sistema nervoso periférico"],["Célula que transmite o impulso nervoso.","neurônio"],["A comunicação entre dois neurônios.","sinapse"]],["sistema nervoso central","sistema nervoso periférico","neurônio","sinapse"])},
+ {code:"B3R",ano:"3ª série",title:"Sistema endócrino",
+  concept:`<p>Glândulas e hormônios: <b>insulina</b> (pâncreas), <b>tiroxina</b> (tireoide), <b>adrenalina</b> (suprarrenal).</p>`,
+  ex:{q:"Hormônio que controla a glicose no sangue:",steps:["pâncreas","insulina"],a:"insulina (pâncreas)"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Controla o açúcar no sangue.","insulina (pâncreas)"],["Regula o metabolismo do corpo.","tiroxina (tireoide)"],["Prepara o corpo para 'lutar ou fugir'.","adrenalina (suprarrenal)"],["Sua falta causa diabetes.","insulina (pâncreas)"]],["insulina (pâncreas)","tiroxina (tireoide)","adrenalina (suprarrenal)"])},
+ {code:"B3S",ano:"3ª série",title:"Sistema imunológico",
+  concept:`<p><b>Anticorpos</b> defendem o corpo. <b>Vacina</b> = antígeno enfraquecido (imunidade ativa); <b>soro</b> = anticorpos prontos (imunidade passiva).</p>`,
+  ex:{q:"Vacina dá imunidade...",steps:["o corpo produz anticorpos","ativa"],a:"vacina (imunidade ativa)"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Antígeno enfraquecido; o corpo cria seus anticorpos.","vacina (imunidade ativa)"],["Anticorpos prontos, ação imediata e temporária.","soro (imunidade passiva)"],["Proteínas de defesa contra antígenos.","anticorpos"],["Células brancas de defesa do organismo.","linfócitos"]],["vacina (imunidade ativa)","soro (imunidade passiva)","anticorpos","linfócitos"])},
+ {code:"B3T",ano:"3ª série",title:"Fisiologia vegetal",
+  concept:`<p>O <b>xilema</b> conduz água e sais (seiva bruta); o <b>floema</b> conduz a seiva elaborada (açúcares). A <b>auxina</b> é um hormônio de crescimento.</p>`,
+  ex:{q:"Vaso que conduz água das raízes às folhas:",steps:["seiva bruta","xilema"],a:"xilema"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Conduz água e sais das raízes às folhas.","xilema"],["Conduz açúcares produzidos na fotossíntese.","floema"],["Hormônio que estimula o crescimento vegetal.","auxina"],["Perda de água pelas folhas (estômatos).","transpiração"]],["xilema","floema","auxina","transpiração"])},
+ {code:"B3U",ano:"3ª série",title:"Ciclos biogeoquímicos",
+  concept:`<p>Reciclagem da matéria: ciclo do <b>carbono</b> (fotossíntese e respiração), do <b>nitrogênio</b> (bactérias fixadoras) e da <b>água</b>.</p>`,
+  ex:{q:"Bactérias fixadoras participam do ciclo do...",steps:["transformam N₂","nitrogênio"],a:"nitrogênio"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Movido por fotossíntese e respiração.","carbono"],["Depende de bactérias fixadoras no solo.","nitrogênio"],["Evaporação, condensação e precipitação.","água"],["A queima de combustíveis fósseis o desequilibra.","carbono"]],["carbono","nitrogênio","água"])},
+ {code:"B3V",ano:"3ª série",title:"Fluxo de energia e sucessão",
+  concept:`<p>A energia flui em sentido único e diminui a cada nível trófico (pirâmide). Na <b>sucessão</b>, as espécies <b>pioneiras</b> preparam o ambiente até a comunidade <b>clímax</b>.</p>`,
+  ex:{q:"Primeiras espécies a colonizar um ambiente:",steps:["líquens","pioneiras"],a:"espécies pioneiras"},
+  gen:()=>clsGen(s=>`"${s}"`,[["A energia diminui a cada nível da cadeia.","pirâmide de energia"],["Primeiras espécies a colonizar (líquens).","espécies pioneiras"],["Comunidade final, estável e madura.","comunidade clímax"],["A energia flui em sentido único pelo ecossistema.","pirâmide de energia"]],["pirâmide de energia","espécies pioneiras","comunidade clímax"])},
 ],
 };
 
@@ -1566,12 +1708,13 @@ function renderReview(){
       let buf="";
       zone.innerHTML=`<div class="answer" id="ans"><span class="ph">?</span></div><div class="keypad" id="kp"></div>`;
       const kp=$("kp"),ans=$("ans");
-      ['1','2','3','4','5','6','7','8','9','±','0','⌫'].forEach(k=>{const b=document.createElement("button");b.className="key"+(k==='⌫'?' del':k==='±'?' sign':'');b.textContent=k;
-        b.onclick=()=>{if(locked)return; if(k==='⌫')buf=buf.slice(0,-1); else if(k==='±')buf=buf.startsWith('-')?buf.slice(1):'-'+buf; else if(buf.replace('-','').length<6)buf+=k; ans.innerHTML=buf===''||buf==='-'?'<span class="ph">?</span>':buf.replace('-','−');};
+      ['1','2','3','4','5','6','7','8','9','±','0',','].forEach(k=>{const b=document.createElement("button");b.className="key"+(k==='±'?' sign':'');b.textContent=k;
+        b.onclick=()=>{if(locked)return; if(k==='±')buf=buf.startsWith('-')?buf.slice(1):'-'+buf; else if(k===','){if(!buf.includes(','))buf=(buf===''||buf==='-')?buf+'0,':buf+',';} else if(buf.replace('-','').replace(',','').length<6)buf+=k; ans.innerHTML=buf===''||buf==='-'?'<span class="ph">?</span>':buf.replace('-','−');};
         kp.appendChild(b);});
+      const del=document.createElement("button");del.className="key del";del.textContent="⌫";del.onclick=()=>{if(locked)return;buf=buf.slice(0,-1);ans.innerHTML=buf===''||buf==='-'?'<span class="ph">?</span>':buf.replace('-','−');};kp.appendChild(del);
       const ok=document.createElement("button");ok.className="key ok";ok.textContent="OK";
-      ok.onclick=()=>{if(locked||buf===''||buf==='-')return;locked=true;const correct=parseInt(buf,10)===cur.answer;ans.className="answer "+(correct?"correct":"wrong");
-        if(!correct)whyEl.innerHTML=`Era <b>${neg(cur.answer)}</b>.`; clearItem(cur,correct); if(navigator.vibrate)navigator.vibrate(correct?8:[20,40,20]); setTimeout(nextItem,correct?720:1300);};
+      ok.onclick=()=>{if(locked||buf===''||buf==='-'||buf.endsWith(','))return;locked=true;const correct=Math.abs(parseFloat(buf.replace(',','.'))-cur.answer)<0.011;ans.className="answer "+(correct?"correct":"wrong");
+        if(!correct)whyEl.innerHTML=`Era <b>${fmtNum(cur.answer)}</b>.`; clearItem(cur,correct); if(navigator.vibrate)navigator.vibrate(correct?8:[20,40,20]); setTimeout(nextItem,correct?720:1300);};
       kp.appendChild(ok);
     }else{
       zone.innerHTML=`<div class="opts" id="opts"></div>`;const optsEl=$("opts");
@@ -1671,18 +1814,19 @@ function renderPractice(sid,bk,i){
   }
   if(typed){
     const kp=$("kp"),ans=$("ans");
-    ['1','2','3','4','5','6','7','8','9','±','0','⌫'].forEach(k=>{
-      const b=document.createElement("button");b.className="key"+(k==='⌫'?' del':k==='±'?' sign':'');b.textContent=k;
+    ['1','2','3','4','5','6','7','8','9','±','0',','].forEach(k=>{
+      const b=document.createElement("button");b.className="key"+(k==='±'?' sign':'');b.textContent=k;
       b.onclick=()=>{if(locked)return;
-        if(k==='⌫')buf=buf.slice(0,-1);
-        else if(k==='±')buf=buf.startsWith('-')?buf.slice(1):'-'+buf;
-        else if(buf.replace('-','').length<6)buf+=k;
+        if(k==='±')buf=buf.startsWith('-')?buf.slice(1):'-'+buf;
+        else if(k===','){if(!buf.includes(','))buf=(buf===''||buf==='-')?buf+'0,':buf+',';}
+        else if(buf.replace('-','').replace(',','').length<6)buf+=k;
         ans.innerHTML=buf===''||buf==='-'?'<span class="ph">?</span>':buf.replace('-','−');};
       kp.appendChild(b);});
+    const del=document.createElement("button");del.className="key del";del.textContent="⌫";del.onclick=()=>{if(locked)return;buf=buf.slice(0,-1);ans.innerHTML=buf===''||buf==='-'?'<span class="ph">?</span>':buf.replace('-','−');};kp.appendChild(del);
     const ok=document.createElement("button");ok.className="key ok";ok.textContent="OK";
-    ok.onclick=()=>{if(locked||buf===''||buf==='-')return;locked=true;
-      const correct=parseInt(buf,10)===p.answer;ans.className="answer "+(correct?"correct":"wrong");
-      if(!correct){whyEl.innerHTML=`Era <b>${neg(p.answer)}</b> — confira e siga.`;recordMiss(lv,p);}resolve(correct);};
+    ok.onclick=()=>{if(locked||buf===''||buf==='-'||buf.endsWith(','))return;locked=true;
+      const correct=Math.abs(parseFloat(buf.replace(',','.'))-p.answer)<0.011;ans.className="answer "+(correct?"correct":"wrong");
+      if(!correct){whyEl.innerHTML=`Era <b>${fmtNum(p.answer)}</b> — confira e siga.`;recordMiss(lv,p);}resolve(correct);};
     kp.appendChild(ok);
   }
   load();
