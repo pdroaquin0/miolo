@@ -40,6 +40,40 @@
 
   .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
   .review-card{display:flex;align-items:center;gap:12px;background:linear-gradient(180deg,rgba(255,210,125,.16),rgba(255,125,104,.10));border:1px solid var(--gold);border-radius:16px;padding:15px;margin-bottom:14px;cursor:pointer;transition:.14s;}
+  .ofnote{font-size:12.5px;color:var(--mute);line-height:1.5;margin-bottom:12px;background:var(--panel2);border:1px solid var(--edge);border-radius:12px;padding:11px 13px;}
+  .ofnote b{color:var(--gold);}
+  .ofnote2{font-size:11.5px;color:var(--mute);margin:2px 0 10px;}
+  .ofbox{background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:13px;margin-bottom:12px;}
+  .ofrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .ofbtn{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--txt);background:var(--tile);border:1px solid var(--edge);border-radius:10px;padding:9px 12px;cursor:pointer;}
+  .ofbtn:active{transform:scale(.97);}
+  .oftime{font-family:var(--mono);font-size:15px;color:var(--mint);margin-left:auto;}
+  .oftema{margin-top:11px;font-size:14px;line-height:1.5;color:var(--txt);}
+  .oftema b{color:var(--coral);}
+  .ofh{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--coral);margin-bottom:8px;}
+  .redarea{width:100%;min-height:200px;resize:vertical;background:var(--panel2);border:1px solid var(--edge);border-radius:12px;padding:13px;color:var(--txt);font-family:var(--ui);font-size:15px;line-height:1.6;-webkit-user-select:text;user-select:text;margin-bottom:10px;}
+  .redarea:focus{outline:2px solid var(--coral);}
+  .finding{background:var(--panel2);border:1px solid var(--edge);border-left-width:4px;border-radius:10px;padding:10px 12px;margin-bottom:8px;}
+  .finding.ok{border-left-color:var(--mint);}
+  .finding.warn{border-left-color:var(--gold);}
+  .finding .fl{font-weight:700;font-size:14px;}
+  .finding .fn{font-size:12.5px;color:var(--mute);margin-top:3px;line-height:1.45;}
+  .comp-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+  .comp-row .cn{flex:1 1 110px;font-size:12.5px;font-weight:600;}
+  .cbtns{display:flex;gap:4px;}
+  .cbtns button{font-family:var(--mono);font-size:11px;width:30px;height:30px;border-radius:7px;border:1px solid var(--edge);background:var(--tile);color:var(--mute);cursor:pointer;}
+  .cbtns button.sel{background:var(--coral);color:var(--bg);border-color:var(--coral);font-weight:700;}
+  .oftotal{font-family:var(--mono);font-weight:700;font-size:16px;color:var(--mint);text-align:right;margin-top:8px;}
+  .fcard{background:var(--panel);border:1px solid var(--edge);border-radius:14px;margin-bottom:9px;overflow:hidden;}
+  .fhead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px;cursor:pointer;}
+  .fhead:active{background:var(--panel2);}
+  .ft{font-weight:700;font-size:15px;}
+  .fmeta{font-size:12px;color:var(--mute);margin-top:3px;}
+  .fchev{font-family:var(--mono);font-size:20px;color:var(--coral);flex:0 0 auto;}
+  .fbody{max-height:0;overflow:hidden;transition:max-height .3s;padding:0 14px;}
+  .fcard.open .fbody{max-height:600px;padding:0 14px 12px;}
+  .fbody p{margin:8px 0;font-size:13.5px;line-height:1.5;color:var(--txt);}
+  .fbody b{color:var(--gold);}
   .review-card:active{transform:scale(.99);}
   .review-card .rl{flex:1;min-width:0;}
   .review-card .rt{font-weight:800;font-size:15px;color:var(--gold);}
@@ -642,6 +676,784 @@ medio:[
 ],
 };
 
+const RED={
+fund1:[
+ {code:"R11",ano:"1º ano",title:"Tipos de texto",
+  concept:`<p><b>Narração</b> conta fatos no tempo; <b>descrição</b> retrata como algo é; <b>dissertação</b> defende uma ideia com argumentos.</p>`,
+  ex:{q:"'É preciso investir em educação porque...'",steps:["defende uma ideia","dissertação"],a:"dissertação"},
+  gen:()=>clsGen(s=>`"${s}"<br>É que tipo de texto?`,[["Era uma vez um menino que partiu numa jornada.","narração"],["O quarto era pequeno, com paredes azuis e uma janela.","descrição"],["É fundamental investir em educação para reduzir a desigualdade.","dissertação"],["No dia seguinte, ela acordou e correu para a escola.","narração"],["A paisagem exibia montanhas verdes e um rio sereno.","descrição"],["Conclui-se que combater a desinformação exige ação coletiva.","dissertação"],["De repente, ouviu-se um grito ao longe.","narração"],["Tinha olhos castanhos e um sorriso largo.","descrição"],["Portanto, o Estado deve garantir esse direito.","dissertação"]],["narração","descrição","dissertação"])},
+ {code:"R12",ano:"2º ano",title:"Clareza e concisão",
+  concept:`<p>Uma boa frase é <b>clara</b> e <b>direta</b>. Evite repetições, rodeios e marcas de fala.</p>`,
+  ex:{q:"Qual é mais clara?",steps:["direta e sem rodeio","O projeto foi aprovado pela diretoria."],a:"O projeto foi aprovado pela diretoria."},
+  gen:()=>fcGen([{o:["O projeto foi aprovado pela diretoria.","O projeto, ele foi aprovado pela diretoria.","Foi aprovado o projeto pela diretoria que aprovou o projeto.","O projeto aprovado foi pela diretoria sendo aprovado."],c:0},{o:["Ela explicou o problema com clareza.","Ela tipo explicou o problema meio assim.","O problema foi explicado por ela que o explicou.","Com clareza ela o problema explicou que explicou."],c:0},{o:["É importante ler todos os dias.","É importante a gente ler umas coisas todo dia.","Ler é importante todo dia é importante ler.","Importante é ler que é importante todo dia."],c:0}])},
+],
+fund2:[
+ {code:"R21",ano:"6º ano",title:"Tópico frasal",
+  concept:`<p>O <b>tópico frasal</b> é a frase que abre o parágrafo e anuncia sua ideia central, de forma clara e objetiva.</p>`,
+  ex:{q:"Melhor abertura de parágrafo:",steps:["anuncia a ideia central","Em primeiro lugar, a desigualdade limita oportunidades."],a:"Em primeiro lugar, a desigualdade limita oportunidades."},
+  gen:()=>fcGen([{q:"Melhor tópico frasal (saúde mental):",o:["A negligência com a saúde mental dos jovens decorre de dois fatores.","Saúde mental é uma coisa que tem.","Eu acho que saúde mental é importante né.","Vou falar sobre saúde mental agora."],c:0},{q:"Melhor abertura de parágrafo:",o:["Em primeiro lugar, a desigualdade educacional limita oportunidades.","Bom, então, sobre educação.","A educação. Importante.","Educação educação educação."],c:0},{q:"Melhor tópico frasal:",o:["Outro fator relevante é a ausência de fiscalização do Estado.","E tem mais coisa também.","Aí tem outro negócio.","Mais um ponto aqui ó."],c:0}])},
+ {code:"R22",ano:"7º ano",title:"Registro formal",
+  concept:`<p>A redação exige <b>registro formal</b> e <b>impessoal</b>: nada de gírias, abreviações ou linguagem de conversa.</p>`,
+  ex:{q:"Versão formal:",steps:["formal e impessoal","É necessário repensar essa prática."],a:"É necessário repensar essa prática."},
+  gen:()=>fcGen([{o:["É necessário repensar essa prática.","É necessário dar um jeito nessa parada.","Tem que mudar isso aí.","Precisa ver isso melhor, sô."],c:0},{o:["Os dados revelam um cenário preocupante.","Os dados mostram que a coisa tá feia.","Os números tão bem ruins.","Deu ruim nos números."],c:0},{o:["Conclui-se que a medida é ineficaz.","No fim das contas a medida não funciona.","A medida é meio sem graça.","Tipo, a medida não rola."],c:0}])},
+ {code:"R23",ano:"9º ano",title:"Conectivos",
+  concept:`<p>Conectivos ligam as ideias e mostram a relação entre elas: <b>adição</b>, <b>oposição</b>, <b>conclusão</b>, <b>causa</b>, <b>comparação</b>.</p>`,
+  ex:{q:"'entretanto' indica...",steps:["contraste","oposição"],a:"oposição"},
+  gen:()=>clsGen(w=>`O conectivo "${w}" indica...`,[["ademais","adição"],["outrossim","adição"],["além disso","adição"],["entretanto","oposição"],["todavia","oposição"],["por outro lado","oposição"],["portanto","conclusão"],["por conseguinte","conclusão"],["dessa forma","conclusão"],["visto que","causa"],["uma vez que","causa"],["porquanto","causa"],["assim como","comparação"],["tal qual","comparação"]],["adição","oposição","conclusão","causa","comparação"])},
+],
+medio:[
+ {code:"R30",ano:"Oficina",title:"Oficina de Redação",tool:"oficina",
+  concept:`<p>Escreva sob tempo e receba análise mecânica.</p>`,ex:{q:"",steps:[],a:""}},
+ {code:"R31",ano:"1ª série",title:"Estrutura dissertativa",
+  concept:`<p>Três partes: <b>introdução</b> (tema + tese), <b>desenvolvimento</b> (argumentos + repertório) e <b>conclusão</b> (retomada + proposta).</p>`,
+  ex:{q:"'Diante do exposto, medidas são urgentes.'",steps:["fecha o texto","conclusão"],a:"conclusão"},
+  gen:()=>clsGen(s=>`"${s}"<br>É parte de qual?`,[["Diante do exposto, é evidente que medidas são urgentes.","conclusão"],["A exclusão digital é um desafio atual no Brasil.","introdução"],["Segundo o IBGE, milhões ainda não têm acesso à rede.","desenvolvimento"],["Portanto, o poder público deve agir.","conclusão"],["Vivemos uma era marcada pela informação instantânea.","introdução"],["Um exemplo disso foi a evasão escolar na pandemia.","desenvolvimento"],["Em síntese, a transformação depende de educação.","conclusão"],["O presente texto discutirá os impactos da automação.","introdução"],["Além disso, a falta de fiscalização agrava o quadro.","desenvolvimento"]],["introdução","desenvolvimento","conclusão"])},
+ {code:"R32",ano:"1ª série",title:"A tese",
+  concept:`<p>A <b>tese</b> é o seu <b>ponto de vista</b> sobre o tema — clara e defensável. Não é o tema repetido nem uma frase vaga.</p>`,
+  ex:{q:"Melhor tese?",steps:["posição clara e defensável"],a:"clara e com posição"},
+  gen:()=>fcGen([{q:"Melhor tese (desinformação):",o:["A desinformação compromete a democracia e exige educação midiática e regulação.","A desinformação existe.","Vou falar sobre desinformação.","Desinformação é informar errado."],c:0},{q:"Melhor tese (saúde mental):",o:["A negligência com a saúde mental dos jovens decorre do estigma e da falta de acesso.","Saúde mental é importante.","Existem muitos jovens.","A saúde mental dos jovens."],c:0},{q:"Melhor tese (meio ambiente):",o:["A crise hídrica resulta do desperdício e da ausência de políticas de longo prazo.","A água é importante.","Vou discutir a água.","Água é vida."],c:0}])},
+ {code:"R33",ano:"2ª série",title:"Tipos de argumento",
+  concept:`<p>Argumentos por <b>autoridade</b> (especialista), <b>dados</b> (estatística), <b>exemplo histórico</b>, <b>causa-consequência</b> e <b>comparação</b>.</p>`,
+  ex:{q:"'Segundo a OMS...'",steps:["cita especialista/órgão","autoridade"],a:"autoridade"},
+  gen:()=>clsGen(s=>`"${s}"<br>Que tipo de argumento?`,[["Segundo a OMS, a depressão lidera as causas de incapacidade.","autoridade"],["90% dos jovens relatam ansiedade, aponta a pesquisa.","dados/estatística"],["Na Revolução Industrial, máquinas substituíram operários.","exemplo histórico"],["Sem saneamento, crescem as doenças e os gastos públicos.","causa-consequência"],["Assim como o fogo, a tecnologia pode aquecer ou queimar.","comparação"],["O filósofo Kant via a dignidade humana como um fim.","autoridade"],["Dados do IBGE mostram queda no emprego formal.","dados/estatística"],["A abolição de 1888 não trouxe inclusão social.","exemplo histórico"]],["autoridade","dados/estatística","exemplo histórico","causa-consequência","comparação"])},
+ {code:"R34",ano:"2ª série",title:"Repertório legitimado",
+  concept:`<p>Repertório <b>legitimado</b> é citável e produtivo: dados, filosofia, história, leis, obras. Evite senso comum ("todo mundo sabe").</p>`,
+  ex:{q:"Qual é legitimado?",steps:["fonte reconhecida","Dados do IBGE."],a:"Dados do IBGE."},
+  gen:()=>fcGen([{q:"Repertório legitimado?",o:["Dados do IBGE sobre acesso à internet.","Minha avó sempre dizia que...","Todo mundo sabe que...","Vi num story que..."],c:0},{q:"Bom repertório?",o:["O conceito de 'modernidade líquida', de Bauman.","Uma coisa que li sei lá onde.","O que comentaram na rua.","Acho que é assim."],c:0},{q:"Repertório produtivo?",o:["O artigo 5º da Constituição garante a igualdade.","Dizem por aí que é assim.","É o que todos pensam.","Bom, na minha cabeça..."],c:0}])},
+ {code:"R35",ano:"3ª série",title:"Proposta de intervenção",
+  concept:`<p>A proposta (competência 5) precisa de <b>agente</b> + <b>ação</b> + <b>meio</b> + <b>finalidade</b> (e, idealmente, detalhamento).</p>`,
+  ex:{q:"Mais completa?",steps:["tem agente, ação, meio e finalidade"],a:"a que tem os 4 elementos"},
+  gen:()=>fcGen([{q:"Proposta mais completa?",o:["O MEC deve ampliar o acesso à internet por meio de parcerias com operadoras, a fim de reduzir a exclusão digital.","É preciso resolver o problema.","O governo tem que fazer algo.","Devemos melhorar isso."],c:0},{q:"Qual tem os 4 elementos?",o:["As escolas, por meio de campanhas, devem promover a saúde mental, garantindo o bem-estar dos alunos.","Tem que cuidar da saúde mental.","A saúde mental precisa melhorar.","Alguém deveria ajudar."],c:0}])},
+ {code:"R36",ano:"3ª série",title:"Competências do ENEM",
+  concept:`<p>C1 norma culta · C2 tema e estrutura · C3 argumentação · C4 coesão · C5 proposta de intervenção. Cada uma vale até 200.</p>`,
+  ex:{q:"'Faltam conectivos.'",steps:["ligação entre ideias","C4: coesão"],a:"C4: coesão"},
+  gen:()=>clsGen(s=>`"${s}"<br>Falha em qual competência?`,[["A redação tem vários erros de concordância e ortografia.","C1: norma culta"],["O texto fugiu do tema proposto.","C2: tema e estrutura"],["Os argumentos são frágeis e sem repertório.","C3: argumentação"],["Faltam conectivos entre os parágrafos.","C4: coesão"],["Não há proposta de intervenção na conclusão.","C5: proposta"],["O candidato ignorou a estrutura dissertativa.","C2: tema e estrutura"],["A proposta não indica o agente nem o meio.","C5: proposta"],["Há repetição e ausência de coesão.","C4: coesão"]],["C1: norma culta","C2: tema e estrutura","C3: argumentação","C4: coesão","C5: proposta"])},
+ {code:"R37",ano:"3ª série",title:"O que penaliza ou zera",
+  concept:`<p>Zeram ou penalizam: <b>fuga ao tema</b>, <b>ferir os direitos humanos</b>, <b>texto insuficiente</b> e <b>cópia</b> da coletânea.</p>`,
+  ex:{q:"'Propôs punição desumana.'",steps:["viola direitos humanos","ferir direitos humanos"],a:"ferir direitos humanos"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Escreveu sobre outro assunto, ignorando o tema.","fuga ao tema"],["Propôs punição que viola a dignidade humana.","ferir direitos humanos"],["Escreveu apenas cinco linhas.","texto insuficiente"],["Copiou trechos da coletânea sem desenvolver.","cópia"],["Defendeu solução desumana para o problema.","ferir direitos humanos"],["O texto tem só um parágrafo curto.","texto insuficiente"],["Desenvolveu um tema diferente do proposto.","fuga ao tema"]],["fuga ao tema","ferir direitos humanos","texto insuficiente","cópia"])},
+],
+};
+const TEMAS=["Os desafios da inclusão da pessoa com deficiência no Brasil","Caminhos para combater a desinformação na era digital","O impacto da automação e da inteligência artificial no trabalho","A valorização da saúde mental entre os jovens","Estratégias para reduzir o desperdício de alimentos no país","O acesso à cultura como direito de todos","Os limites entre liberdade de expressão e responsabilidade","A crise hídrica e o uso consciente da água","A importância da educação financeira nas escolas","O combate ao etarismo na sociedade contemporânea","Desafios da mobilidade urbana nas grandes cidades","O papel das redes sociais na formação de opinião"];
+function analyzeRedacao(text){
+  const t=text.trim(); if(!t)return[{label:"Escreva ou cole seu texto na área acima.",status:"warn",note:""}];
+  const out=[]; const words=t.split(/\s+/).filter(Boolean); const wc=words.length;
+  out.push({label:`Palavras: ${wc}`,status:(wc>=250&&wc<=450)?"ok":"warn",note:wc<250?"Curto — o ENEM espera ~30 linhas (250 a 350 palavras).":wc>450?"Longo demais; corte o excesso.":"Tamanho adequado."});
+  const paras=t.split(/\n\s*\n/).map(p=>p.trim()).filter(Boolean);
+  out.push({label:`Parágrafos: ${paras.length}`,status:paras.length>=4?"ok":"warn",note:paras.length<4?"Ideal: 4 a 5 (introdução, 2-3 de desenvolvimento, conclusão). Separe com linha em branco.":"Boa divisão."});
+  const sentences=t.split(/[.!?…]+/).map(s=>s.trim()).filter(s=>s.split(/\s+/).length>1);
+  const longest=sentences.reduce((a,s)=>Math.max(a,s.split(/\s+/).length),0);
+  out.push({label:`Frases: ${sentences.length} (maior: ${longest} palavras)`,status:longest>40?"warn":"ok",note:longest>40?"Há frase muito longa — risco de perder a clareza. Quebre em duas.":"Frases em tamanho razoável."});
+  const con=["além disso","ademais","outrossim","portanto","logo","por conseguinte","contudo","entretanto","todavia","porém","no entanto","visto que","uma vez que","porque","dessa forma","desse modo","por fim","em síntese","conclui-se","em primeiro lugar","por outro lado","sobretudo","assim sendo"];
+  const low=" "+t.toLowerCase().replace(/\s+/g," ")+" ";
+  const found=con.filter(c=>low.includes(c));
+  out.push({label:`Conectivos: ${found.length}`,status:found.length>=4?"ok":"warn",note:found.length<4?"Use mais conectivos para amarrar as ideias (competência 4).":"Ex.: "+found.slice(0,5).join(", ")+"."});
+  const prop=["é preciso","deve-se","o governo","o estado","o ministério","as escolas","a mídia","a família","por meio de","a fim de","com o intuito","com o objetivo","campanhas","investir em","políticas públicas","medidas","cabe ao"];
+  const hasProp=prop.some(w=>low.includes(w));
+  out.push({label:"Proposta de intervenção",status:hasProp?"ok":"warn",note:hasProp?"Detectei sinais de proposta. Confira se há agente, ação, meio e finalidade.":"Não detectei proposta (competência 5). A conclusão precisa propor solução com agente, ação, meio e finalidade."});
+  const inf=["a gente","tipo,","coisa","né","pra caramba","eu acho","na minha opinião","kkk"," cê "];
+  const fi=inf.filter(w=>low.includes(w));
+  if(fi.length)out.push({label:"Marcas de informalidade",status:"warn",note:"Evite na dissertação: "+fi.map(x=>x.trim()).join(", ")+". Prefira o registro formal e impessoal."});
+  const stop=new Set(["para","como","mais","esse","essa","isso","pelo","pela","seus","suas","quando","onde","entre","sobre","cada","todo","toda","todos","todas","muito","muita","sendo","porém","ainda","então","assim","qual","quais","deve","pode","pelos","pelas"]);
+  const freq={};
+  words.map(w=>w.toLowerCase().replace(/[^a-zà-ÿ]/gi,"")).filter(w=>w.length>4&&!stop.has(w)).forEach(w=>freq[w]=(freq[w]||0)+1);
+  const top=Object.entries(freq).sort((a,b)=>b[1]-a[1])[0];
+  if(top&&top[1]>=5)out.push({label:"Repetição de palavra",status:"warn",note:`"${top[0]}" aparece ${top[1]}× — varie o vocabulário.`});
+  return out;
+}
+function renderOficina(sid,bk,i){
+  const DKEY="miolo.red.draft"; let draft=""; try{draft=localStorage.getItem(DKEY)||"";}catch(e){}
+  let comp=[0,0,0,0,0]; let secs=0,timer=null;
+  const C=["C1 norma culta","C2 tema/estrutura","C3 argumentação","C4 coesão","C5 proposta"];
+  view.innerHTML=`<button class="back" id="bk">‹ Redação</button><div class="crumb">📝 Oficina de Redação</div>
+   <div class="ofnote">Análise <b>mecânica</b> — conta, mede e sinaliza. <b>Não avalia a qualidade dos seus argumentos</b> (isso exige leitura humana).</div>
+   <div class="ofbox"><div class="ofrow"><button class="ofbtn" id="tema">🎲 Sortear tema</button><button class="ofbtn" id="tim">⏱ Iniciar</button><span class="oftime" id="clock">00:00</span></div>
+     <div class="oftema" id="temabox">Toque em "Sortear tema" para começar.</div></div>
+   <textarea class="redarea" id="ta" placeholder="Escreva ou cole aqui sua redação (separe parágrafos com uma linha em branco)...">${draft.replace(/</g,"&lt;")}</textarea>
+   <button class="cta" id="an">Analisar texto →</button>
+   <div id="report"></div>
+   <div class="ofbox"><div class="ofh">Auto-avaliação · 5 competências</div>
+     <div class="ofnote2">Você mesmo se nota (0 a 200 por competência). É honestidade, não correção automática.</div>
+     <div id="rubric"></div>
+     <div class="oftotal" id="total">Total: 0 / 1000</div></div>`;
+  $("bk").onclick=()=>renderBand(sid,bk);
+  const ta=$("ta");
+  ta.addEventListener("input",()=>{try{localStorage.setItem(DKEY,ta.value);}catch(e){}});
+  $("tema").onclick=()=>{$("temabox").innerHTML="<b>Tema:</b> "+choice(TEMAS);};
+  $("tim").onclick=()=>{const b=$("tim");if(timer){clearInterval(timer);timer=null;b.textContent="⏱ Retomar";return;}b.textContent="⏸ Pausar";timer=setInterval(()=>{secs++;const m=String(Math.floor(secs/60)).padStart(2,"0"),s=String(secs%60).padStart(2,"0");$("clock").textContent=`${m}:${s}`;},1000);};
+  $("an").onclick=()=>{const f=analyzeRedacao(ta.value);$("report").innerHTML=`<div class="ofh" style="margin-top:6px">Análise mecânica</div>`+f.map(x=>`<div class="finding ${x.status}"><div class="fl">${x.label}</div>${x.note?`<div class="fn">${x.note}</div>`:""}</div>`).join("");};
+  const rub=$("rubric");
+  C.forEach((name,ci)=>{
+    const row=document.createElement("div");row.className="comp-row";
+    row.innerHTML=`<div class="cn">${name}</div><div class="cbtns" data-ci="${ci}">${[0,40,80,120,160,200].map(v=>`<button data-v="${v}">${v}</button>`).join("")}</div>`;
+    rub.appendChild(row);
+  });
+  rub.querySelectorAll(".cbtns").forEach(g=>{const ci=+g.dataset.ci;g.querySelectorAll("button").forEach(b=>{b.onclick=()=>{comp[ci]=+b.dataset.v;[...g.children].forEach(x=>x.classList.remove("sel"));b.classList.add("sel");$("total").textContent=`Total: ${comp.reduce((a,c)=>a+c,0)} / 1000`;};});});
+  view.scrollTop=0;
+}
+
+const LIT={
+fund1:[
+ {code:"L11",ano:"1º ano",title:"Gêneros literários",
+  concept:`<p>Os três grandes gêneros: <b>lírico</b> (poesia, emoção), <b>narrativo/épico</b> (conta uma história) e <b>dramático</b> (teatro).</p>`,
+  ex:{q:"Um poema de amor é do gênero...",steps:["expressa emoção/eu lírico","lírico"],a:"lírico"},
+  gen:()=>clsGen(s=>`"${s}"<br>É de que gênero?`,[["Um poema sobre a saudade.","lírico"],["Um conto com começo, meio e fim.","narrativo"],["Uma peça de teatro com diálogos e atos.","dramático"],["Versos que expressam um sentimento.","lírico"],["Um romance que conta a vida de alguém.","narrativo"],["Uma comédia encenada no palco.","dramático"],["Uma fábula com animais e moral.","narrativo"],["Um soneto melancólico.","lírico"]],["lírico","narrativo","dramático"])},
+ {code:"L12",ano:"2º ano",title:"Verso e prosa",
+  concept:`<p><b>Prosa</b> é texto corrido (romances, contos). <b>Verso</b> é organizado em linhas e estrofes (poemas).</p>`,
+  ex:{q:"Romance é escrito em...",steps:["texto corrido","prosa"],a:"prosa"},
+  gen:()=>clsGen(s=>`"${s}"<br>É verso ou prosa?`,[["Um romance de 300 páginas.","prosa"],["Um soneto com 14 versos.","verso"],["Um conto curto.","prosa"],["Um poema dividido em estrofes.","verso"],["Uma crônica de jornal.","prosa"],["Uma poesia rimada.","verso"]],["verso","prosa"])},
+],
+fund2:[
+ {code:"L21",ano:"6º ano",title:"Foco narrativo",
+  concept:`<p><b>1ª pessoa</b>: o narrador participa (eu). <b>3ª pessoa</b>: narra de fora (ele/ela), podendo ser onisciente (sabe tudo).</p>`,
+  ex:{q:"'Eu nasci numa cidade pequena...'",steps:["narrador usa 'eu'","1ª pessoa"],a:"narrador em 1ª pessoa"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Eu me lembro do dia em que parti.","narrador em 1ª pessoa"],["Ele caminhou até a porta e bateu.","narrador em 3ª pessoa"],["Naquela manhã, decidi mudar de vida.","narrador em 1ª pessoa"],["Ela sabia o que todos pensavam.","narrador em 3ª pessoa"],["Contei a ninguém o meu segredo.","narrador em 1ª pessoa"],["O menino sentia medo, mas seguiu em frente.","narrador em 3ª pessoa"]],["narrador em 1ª pessoa","narrador em 3ª pessoa"])},
+ {code:"L22",ano:"8º ano",title:"Escolas literárias",
+  concept:`<p>Movimentos em ordem: Quinhentismo, Barroco, Arcadismo, <b>Romantismo</b>, <b>Realismo/Naturalismo</b>, <b>Modernismo</b>. Cada um reflete sua época.</p>`,
+  ex:{q:"Herói idealizado, natureza, emoção:",steps:["idealização e subjetividade","Romantismo"],a:"Romantismo"},
+  gen:()=>clsGen(s=>`${s}`,[["Idealização do amor e do herói, natureza, emoção.","Romantismo"],["Análise crítica da sociedade, objetividade, ironia.","Realismo"],["Determinismo, instinto, o meio molda o homem.","Naturalismo"],["Liberdade formal, linguagem coloquial, identidade nacional.","Modernismo"],["Indianismo e nacionalismo idealizado.","Romantismo"],["Crítica à burguesia e à Igreja, personagens complexos.","Realismo"]],["Romantismo","Realismo","Naturalismo","Modernismo"])},
+],
+medio:[
+ {code:"L30",ano:"Fichas",title:"Fichas das obras",tool:"fichas",
+  concept:`<p>Resumos de estudo das 10 obras.</p>`,ex:{q:"",steps:[],a:""}},
+ {code:"L31",ano:"3ª série",title:"Obra e autor",
+  concept:`<p>Saber <b>quem escreveu</b> cada obra é o básico do vestibular. Atenção: Machado de Assis assina duas das obras da lista.</p>`,
+  ex:{q:"Quem escreveu 'Dom Casmurro'?",steps:["narrador Bentinho","Machado de Assis"],a:"Machado de Assis"},
+  gen:()=>trGen(o=>`Quem escreveu<br>"${o}"?`,[["A Hora da Estrela","Clarice Lispector"],["Capitães da Areia","Jorge Amado"],["Claro Enigma","Carlos Drummond de Andrade"],["Dom Casmurro","Machado de Assis"],["Iracema","José de Alencar"],["Macunaíma","Mário de Andrade"],["Memórias Póstumas de Brás Cubas","Machado de Assis"],["O Cortiço","Aluísio Azevedo"],["Quarto de Despejo","Carolina Maria de Jesus"],["Vidas Secas","Graciliano Ramos"]])},
+ {code:"L32",ano:"3ª série",title:"Obra e movimento",
+  concept:`<p>Cada obra pertence a uma escola: <b>Romantismo</b> (Iracema), <b>Realismo</b> (Machado), <b>Naturalismo</b> (O Cortiço), <b>Modernismo</b> (as demais).</p>`,
+  ex:{q:"'O Cortiço' pertence a qual escola?",steps:["determinismo, meio social","Naturalismo"],a:"Naturalismo"},
+  gen:()=>clsGen(o=>`"${o}"<br>É de qual escola?`,[["Iracema","Romantismo"],["Dom Casmurro","Realismo"],["Memórias Póstumas de Brás Cubas","Realismo"],["O Cortiço","Naturalismo"],["Macunaíma","Modernismo"],["Capitães da Areia","Modernismo"],["Vidas Secas","Modernismo"],["A Hora da Estrela","Modernismo"],["Quarto de Despejo","Modernismo"],["Claro Enigma","Modernismo"]],["Romantismo","Realismo","Naturalismo","Modernismo"])},
+ {code:"L33",ano:"3ª série",title:"Narrador das obras",
+  concept:`<p>Reconheça o foco: <b>1ª pessoa</b> em Dom Casmurro, Memórias Póstumas, A Hora da Estrela e Quarto de Despejo; <b>3ª pessoa</b> nas demais em prosa.</p>`,
+  ex:{q:"O narrador de 'Memórias Póstumas' é...",steps:["Brás Cubas, o 'defunto autor'","1ª pessoa"],a:"narrador em 1ª pessoa"},
+  gen:()=>clsGen(o=>`O narrador de<br>"${o}" é...`,[["Dom Casmurro","narrador em 1ª pessoa"],["Memórias Póstumas de Brás Cubas","narrador em 1ª pessoa"],["A Hora da Estrela","narrador em 1ª pessoa"],["Quarto de Despejo","narrador em 1ª pessoa"],["O Cortiço","narrador em 3ª pessoa"],["Iracema","narrador em 3ª pessoa"],["Vidas Secas","narrador em 3ª pessoa"],["Capitães da Areia","narrador em 3ª pessoa"],["Macunaíma","narrador em 3ª pessoa"]],["narrador em 1ª pessoa","narrador em 3ª pessoa"])},
+ {code:"L34",ano:"3ª série",title:"Personagens",
+  concept:`<p>Ligue o protagonista à obra: Macabéa, Capitu, Brás Cubas, Fabiano, Iracema, Pedro Bala, João Romão, Macunaíma.</p>`,
+  ex:{q:"Em que obra aparece Macabéa?",steps:["a nordestina datilógrafa","A Hora da Estrela"],a:"A Hora da Estrela"},
+  gen:()=>trGen(p=>`O personagem "${p}"<br>é de qual obra?`,[["Macabéa","A Hora da Estrela"],["Capitu","Dom Casmurro"],["Brás Cubas","Memórias Póstumas de Brás Cubas"],["Fabiano e Baleia","Vidas Secas"],["Iracema","Iracema"],["Pedro Bala","Capitães da Areia"],["João Romão","O Cortiço"],["Macunaíma","Macunaíma"]])},
+ {code:"L35",ano:"3ª série",title:"Enredo das obras",
+  concept:`<p>Reconheça a obra pela história. Leia o resumo e identifique o livro.</p>`,
+  ex:{q:"Retirantes fogem da seca pelo sertão...",steps:["Fabiano, Vitória, Baleia","Vidas Secas"],a:"Vidas Secas"},
+  gen:()=>{const b=[["Uma família de retirantes foge da seca pelo sertão nordestino.","Vidas Secas"],["Meninos abandonados vivem de pequenos delitos num areal de Salvador.","Capitães da Areia"],["Um homem maduro relembra a juventude e suspeita que a esposa o traiu.","Dom Casmurro"],["Um defunto narra a própria vida com ironia, depois de morto.","Memórias Póstumas de Brás Cubas"],["A lenda da índia que se apaixona por um colonizador no Ceará.","Iracema"],["A pobre nordestina Macabéa tenta sobreviver no Rio de Janeiro.","A Hora da Estrela"],["O cotidiano de um cortiço e a ascensão do dono ganancioso.","O Cortiço"],["O diário real de uma mulher que cata papel para sobreviver na favela.","Quarto de Despejo"],["As aventuras folclóricas de um 'herói sem nenhum caráter'.","Macunaíma"]];const it=choice(b);const others=shuffle(b.filter(x=>x[1]!==it[1])).slice(0,3).map(x=>x[1]);return{prompt:`"${it[0]}"<br>Qual obra?`,small:true,opts:strOpts(it[1],others)};}},
+ {code:"L36",ano:"3ª série",title:"Características das escolas",
+  concept:`<p>Cada movimento tem um estilo: do <b>Barroco</b> (contrastes) ao <b>Modernismo</b> (liberdade), passando por Parnasianismo e Simbolismo.</p>`,
+  ex:{q:"'Culto à forma, arte pela arte':",steps:["perfeição métrica","Parnasianismo"],a:"Parnasianismo"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Cultismo e conceptismo, contrastes, religiosidade.","Barroco"],["Equilíbrio, pastoralismo, vida simples no campo.","Arcadismo"],["Idealização, subjetividade, indianismo.","Romantismo"],["Objetividade, crítica social, análise psicológica.","Realismo"],["Culto à forma, 'arte pela arte', perfeição métrica.","Parnasianismo"],["Musicalidade, sinestesia, misticismo.","Simbolismo"],["Verso livre, linguagem coloquial, ruptura.","Modernismo"]],["Barroco","Arcadismo","Romantismo","Realismo","Parnasianismo","Simbolismo","Modernismo"])},
+ {code:"L37",ano:"3ª série",title:"Autor e obra (ampliado)",
+  concept:`<p>Banco ampliado com o cânone cobrado em vestibulares difíceis (ITA, IME, FUVEST), incluindo literatura portuguesa.</p>`,
+  ex:{q:"Quem escreveu 'Os Sertões'?",steps:["sobre Canudos","Euclides da Cunha"],a:"Euclides da Cunha"},
+  gen:()=>trGen(o=>`Quem escreveu<br>"${o}"?`,[["Os Lusíadas","Camões"],["Dom Casmurro","Machado de Assis"],["O Cortiço","Aluísio Azevedo"],["Iracema","José de Alencar"],["Macunaíma","Mário de Andrade"],["Vidas Secas","Graciliano Ramos"],["Capitães da Areia","Jorge Amado"],["A Hora da Estrela","Clarice Lispector"],["Os Sertões","Euclides da Cunha"],["Triste Fim de Policarpo Quaresma","Lima Barreto"],["Morte e Vida Severina","João Cabral de Melo Neto"],["Grande Sertão: Veredas","Guimarães Rosa"],["O Primo Basílio","Eça de Queirós"],["Auto da Compadecida","Ariano Suassuna"],["Memorial do Convento","José Saramago"],["Mensagem","Fernando Pessoa"]])},
+ {code:"L38",ano:"3ª série",title:"Literatura portuguesa",
+  concept:`<p>Da Idade Média ao presente: <b>Trovadorismo</b>, <b>Humanismo</b> (Gil Vicente), <b>Classicismo</b> (Camões), <b>Barroco</b> (Vieira), <b>Realismo</b> (Eça), <b>Modernismo</b> (Pessoa) e <b>Contemporâneo</b> (Saramago).</p>`,
+  ex:{q:"Fernando Pessoa pertence ao...",steps:["geração de Orpheu","Modernismo"],a:"Modernismo"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Cantigas de amor e de amigo (séc. XII-XIV).","Trovadorismo"],["Gil Vicente e o 'Auto da Barca do Inferno'.","Humanismo"],["Camões e 'Os Lusíadas'.","Classicismo"],["Padre Antônio Vieira e seus sermões.","Barroco"],["Eça de Queirós e 'O Primo Basílio'.","Realismo"],["Fernando Pessoa e os heterônimos.","Modernismo"],["José Saramago e 'Ensaio sobre a Cegueira'.","Contemporâneo"]],["Trovadorismo","Humanismo","Classicismo","Barroco","Realismo","Modernismo","Contemporâneo"])},
+ {code:"L39",ano:"3ª série",title:"Heterônimos de Pessoa",
+  concept:`<p>Fernando Pessoa criou poetas distintos: <b>Caeiro</b> (natureza), <b>Ricardo Reis</b> (odes clássicas), <b>Álvaro de Campos</b> (futurista) e o <b>ortônimo</b> (saudade, 'Mensagem').</p>`,
+  ex:{q:"'Versos livres, futurismo, sensações':",steps:["o engenheiro modernista","Álvaro de Campos"],a:"Álvaro de Campos"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Mestre dos demais; poeta da natureza e das coisas como são.","Alberto Caeiro"],["Odes clássicas, epicurismo, viver o momento com serenidade.","Ricardo Reis"],["Versos livres, futurismo, sensações intensas e modernas.","Álvaro de Campos"],["O 'ele mesmo': saudade e o mito de Portugal em 'Mensagem'.","ortônimo (Pessoa)"]],["Alberto Caeiro","Ricardo Reis","Álvaro de Campos","ortônimo (Pessoa)"])},
+ {code:"L3A",ano:"3ª série",title:"Os Lusíadas",
+  concept:`<p>Épica de Camões em 10 cantos: narra a viagem de Vasco da Gama às Índias e exalta Portugal. Episódios famosos: Inês de Castro, Adamastor e o Velho do Restelo.</p>`,
+  ex:{q:"O gigante do Cabo das Tormentas:",steps:["personifica o perigo","Adamastor"],a:"Adamastor"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Gigante que assombra o Cabo das Tormentas.","Adamastor"],["A amante assassinada, 'morta que foi rainha'.","Inês de Castro"],["O ancião que condena a aventura marítima.","Velho do Restelo"],["O capitão que comanda a viagem às Índias.","Vasco da Gama"]],["Adamastor","Inês de Castro","Velho do Restelo","Vasco da Gama"])},
+],
+};
+const FICHAS=[
+ {t:"A Hora da Estrela",a:"Clarice Lispector",y:"1977",m:"Modernismo (3ª fase)",n:"1ª pessoa — Rodrigo S.M., narrador-personagem",e:"Rodrigo S.M. narra a vida de Macabéa, jovem nordestina, pobre e datilógrafa no Rio de Janeiro, refletindo sobre sua própria criação enquanto conta a história dela.",tm:"invisibilidade social, pobreza, existência, o ato de narrar",w:"discute a marginalização e dá voz a quem a sociedade ignora; metalinguagem."},
+ {t:"Capitães da Areia",a:"Jorge Amado",y:"1937",m:"Modernismo (2ª fase, Romance de 30)",n:"3ª pessoa onisciente",e:"Um grupo de meninos órfãos e abandonados sobrevive de furtos num trapiche de Salvador, liderados por Pedro Bala.",tm:"infância abandonada, desigualdade, criminalidade social",w:"denúncia social do romance de 30; crianças marginalizadas."},
+ {t:"Claro Enigma",a:"Carlos Drummond de Andrade",y:"1951",m:"Modernismo (3ª fase) — poesia",n:"eu lírico (poesia, não há narrador)",e:"Livro de poemas mais reflexivo e formal de Drummond, voltado a temas existenciais e metafísicos.",tm:"tempo, existência, amor, a condição humana",w:"mostra a face madura e filosófica do maior poeta modernista."},
+ {t:"Dom Casmurro",a:"Machado de Assis",y:"1899",m:"Realismo",n:"1ª pessoa — Bento Santiago (narrador não confiável)",e:"Bentinho relembra a infância e o amor por Capitu, alimentando a suspeita de que ela o traiu com o amigo Escobar — sem provas, deixando a dúvida ao leitor.",tm:"ciúme, dúvida, memória, narrador não confiável",w:"o grande enigma 'Capitu traiu?' é clássico de prova; ironia machadiana."},
+ {t:"Iracema",a:"José de Alencar",y:"1865",m:"Romantismo (indianismo)",n:"3ª pessoa",e:"A índia tabajara Iracema se apaixona pelo colonizador Martim; do amor nasce Moacir, numa lenda sobre a origem do Ceará. 'Iracema' é anagrama de 'América'.",tm:"amor idealizado, mito de fundação, indianismo",w:"prosa poética romântica; idealização do índio e do nacional."},
+ {t:"Macunaíma",a:"Mário de Andrade",y:"1928",m:"Modernismo (1ª fase)",n:"3ª pessoa (rapsódia)",e:"As aventuras fantásticas de Macunaíma, o 'herói sem nenhum caráter', que reúne lendas e folclore de todo o Brasil.",tm:"identidade nacional, folclore, crítica e humor",w:"experimento modernista de 22; síntese do 'ser brasileiro'."},
+ {t:"Memórias Póstumas de Brás Cubas",a:"Machado de Assis",y:"1881",m:"Realismo (marco inicial no Brasil)",n:"1ª pessoa — Brás Cubas, o 'defunto autor'",e:"Já morto, Brás Cubas narra a própria vida em capítulos curtos e irônicos, sem heroísmo, expondo a hipocrisia da elite.",tm:"ironia, pessimismo, crítica social, morte",w:"inaugura o Realismo brasileiro; narrador morto e digressivo."},
+ {t:"O Cortiço",a:"Aluísio Azevedo",y:"1890",m:"Naturalismo",n:"3ª pessoa",e:"A vida coletiva de um cortiço no Rio e a ascensão do ganancioso João Romão; o ambiente determina o comportamento das pessoas.",tm:"determinismo, ambiente social, instinto, exploração",w:"principal romance naturalista; personagem coletivo e determinismo."},
+ {t:"Quarto de Despejo",a:"Carolina Maria de Jesus",y:"1960",m:"Modernismo / literatura de testemunho",n:"1ª pessoa (diário real da autora)",e:"Diário verídico de Carolina, catadora de papel na favela do Canindé (SP), que registra a fome e a luta diária para sustentar os filhos.",tm:"fome, favela, marginalização, voz feminina e negra",w:"testemunho real e raro de uma autora negra e periférica."},
+ {t:"Vidas Secas",a:"Graciliano Ramos",y:"1938",m:"Modernismo (2ª fase, Romance de 30)",n:"3ª pessoa (discurso indireto livre)",e:"A família de retirantes — Fabiano, sinhá Vitória, os dois filhos e a cachorra Baleia — luta para sobreviver fugindo da seca pelo sertão.",tm:"seca, miséria, incomunicabilidade, retirância",w:"capítulos independentes; até a cachorra Baleia tem foco narrativo."},
+ {t:"Os Lusíadas",a:"Luís de Camões",y:"1572",m:"Classicismo (Portugal)",n:"narrador épico (3ª pessoa)",e:"Epopeia em dez cantos que narra a viagem de Vasco da Gama às Índias, entremeando a história e os mitos de Portugal.",tm:"navegações, heroísmo, nação, mitologia",w:"obra-prima da língua; episódios Adamastor, Inês de Castro e Velho do Restelo."},
+ {t:"Os Sertões",a:"Euclides da Cunha",y:"1902",m:"Pré-modernismo",n:"3ª pessoa (ensaístico)",e:"Relata a Guerra de Canudos em três partes — A Terra, O Homem, A Luta — denunciando o massacre dos sertanejos.",tm:"sertão, ciência, crítica social, fanatismo",w:"marco do pré-modernismo; visão crítica do Brasil profundo."},
+ {t:"Morte e Vida Severina",a:"João Cabral de Melo Neto",y:"1955",m:"Modernismo (3ª fase)",n:"poema dramático (auto de Natal)",e:"O retirante Severino foge da seca rumo ao Recife, encontrando a morte pelo caminho — e, ao final, um fio de esperança no nascimento de uma criança.",tm:"seca, retirância, vida e morte, nordeste",w:"poesia social com rigor formal; clássico de leitura obrigatória."},
+ {t:"Grande Sertão: Veredas",a:"Guimarães Rosa",y:"1956",m:"Modernismo (3ª fase)",n:"1ª pessoa — Riobaldo narra a um interlocutor",e:"O ex-jagunço Riobaldo recorda a vida no sertão, a guerra entre bandos, o amor por Diadorim e a dúvida sobre um pacto com o diabo.",tm:"sertão metafísico, bem e mal, amor, linguagem inventiva",w:"linguagem revolucionária; um dos maiores romances brasileiros."},
+ {t:"Mensagem",a:"Fernando Pessoa",y:"1934",m:"Modernismo (Portugal)",n:"eu lírico (poesia)",e:"Único livro em português que Pessoa publicou em vida; poemas que reconstroem a história e o mito de Portugal, com tom sebastianista.",tm:"nação, mito, sebastianismo, heroísmo",w:"síntese poética da identidade portuguesa; ortônimo de Pessoa."},
+ {t:"Auto da Compadecida",a:"Ariano Suassuna",y:"1955",m:"Literatura contemporânea (regionalista)",n:"peça teatral (auto)",e:"As trapaças de João Grilo e Chicó no sertão nordestino terminam num julgamento no céu, em que Nossa Senhora intercede pelos pecadores.",tm:"cultura popular, fé, humor, justiça",w:"une teatro popular e religiosidade; muito cobrado e adaptado."},
+];
+function renderFichas(sid,bk,i){
+  view.innerHTML=`<button class="back" id="bk">‹ Literatura</button><div class="crumb">📖 Fichas das obras</div>
+   <div class="ofnote">Resumos de estudo <b>originais</b>. Para respeitar direitos autorais, <b>não reproduzo o texto das obras</b> — apenas fatos e sínteses.</div>
+   <div id="fichas"></div>`;
+  $("bk").onclick=()=>renderBand(sid,bk);
+  const box=$("fichas");
+  FICHAS.forEach((f,idx)=>{
+    const c=document.createElement("div");c.className="fcard";
+    c.innerHTML=`<div class="fhead"><div><div class="ft">${f.t}</div><div class="fmeta">${f.a} · ${f.y}</div></div><div class="fchev">+</div></div>
+      <div class="fbody"><p><b>Movimento:</b> ${f.m}</p><p><b>Narrador:</b> ${f.n}</p><p><b>Enredo:</b> ${f.e}</p><p><b>Temas:</b> ${f.tm}</p><p><b>Por que cai:</b> ${f.w}</p></div>`;
+    c.querySelector(".fhead").onclick=()=>{c.classList.toggle("open");c.querySelector(".fchev").textContent=c.classList.contains("open")?"−":"+";};
+    box.appendChild(c);
+  });
+  view.scrollTop=0;
+}
+
+const ING={
+fund1:[
+ {code:"E11",ano:"1º ano",title:"Vocabulário",
+  concept:`<p>Comece pelo essencial: substantivos do dia a dia. <b>house</b> = casa, <b>water</b> = água, <b>friend</b> = amigo.</p>`,
+  ex:{q:"O que significa 'book'?",steps:["objeto de leitura","livro"],a:"livro"},
+  gen:()=>trGen(w=>`O que significa<br>"${w}"?`,[["house","casa"],["dog","cachorro"],["water","água"],["book","livro"],["friend","amigo"],["night","noite"],["school","escola"],["food","comida"],["work","trabalho"],["city","cidade"],["world","mundo"],["life","vida"],["child","criança"],["woman","mulher"],["man","homem"],["year","ano"],["hand","mão"],["love","amor"],["day","dia"],["tree","árvore"]])},
+ {code:"E12",ano:"2º ano",title:"Verbo 'to be'",
+  concept:`<p>O verbo <b>to be</b> (ser/estar): <b>I am</b>, <b>you/we/they are</b>, <b>he/she/it is</b>.</p>`,
+  ex:{q:"'She ___ a doctor.'",steps:["he/she/it → is","is"],a:"is"},
+  gen:()=>fcGen([{q:"'She ___ a doctor.'",o:["is","are","am","be"],c:0},{q:"'They ___ happy.'",o:["are","is","am","be"],c:0},{q:"'I ___ a student.'",o:["am","is","are","be"],c:0},{q:"'We ___ friends.'",o:["are","is","am","be"],c:0},{q:"'He ___ tall.'",o:["is","are","am","be"],c:0},{q:"'It ___ cold today.'",o:["is","are","am","be"],c:0}])},
+ {code:"E13",ano:"3º ano",title:"Plural irregular",
+  concept:`<p>Alguns plurais não seguem o '-s': <b>child→children</b>, <b>man→men</b>, <b>foot→feet</b>.</p>`,
+  ex:{q:"Plural de 'child'?",steps:["irregular","children"],a:"children"},
+  gen:()=>trGen(w=>`Plural de "${w}"?`,[["child","children"],["man","men"],["woman","women"],["foot","feet"],["tooth","teeth"],["mouse","mice"],["person","people"],["leaf","leaves"],["knife","knives"],["city","cities"],["baby","babies"],["box","boxes"]])},
+],
+fund2:[
+ {code:"E21",ano:"6º ano",title:"Presente, passado, futuro",
+  concept:`<p>Identifique o tempo pela forma do verbo: <b>goes</b> (presente), <b>went</b> (passado), <b>will go</b> (futuro).</p>`,
+  ex:{q:"'will play' está no...",steps:["will → futuro","futuro"],a:"futuro"},
+  gen:()=>clsGen(w=>`"${w}" está no...`,[["went","passado"],["goes","presente"],["will go","futuro"],["played","passado"],["plays","presente"],["will play","futuro"],["ate","passado"],["eats","presente"],["saw","passado"],["sees","presente"],["will see","futuro"],["bought","passado"]],["presente","passado","futuro"])},
+ {code:"E22",ano:"7º ano",title:"Comparativos",
+  concept:`<p>Comparativo curto: <b>+ -er</b> (big→bigger). Irregulares: <b>good→better</b>, <b>bad→worse</b>.</p>`,
+  ex:{q:"Comparativo de 'good'?",steps:["irregular","better"],a:"better"},
+  gen:()=>trGen(w=>`Comparativo de "${w}"?`,[["good","better"],["bad","worse"],["big","bigger"],["happy","happier"],["easy","easier"],["hot","hotter"],["fast","faster"],["large","larger"],["busy","busier"],["small","smaller"]])},
+ {code:"E23",ano:"9º ano",title:"Question words",
+  concept:`<p>Palavras de pergunta: <b>What</b> (o quê), <b>Who</b> (quem), <b>Where</b> (onde), <b>When</b> (quando), <b>Why</b> (por quê).</p>`,
+  ex:{q:"'___ do you live?' (lugar)",steps:["lugar → Where","Where"],a:"Where"},
+  gen:()=>fcGen([{q:"'___ is your name?'",o:["What","Who","Where","When"],c:0},{q:"'___ do you live?' (lugar)",o:["Where","What","Who","When"],c:0},{q:"'___ are you?' (pessoa)",o:["Who","What","Where","Why"],c:0},{q:"'___ is the party?' (tempo)",o:["When","Where","Who","What"],c:0},{q:"'___ are you sad?' (motivo)",o:["Why","What","Where","When"],c:0},{q:"'___ much is it?' (preço)",o:["How","What","Who","When"],c:0}])},
+],
+medio:[
+ {code:"E31",ano:"1ª série",title:"Tempos verbais (revisão)",
+  concept:`<p><b>Present simple</b> (rotina), <b>past simple</b> (acabou), <b>present continuous</b> (-ing, agora), <b>present perfect</b> (have/has + particípio), <b>future</b> (will).</p>`,
+  ex:{q:"'She is working now.'",steps:["be + -ing","present continuous"],a:"present continuous"},
+  gen:()=>clsGen(s=>`"${s}"`,[["She works here.","present simple"],["She worked yesterday.","past simple"],["She is working now.","present continuous"],["She has worked here for years.","present perfect"],["She will work tomorrow.","future"],["They play soccer.","present simple"],["They played soccer.","past simple"],["They are playing now.","present continuous"],["I have finished it.","present perfect"],["I will call you.","future"]],["present simple","past simple","present continuous","present perfect","future"])},
+ {code:"E32",ano:"2ª série",title:"Falsos cognatos",
+  concept:`<p>Cuidado: palavras parecidas com o português enganam. <b>actually</b> = na verdade (não 'atualmente'); <b>library</b> = biblioteca (não 'livraria').</p>`,
+  ex:{q:"'pretend' significa...",steps:["não é 'pretender'","fingir"],a:"fingir"},
+  gen:()=>{const b=[["actually","na verdade","atualmente"],["pretend","fingir","pretender"],["library","biblioteca","livraria"],["parents","pais","parentes"],["push","empurrar","puxar"],["realize","perceber","realizar"],["fabric","tecido","fábrica"],["college","faculdade","colégio"],["novel","romance","novela"],["exit","saída","êxito"],["sensible","sensato","sensível"],["lecture","palestra","leitura"]];const it=choice(b);const others=shuffle(b.filter(x=>x[1]!==it[1]&&x[1]!==it[2])).slice(0,2).map(x=>x[1]);return{prompt:`O que significa<br>"${it[0]}"?`,small:true,opts:strOpts(it[1],[it[2],...others])};}},
+ {code:"E33",ano:"2ª série",title:"Linking words",
+  concept:`<p>Conectivos em inglês: <b>however</b> (contraste), <b>therefore</b> (conclusão), <b>moreover</b> (adição), <b>because</b> (causa).</p>`,
+  ex:{q:"'however' indica...",steps:["contraste","contraste"],a:"contraste"},
+  gen:()=>clsGen(w=>`"${w}" indica...`,[["however","contraste"],["although","contraste"],["nevertheless","contraste"],["therefore","conclusão"],["thus","conclusão"],["so","conclusão"],["moreover","adição"],["furthermore","adição"],["in addition","adição"],["because","causa"],["since","causa"],["as","causa"]],["contraste","conclusão","adição","causa"])},
+ {code:"E34",ano:"3ª série",title:"Reading comprehension",
+  concept:`<p>Leia o texto curto e responda. (Amostra de textos — não é gerado.)</p>`,
+  ex:{q:"Read and answer",steps:["find the answer in the text"],a:"—"},
+  gen:()=>{const items=[
+    {t:'"Maria wakes up at 6 a.m. every day to study before work. She dreams of becoming a doctor."',q:"What does Maria want to be?",o:["a doctor","a teacher","a nurse","a writer"],c:0},
+    {t:'"The museum is closed on Mondays. It opens Tuesday to Sunday, from 9 a.m. to 5 p.m."',q:"When is the museum closed?",o:["on Mondays","on Sundays","every day","at 9 a.m."],c:0},
+    {t:'"Tom did not go to the party because he was sick."',q:"Why did Tom miss the party?",o:["he was sick","he was busy","he was tired","he forgot"],c:0},
+    {t:'"Recycling helps the planet by reducing waste and saving energy."',q:"Recycling helps by...",o:["reducing waste","making money","creating jobs","cleaning the air"],c:0},
+    {t:'"She has lived in London for ten years, but she still misses her hometown."',q:"How does she feel about her hometown?",o:["she misses it","she hates it","she forgot it","she never left it"],c:0},
+    {t:'"The store offers free delivery for orders over 50 dollars."',q:"When is delivery free?",o:["for orders over $50","always","never","for orders under $50"],c:0}];
+    const it=choice(items);return{prompt:`${it.t}<br><br><span style="font-size:.8em;color:var(--mute)">${it.q}</span>`,small:true,opts:shuffle(it.o.map((s,i)=>({html:s,correct:i===it.c})))};}},
+ {code:"E35",ano:"3ª série",title:"Preposições (in/on/at)",
+  concept:`<p><b>in</b> (ano, mês, país), <b>on</b> (dia, data, superfície), <b>at</b> (hora, lugar específico).</p>`,
+  ex:{q:"'I was born ___ 1990.'",steps:["ano → in","in"],a:"in"},
+  gen:()=>fcGen([{q:"'I was born ___ 1990.'",o:["in","on","at","to"],c:0},{q:"'The meeting is ___ Monday.'",o:["on","in","at","to"],c:0},{q:"'See you ___ 5 p.m.'",o:["at","in","on","to"],c:0},{q:"'She lives ___ Brazil.'",o:["in","on","at","to"],c:0},{q:"'The book is ___ the table.'",o:["on","in","at","to"],c:0},{q:"'We meet ___ night.'",o:["at","in","on","to"],c:0}])},
+],
+};
+
+const FIS={
+fund1:[
+ {code:"F11",ano:"1º ano",title:"Velocidade média",typed:true,
+  concept:`<p>Velocidade média é a distância percorrida dividida pelo tempo gasto.</p><div class="formula">v = Δs / Δt</div>`,
+  ex:{q:"120 km em 2 h",steps:["120 ÷ 2","= 60 km/h"],a:"60"},
+  gen:()=>{const v=rint(20,100),t=rint(2,5);return{prompt:`Percorre ${v*t} km em ${t} h.<br>Velocidade média (km/h)?`,small:true,answer:v};}},
+ {code:"F12",ano:"2º ano",title:"Densidade",typed:true,
+  concept:`<p>Densidade é a massa contida em cada unidade de volume.</p><div class="formula">d = m / V</div>`,
+  ex:{q:"massa 60 g, volume 20 cm³",steps:["60 ÷ 20","= 3 g/cm³"],a:"3"},
+  gen:()=>{const d=rint(1,9),V=rint(2,8);return{prompt:`Massa ${d*V} g, volume ${V} cm³.<br>Densidade (g/cm³)?`,small:true,answer:d};}},
+],
+fund2:[
+ {code:"F21",ano:"6º ano",title:"Movimento uniforme (MRU)",typed:true,
+  concept:`<p>No MRU a velocidade é constante; a posição cresce de forma linear.</p><div class="formula">s = s₀ + v·t</div>`,
+  ex:{q:"s₀=10, v=5, t=4",steps:["10 + 5·4","= 30 m"],a:"30"},
+  gen:()=>{const s0=rint(0,20),v=rint(1,15),t=rint(1,8);return{prompt:`s₀=${s0} m, v=${v} m/s, t=${t} s.<br>Posição s (m)?`,small:true,answer:s0+v*t};}},
+ {code:"F22",ano:"7º ano",title:"Aceleração",typed:true,
+  concept:`<p>Aceleração é a variação da velocidade dividida pelo tempo.</p><div class="formula">a = Δv / Δt</div>`,
+  ex:{q:"de 0 a 20 m/s em 4 s",steps:["20 ÷ 4","= 5 m/s²"],a:"5"},
+  gen:()=>{const a=rint(1,6),t=rint(2,6),v0=rint(0,10);return{prompt:`Velocidade vai de ${v0} a ${v0+a*t} m/s<br>em ${t} s. Aceleração (m/s²)?`,small:true,answer:a};}},
+ {code:"F23",ano:"8º ano",title:"Força (2ª lei de Newton)",typed:true,
+  concept:`<p>A força resultante é o produto da massa pela aceleração.</p><div class="formula">F = m · a</div>`,
+  ex:{q:"m=5 kg, a=3 m/s²",steps:["5 · 3","= 15 N"],a:"15"},
+  gen:()=>{const m=rint(1,20),a=rint(1,10);return{prompt:`Massa ${m} kg, aceleração ${a} m/s².<br>Força (N)?`,small:true,answer:m*a};}},
+ {code:"F24",ano:"9º ano",title:"Peso",typed:true,
+  concept:`<p>Peso é a força com que a gravidade puxa um corpo (use g = 10 m/s²).</p><div class="formula">P = m · g</div>`,
+  ex:{q:"m=7 kg, g=10",steps:["7 · 10","= 70 N"],a:"70"},
+  gen:()=>{const m=rint(1,50);return{prompt:`Massa ${m} kg (g=10 m/s²).<br>Peso (N)?`,small:true,answer:m*10};}},
+],
+medio:[
+ {code:"F31",ano:"1ª série",title:"MRUV (velocidade)",typed:true,
+  concept:`<p>No MRUV a velocidade muda a uma taxa constante (a aceleração).</p><div class="formula">v = v₀ + a·t</div>`,
+  ex:{q:"v₀=2, a=3, t=4",steps:["2 + 3·4","= 14 m/s"],a:"14"},
+  gen:()=>{const v0=rint(0,15),a=rint(1,8),t=rint(1,6);return{prompt:`v₀=${v0} m/s, a=${a} m/s², t=${t} s.<br>v (m/s)?`,small:true,answer:v0+a*t};}},
+ {code:"F32",ano:"1ª série",title:"Energia cinética",typed:true,
+  concept:`<p>Energia do movimento: depende da massa e do quadrado da velocidade.</p><div class="formula">Ec = m·v² / 2</div>`,
+  ex:{q:"m=2 kg, v=4 m/s",steps:["2·16/2","= 16 J"],a:"16"},
+  gen:()=>{const m=rint(1,10),v=2*rint(1,5);return{prompt:`m=${m} kg, v=${v} m/s.<br>Energia cinética (J)?`,small:true,answer:m*v*v/2};}},
+ {code:"F33",ano:"1ª série",title:"Energia potencial",typed:true,
+  concept:`<p>Energia armazenada pela altura num campo gravitacional (g = 10).</p><div class="formula">Ep = m·g·h</div>`,
+  ex:{q:"m=2 kg, h=5 m",steps:["2·10·5","= 100 J"],a:"100"},
+  gen:()=>{const m=rint(1,20),h=rint(1,15);return{prompt:`m=${m} kg, h=${h} m (g=10).<br>Energia potencial (J)?`,small:true,answer:m*10*h};}},
+ {code:"F34",ano:"1ª série",title:"Trabalho",typed:true,
+  concept:`<p>Trabalho de uma força constante na direção do movimento.</p><div class="formula">W = F · d</div>`,
+  ex:{q:"F=10 N, d=5 m",steps:["10·5","= 50 J"],a:"50"},
+  gen:()=>{const F=rint(2,30),d=rint(1,15);return{prompt:`Força ${F} N, deslocamento ${d} m.<br>Trabalho (J)?`,small:true,answer:F*d};}},
+ {code:"F35",ano:"2ª série",title:"Potência",typed:true,
+  concept:`<p>Potência é o trabalho realizado por unidade de tempo.</p><div class="formula">P = W / t</div>`,
+  ex:{q:"W=200 J em 4 s",steps:["200 ÷ 4","= 50 W"],a:"50"},
+  gen:()=>{const P=rint(10,100),t=rint(2,8);return{prompt:`Trabalho ${P*t} J em ${t} s.<br>Potência (W)?`,small:true,answer:P};}},
+ {code:"F36",ano:"2ª série",title:"Calor sensível",typed:true,
+  concept:`<p>Calor para variar a temperatura sem mudar de estado (água: c = 1 cal/g°C).</p><div class="formula">Q = m·c·ΔT</div>`,
+  ex:{q:"m=100 g, ΔT=20°C",steps:["100·1·20","= 2000 cal"],a:"2000"},
+  gen:()=>{const m=rint(10,100),dT=rint(5,40);return{prompt:`${m} g de água (c=1), ΔT=${dT}°C.<br>Calor Q (cal)?`,small:true,answer:m*dT};}},
+ {code:"F37",ano:"2ª série",title:"Lei de Ohm",typed:true,
+  concept:`<p>A tensão é o produto da resistência pela corrente.</p><div class="formula">U = R · i</div>`,
+  ex:{q:"R=10 Ω, i=2 A",steps:["10·2","= 20 V"],a:"20"},
+  gen:()=>{const R=rint(2,20),i=rint(1,10);return{prompt:`R=${R} Ω, i=${i} A.<br>Tensão U (V)?`,small:true,answer:R*i};}},
+ {code:"F38",ano:"3ª série",title:"Potência elétrica",typed:true,
+  concept:`<p>A potência dissipada é o produto da tensão pela corrente.</p><div class="formula">P = U · i</div>`,
+  ex:{q:"U=12 V, i=2 A",steps:["12·2","= 24 W"],a:"24"},
+  gen:()=>{const U=rint(2,20),i=rint(1,10);return{prompt:`U=${U} V, i=${i} A.<br>Potência (W)?`,small:true,answer:U*i};}},
+ {code:"F39",ano:"3ª série",title:"Ondas",typed:true,
+  concept:`<p>A velocidade de uma onda relaciona comprimento de onda e frequência.</p><div class="formula">v = λ · f</div>`,
+  ex:{q:"λ=2 m, f=5 Hz",steps:["2·5","= 10 m/s"],a:"10"},
+  gen:()=>{const l=rint(1,10),f=rint(2,20);return{prompt:`λ=${l} m, f=${f} Hz.<br>Velocidade (m/s)?`,small:true,answer:l*f};}},
+ {code:"F3A",ano:"3ª série",title:"Leis de Newton",
+  concept:`<p><b>1ª</b> inércia (sem força resultante, o estado se mantém); <b>2ª</b> F=ma; <b>3ª</b> ação e reação.</p>`,
+  ex:{q:"'Toda ação tem reação igual e oposta.'",steps:["3ª lei","ação e reação"],a:"3ª lei (ação e reação)"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Um corpo em repouso tende a continuar em repouso.","1ª lei (inércia)"],["A força é igual à massa vezes a aceleração.","2ª lei (F=ma)"],["Toda ação gera uma reação igual e contrária.","3ª lei (ação e reação)"],["Sem força resultante, a velocidade não muda.","1ª lei (inércia)"],["Ao empurrar a parede, ela te empurra de volta.","3ª lei (ação e reação)"],["Dobrar a força dobra a aceleração.","2ª lei (F=ma)"]],["1ª lei (inércia)","2ª lei (F=ma)","3ª lei (ação e reação)"])},
+ {code:"F3B",ano:"3ª série",title:"Quantidade de movimento",typed:true,
+  concept:`<p>Momento linear: o quanto de movimento um corpo tem.</p><div class="formula">Q = m · v</div>`,
+  ex:{q:"m=2 kg, v=5 m/s",steps:["2·5","= 10 kg·m/s"],a:"10"},
+  gen:()=>{const m=rint(1,20),v=rint(1,20);return{prompt:`Massa ${m} kg, velocidade ${v} m/s.<br>Quantidade de movimento (kg·m/s)?`,small:true,answer:m*v};}},
+ {code:"F3C",ano:"3ª série",title:"Pressão hidrostática (Stevin)",typed:true,
+  concept:`<p>A pressão de uma coluna de líquido depende da profundidade (água: d=1000, g=10).</p><div class="formula">p = d · g · h</div>`,
+  ex:{q:"h=2 m de água",steps:["1000·10·2","= 20000 Pa"],a:"20000"},
+  gen:()=>{const h=rint(1,10);return{prompt:`Coluna de água de ${h} m (d=1000 kg/m³, g=10).<br>Pressão (Pa)?`,small:true,answer:10000*h};}},
+ {code:"F3D",ano:"2ª série",title:"Escalas termométricas",typed:true,
+  concept:`<p>Conversão de Celsius para Fahrenheit.</p><div class="formula">F = 9·C/5 + 32</div>`,
+  ex:{q:"25°C em °F",steps:["9·25/5 + 32","= 77°F"],a:"77"},
+  gen:()=>{const C=5*rint(0,8);return{prompt:`${C} °C equivalem a quantos °F?<br>(F = 9C/5 + 32)`,small:true,answer:9*C/5+32};}},
+ {code:"F3E",ano:"3ª série",title:"Consumo de energia elétrica",typed:true,
+  concept:`<p>Energia consumida = potência × tempo (em kWh).</p><div class="formula">E = P · t</div>`,
+  ex:{q:"2 kW por 3 h",steps:["2·3","= 6 kWh"],a:"6"},
+  gen:()=>{const P=rint(1,5),t=rint(2,10);return{prompt:`Aparelho de ${P} kW ligado por ${t} h.<br>Energia consumida (kWh)?`,small:true,answer:P*t};}},
+ {code:"F3F",ano:"3ª série",title:"Leis de Kepler",
+  concept:`<p><b>1ª</b> órbitas elípticas; <b>2ª</b> áreas iguais em tempos iguais; <b>3ª</b> T² proporcional a R³.</p>`,
+  ex:{q:"'As órbitas dos planetas são elipses':",steps:["1ª lei","órbitas elípticas"],a:"1ª lei (órbitas)"},
+  gen:()=>clsGen(s=>`"${s}"`,[["As órbitas dos planetas são elipses, com o Sol num foco.","1ª lei (órbitas)"],["O planeta varre áreas iguais em tempos iguais.","2ª lei (áreas)"],["O quadrado do período é proporcional ao cubo do raio.","3ª lei (períodos)"],["Mais perto do Sol, o planeta vai mais rápido.","2ª lei (áreas)"]],["1ª lei (órbitas)","2ª lei (áreas)","3ª lei (períodos)"])},
+ {code:"F3G",ano:"3ª série",title:"Óptica: reflexão e refração",
+  concept:`<p><b>Reflexão</b>: a luz volta ao mesmo meio (espelhos). <b>Refração</b>: a luz muda de meio e de direção (lentes, água).</p>`,
+  ex:{q:"Lápis 'quebrado' dentro do copo d'água:",steps:["mudou de meio","refração"],a:"refração"},
+  gen:()=>clsGen(s=>`"${s}"`,[["A luz volta ao bater num espelho.","reflexão"],["A luz muda de direção ao passar do ar para a água.","refração"],["O lápis parece quebrado dentro do copo.","refração"],["Você se enxerga no espelho.","reflexão"],["O arco-íris decompõe a luz branca.","refração"]],["reflexão","refração"])},
+ {code:"F3H",ano:"1ª série",title:"MRUV: distância",typed:true,
+  concept:`<p>No MRUV a distância depende da velocidade inicial e da aceleração.</p><div class="formula">Δs = v₀·t + ½·a·t²</div>`,
+  ex:{q:"v₀=2, a=4, t=3",steps:["2·3 + ½·4·9","= 6 + 18 = 24 m"],a:"24"},
+  gen:()=>{const a=2*rint(1,5),v0=rint(0,10),t=rint(1,6);return{prompt:`v₀=${v0} m/s, a=${a} m/s², t=${t} s.<br>Distância Δs (m)?`,small:true,answer:v0*t+a*t*t/2};}},
+ {code:"F3I",ano:"1ª série",title:"Queda livre",typed:true,
+  concept:`<p>Em queda do repouso (g=10), a altura cresce com o quadrado do tempo.</p><div class="formula">h = ½·g·t² = 5·t²</div>`,
+  ex:{q:"cai por 3 s",steps:["5·9","= 45 m"],a:"45"},
+  gen:()=>{const t=rint(1,6);return{prompt:`Cai do repouso por ${t} s (g=10).<br>Altura da queda (m)?`,small:true,answer:5*t*t};}},
+ {code:"F3J",ano:"1ª série",title:"Velocidade na queda",typed:true,
+  concept:`<p>Pela equação de Torricelli, a velocidade ao chegar ao solo é v = √(2·g·h).</p><div class="formula">v = √(2·g·h)</div>`,
+  ex:{q:"cai de 5 m (g=10)",steps:["√(2·10·5)=√100","= 10 m/s"],a:"10"},
+  gen:()=>{const b=[[5,10],[20,20],[45,30],[80,40],[125,50]],c=choice(b);return{prompt:`Cai de ${c[0]} m (g=10).<br>Velocidade ao atingir o solo (m/s)?`,small:true,answer:c[1]};}},
+ {code:"F3K",ano:"2ª série",title:"Força de atrito",typed:true,
+  concept:`<p>O atrito é o coeficiente vezes a força normal.</p><div class="formula">Fat = μ · N</div>`,
+  ex:{q:"μ=0,2 e N=50 N",steps:["0,2·50","= 10 N"],a:"10"},
+  gen:()=>{const k=rint(1,5),N=10*rint(1,10);return{prompt:`Coeficiente μ=0,${k} e normal N=${N} N.<br>Força de atrito (N)?`,small:true,answer:k*N/10};}},
+ {code:"F3L",ano:"2ª série",title:"Aceleração centrípeta",typed:true,
+  concept:`<p>No movimento circular, a aceleração aponta para o centro.</p><div class="formula">a = v² / r</div>`,
+  ex:{q:"v=4 m/s, r=2 m",steps:["16 ÷ 2","= 8 m/s²"],a:"8"},
+  gen:()=>{const v=rint(2,10),vs=v*v,ds=[];for(let i=1;i<=vs;i++)if(vs%i===0)ds.push(i);const r=choice(ds);return{prompt:`v=${v} m/s, raio ${r} m.<br>Aceleração centrípeta (m/s²)?`,small:true,answer:vs/r};}},
+ {code:"F3M",ano:"2ª série",title:"Impulso",typed:true,
+  concept:`<p>Impulso é a força aplicada durante um intervalo de tempo.</p><div class="formula">I = F · Δt</div>`,
+  ex:{q:"F=10 N, Δt=3 s",steps:["10·3","= 30 N·s"],a:"30"},
+  gen:()=>{const F=rint(2,20),t=rint(1,8);return{prompt:`Força ${F} N durante ${t} s.<br>Impulso (N·s)?`,small:true,answer:F*t};}},
+ {code:"F3N",ano:"2ª série",title:"Lei de Hooke",typed:true,
+  concept:`<p>A força de uma mola é proporcional à deformação.</p><div class="formula">F = k · x</div>`,
+  ex:{q:"k=20 N/m, x=3 m",steps:["20·3","= 60 N"],a:"60"},
+  gen:()=>{const k=rint(10,100),x=rint(1,5);return{prompt:`Constante ${k} N/m, deformação ${x} m.<br>Força elástica (N)?`,small:true,answer:k*x};}},
+ {code:"F3O",ano:"2ª série",title:"Pressão",typed:true,
+  concept:`<p>Pressão é a força distribuída sobre uma área.</p><div class="formula">p = F / A</div>`,
+  ex:{q:"F=40 N, A=2 m²",steps:["40 ÷ 2","= 20 Pa"],a:"20"},
+  gen:()=>{const p=rint(2,20),A=rint(2,10);return{prompt:`Força ${p*A} N sobre área ${A} m².<br>Pressão (Pa)?`,small:true,answer:p};}},
+ {code:"F3P",ano:"3ª série",title:"Empuxo (Arquimedes)",typed:true,
+  concept:`<p>O empuxo é o peso do líquido deslocado (água: d=1000, g=10).</p><div class="formula">E = d · V · g</div>`,
+  ex:{q:"V=2 m³ de água",steps:["1000·2·10","= 20000 N"],a:"20000"},
+  gen:()=>{const V=rint(1,5);return{prompt:`Corpo desloca ${V} m³ de água (d=1000, g=10).<br>Empuxo (N)?`,small:true,answer:10000*V};}},
+ {code:"F3Q",ano:"3ª série",title:"Torque (momento)",typed:true,
+  concept:`<p>O torque mede o efeito de giro de uma força.</p><div class="formula">M = F · d</div>`,
+  ex:{q:"F=20 N, d=3 m",steps:["20·3","= 60 N·m"],a:"60"},
+  gen:()=>{const F=rint(2,30),d=rint(1,10);return{prompt:`Força ${F} N a ${d} m do eixo.<br>Torque (N·m)?`,small:true,answer:F*d};}},
+ {code:"F3R",ano:"2ª série",title:"Calor latente",typed:true,
+  concept:`<p>Calor para mudar de estado, sem mudar a temperatura.</p><div class="formula">Q = m · L</div>`,
+  ex:{q:"m=10 g de gelo, L=80",steps:["10·80","= 800 cal"],a:"800"},
+  gen:()=>{const b=[["gelo derretendo",80],["água vaporizando",540]],c=choice(b),m=rint(5,50);return{prompt:`${m} g, ${c[0]} (L=${c[1]} cal/g).<br>Calor (cal)?`,small:true,answer:m*c[1]};}},
+ {code:"F3S",ano:"2ª série",title:"Escala Kelvin",typed:true,
+  concept:`<p>A escala absoluta soma 273 à temperatura em Celsius.</p><div class="formula">K = °C + 273</div>`,
+  ex:{q:"27°C em Kelvin",steps:["27 + 273","= 300 K"],a:"300"},
+  gen:()=>{const C=rint(0,100);return{prompt:`${C} °C em Kelvin?`,small:true,answer:C+273};}},
+ {code:"F3T",ano:"3ª série",title:"Transformação isotérmica",typed:true,
+  concept:`<p>A temperatura constante, pressão e volume são inversamente proporcionais (Boyle).</p><div class="formula">P₁·V₁ = P₂·V₂</div>`,
+  ex:{q:"P₁=4, V₁=3, V₂=6",steps:["4·3/6","= 2 atm"],a:"2"},
+  gen:()=>{const P1=rint(2,6),V1=rint(2,6),prod=P1*V1,ds=[];for(let i=1;i<=prod;i++)if(prod%i===0&&i!==V1)ds.push(i);const V2=choice(ds);return{prompt:`Isotérmica: P₁=${P1} atm, V₁=${V1} L, V₂=${V2} L.<br>Pressão P₂ (atm)?`,small:true,answer:prod/V2};}},
+ {code:"F3U",ano:"3ª série",title:"1ª lei da termodinâmica",typed:true,
+  concept:`<p>A energia interna varia com o calor recebido menos o trabalho realizado.</p><div class="formula">ΔU = Q − W</div>`,
+  ex:{q:"Q=50 J, W=20 J",steps:["50 − 20","= 30 J"],a:"30"},
+  gen:()=>{const Q=rint(10,100),W=rint(0,80);return{prompt:`Gás recebe Q=${Q} J e realiza W=${W} J.<br>Variação ΔU (J)?`,small:true,answer:Q-W};}},
+ {code:"F3V",ano:"3ª série",title:"Lentes (equação de Gauss)",typed:true,
+  concept:`<p>Relaciona foco, distância do objeto e da imagem.</p><div class="formula">1/f = 1/p + 1/p'</div>`,
+  ex:{q:"f=10, p=15",steps:["1/10 = 1/15 + 1/p'","p' = 30 cm"],a:"30"},
+  gen:()=>{const b=[[10,15,30],[10,20,20],[10,30,15],[20,30,60],[15,30,30],[12,24,24],[8,24,12],[6,12,12]],c=choice(b);return{prompt:`Lente f=${c[0]} cm, objeto a ${c[1]} cm.<br>Distância da imagem p' (cm)?`,small:true,answer:c[2]};}},
+ {code:"F3W",ano:"3ª série",title:"Espelhos e lentes",
+  concept:`<p><b>Côncavo</b> e <b>convergente</b> concentram a luz; <b>convexo</b> e <b>divergente</b> espalham. Imagem <b>real</b> projeta-se; <b>virtual</b> não.</p>`,
+  ex:{q:"Lente que concentra os raios:",steps:["foco real","convergente"],a:"convergente"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Lente que concentra os raios num foco.","convergente"],["Lente de bordas grossas que espalha a luz.","divergente"],["Espelho que reflete a luz para dentro.","côncavo"],["Espelho que reflete a luz para fora (retrovisor).","convexo"],["Imagem que pode ser projetada num anteparo.","imagem real"],["Imagem que aparece 'atrás' do espelho.","imagem virtual"]],["convergente","divergente","côncavo","convexo","imagem real","imagem virtual"])},
+ {code:"F3X",ano:"1ª série",title:"Período e frequência",typed:true,
+  concept:`<p>Frequência é o número de ciclos por segundo (Hz).</p><div class="formula">f = nº de ciclos / tempo</div>`,
+  ex:{q:"12 ciclos em 3 s",steps:["12 ÷ 3","= 4 Hz"],a:"4"},
+  gen:()=>{const f=rint(1,10),t=rint(2,6);return{prompt:`Completa ${f*t} oscilações em ${t} s.<br>Frequência (Hz)?`,small:true,answer:f};}},
+ {code:"F3Y",ano:"2ª série",title:"Tipos de onda",
+  concept:`<p><b>Mecânicas</b> precisam de meio (som); <b>eletromagnéticas</b> não (luz). <b>Transversais</b> vibram perpendicular; <b>longitudinais</b>, na direção da propagação (som).</p>`,
+  ex:{q:"O som no ar é onda...",steps:["precisa de meio","mecânica"],a:"mecânica"},
+  gen:()=>clsGen(s=>`"${s}"`,[["O som, que precisa de um meio para se propagar.","mecânica"],["A luz, que se propaga no vácuo.","eletromagnética"],["Ondas de rádio e raios X.","eletromagnética"],["A onda numa corda sacudida de cima a baixo.","transversal"],["O som, que comprime e rarefaz o ar.","longitudinal"]],["mecânica","eletromagnética","transversal","longitudinal"])},
+ {code:"F3Z",ano:"3ª série",title:"Resistores em série",typed:true,
+  concept:`<p>Em série, as resistências simplesmente se somam.</p><div class="formula">Req = R₁ + R₂ + R₃</div>`,
+  ex:{q:"10 Ω + 20 Ω",steps:["soma direta","= 30 Ω"],a:"30"},
+  gen:()=>{const a=rint(1,20),b=rint(1,20),c=rint(1,20);return{prompt:`Em série: ${a} Ω, ${b} Ω e ${c} Ω.<br>Resistência equivalente (Ω)?`,small:true,answer:a+b+c};}},
+ {code:"F40",ano:"3ª série",title:"Resistores em paralelo",typed:true,
+  concept:`<p>Em paralelo, a equivalente é menor que a menor resistência.</p><div class="formula">Req = (R₁·R₂)/(R₁+R₂)</div>`,
+  ex:{q:"6 Ω e 3 Ω",steps:["18 ÷ 9","= 2 Ω"],a:"2"},
+  gen:()=>{const b=[[6,3,2],[6,12,4],[10,10,5],[20,5,4],[12,4,3],[6,6,3],[8,8,4],[30,20,12],[12,6,4],[15,10,6]],c=choice(b);return{prompt:`Em paralelo: ${c[0]} Ω e ${c[1]} Ω.<br>Resistência equivalente (Ω)?`,small:true,answer:c[2]};}},
+ {code:"F41",ano:"3ª série",title:"Corrente elétrica",typed:true,
+  concept:`<p>Corrente é a carga que passa por segundo.</p><div class="formula">i = Q / t</div>`,
+  ex:{q:"Q=20 C em 4 s",steps:["20 ÷ 4","= 5 A"],a:"5"},
+  gen:()=>{const i=rint(1,10),t=rint(2,10);return{prompt:`Carga ${i*t} C passa em ${t} s.<br>Corrente (A)?`,small:true,answer:i};}},
+ {code:"F42",ano:"3ª série",title:"Efeito Joule (energia)",typed:true,
+  concept:`<p>A energia dissipada é a potência ao longo do tempo.</p><div class="formula">E = P · t</div>`,
+  ex:{q:"P=60 W por 5 s",steps:["60·5","= 300 J"],a:"300"},
+  gen:()=>{const P=rint(10,200),t=rint(2,10);return{prompt:`Resistor de ${P} W ligado por ${t} s.<br>Energia dissipada (J)?`,small:true,answer:P*t};}},
+ {code:"F43",ano:"3ª série",title:"Peso em outro astro",typed:true,
+  concept:`<p>O peso muda conforme a gravidade local (valores aproximados).</p><div class="formula">P = m · g</div>`,
+  ex:{q:"60 kg na Lua (g=2)",steps:["60·2","= 120 N"],a:"120"},
+  gen:()=>{const b=[["na Lua",2],["em Marte",4],["em Júpiter",25],["na Terra",10]],c=choice(b),m=rint(1,50);return{prompt:`Massa ${m} kg ${c[0]} (g≈${c[1]} m/s²).<br>Peso (N)?`,small:true,answer:m*c[1]};}},
+ {code:"F44",ano:"3ª série",title:"Eletrostática e física moderna",
+  concept:`<p><b>Lei de Coulomb</b> (força entre cargas), <b>campo elétrico</b>, <b>gravitação universal</b> (Newton) e o <b>efeito fotoelétrico</b> (Einstein, luz arranca elétrons).</p>`,
+  ex:{q:"Luz arranca elétrons de um metal:",steps:["Einstein","efeito fotoelétrico"],a:"efeito fotoelétrico"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Força de atração ou repulsão entre cargas elétricas.","Lei de Coulomb"],["A luz incidente arranca elétrons de um metal.","efeito fotoelétrico"],["Atração entre massas, que mantém os planetas em órbita.","gravitação universal"],["Cargas de sinais opostos se atraem.","Lei de Coulomb"],["Base das células solares (fotovoltaicas).","efeito fotoelétrico"]],["Lei de Coulomb","efeito fotoelétrico","gravitação universal"])},
+],
+};
+const QUI={
+fund1:[
+ {code:"Q11",ano:"1º ano",title:"Estados e mudanças",
+  concept:`<p>Mudanças de estado: <b>fusão</b> (sólido→líquido), <b>vaporização</b> (líquido→gás), <b>solidificação</b>, <b>condensação</b>, <b>sublimação</b>.</p>`,
+  ex:{q:"Gelo derretendo é...",steps:["sólido → líquido","fusão"],a:"fusão"},
+  gen:()=>clsGen(s=>`${s}`,[["Sólido virando líquido.","fusão"],["Líquido virando gás.","vaporização"],["Gás virando líquido.","condensação"],["Líquido virando sólido.","solidificação"],["Sólido direto para gás.","sublimação"],["Gelo derretendo.","fusão"],["Água fervendo.","vaporização"],["Orvalho na manhã.","condensação"]],["fusão","vaporização","condensação","solidificação","sublimação"])},
+ {code:"Q12",ano:"2º ano",title:"Substância e mistura",
+  concept:`<p><b>Substância pura</b> tem composição única; <b>mistura</b> reúne duas ou mais substâncias.</p>`,
+  ex:{q:"Água + sal é...",steps:["duas substâncias","mistura"],a:"mistura"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Água destilada","substância pura"],["Água com sal","mistura"],["Ar atmosférico","mistura"],["Ouro 24k","substância pura"],["Granito","mistura"],["Gás oxigênio puro","substância pura"],["Suco com açúcar","mistura"]],["substância pura","mistura"])},
+],
+fund2:[
+ {code:"Q21",ano:"8º ano",title:"Prótons, elétrons e nêutrons",typed:true,
+  concept:`<p>O número atômico Z conta os prótons (= elétrons, se neutro). Nêutrons = A − Z.</p><div class="formula">nêutrons = A − Z</div>`,
+  ex:{q:"A=23, Z=11",steps:["23 − 11","= 12"],a:"12"},
+  gen:()=>{const z=rint(3,30),extra=rint(2,14);return{prompt:`Átomo: Z=${z}, número de massa A=${z+extra}.<br>Quantos nêutrons?`,small:true,answer:extra};}},
+ {code:"Q22",ano:"9º ano",title:"Metais e ametais",
+  concept:`<p>Na tabela periódica, <b>metais</b> conduzem bem e são maioria; <b>ametais</b> formam não-metais como O, N, Cl.</p>`,
+  ex:{q:"Ferro (Fe) é...",steps:["bom condutor","metal"],a:"metal"},
+  gen:()=>clsGen(s=>`${s} é...`,[["Ferro (Fe)","metal"],["Ouro (Au)","metal"],["Oxigênio (O)","ametal"],["Cloro (Cl)","ametal"],["Sódio (Na)","metal"],["Enxofre (S)","ametal"],["Cobre (Cu)","metal"],["Nitrogênio (N)","ametal"],["Hélio (He)","gás nobre"],["Neônio (Ne)","gás nobre"]],["metal","ametal","gás nobre"])},
+],
+medio:[
+ {code:"Q31",ano:"1ª série",title:"Mol e massa molar",typed:true,
+  concept:`<p>Mol relaciona massa e quantidade de matéria pela massa molar (M).</p><div class="formula">n = m / M</div>`,
+  ex:{q:"36 g de água (M=18)",steps:["36 ÷ 18","= 2 mol"],a:"2"},
+  gen:()=>{const subs=[["água","H₂O",18],["gás carbônico","CO₂",44],["gás oxigênio","O₂",32],["metano","CH₄",16],["glicose","C₆H₁₂O₆",180]];const s=choice(subs),n=rint(2,8);return{prompt:`${s[2]*n} g de ${s[0]} (${s[1]}, M=${s[2]} g/mol).<br>Quantos mols?`,small:true,answer:n};}},
+ {code:"Q32",ano:"1ª série",title:"Concentração comum",typed:true,
+  concept:`<p>Concentração comum é a massa do soluto por volume da solução.</p><div class="formula">C = m / V</div>`,
+  ex:{q:"40 g em 2 L",steps:["40 ÷ 2","= 20 g/L"],a:"20"},
+  gen:()=>{const C=rint(2,20),V=rint(1,5);return{prompt:`${C*V} g de soluto em ${V} L.<br>Concentração (g/L)?`,small:true,answer:C};}},
+ {code:"Q33",ano:"2ª série",title:"Funções inorgânicas",
+  concept:`<p><b>Ácido</b> libera H⁺; <b>base</b> libera OH⁻; <b>sal</b> vem de ácido+base; <b>óxido</b> tem oxigênio + outro elemento.</p>`,
+  ex:{q:"NaOH é...",steps:["libera OH⁻","base"],a:"base"},
+  gen:()=>clsGen(s=>`${s} é qual função?`,[["HCl","ácido"],["H₂SO₄","ácido"],["HNO₃","ácido"],["NaOH","base"],["KOH","base"],["Ca(OH)₂","base"],["NaCl","sal"],["CaCO₃","sal"],["KNO₃","sal"],["CO₂","óxido"],["Fe₂O₃","óxido"],["SO₃","óxido"]],["ácido","base","sal","óxido"])},
+ {code:"Q34",ano:"2ª série",title:"Ligações químicas",
+  concept:`<p><b>Iônica</b> (metal + ametal, transfere elétrons); <b>covalente</b> (ametais, compartilha); <b>metálica</b> (entre metais).</p>`,
+  ex:{q:"NaCl tem ligação...",steps:["metal + ametal","iônica"],a:"iônica"},
+  gen:()=>clsGen(s=>`${s} tem ligação...`,[["NaCl","iônica"],["KBr","iônica"],["MgO","iônica"],["H₂O","covalente"],["CO₂","covalente"],["O₂","covalente"],["NH₃","covalente"],["Fe","metálica"],["Cu","metálica"],["Au","metálica"]],["iônica","covalente","metálica"])},
+ {code:"Q35",ano:"2ª série",title:"pH: ácido, neutro ou básico",
+  concept:`<p>pH < 7 é ácido, pH = 7 é neutro, pH > 7 é básico (alcalino).</p>`,
+  ex:{q:"pH = 3",steps:["menor que 7","ácido"],a:"ácido"},
+  gen:()=>{const opts=[[1,"ácido"],[3,"ácido"],[5,"ácido"],[7,"neutro"],[9,"básico"],[11,"básico"],[13,"básico"]];const it=choice(opts);const cats=["ácido","neutro","básico"];const o=shuffle(cats.map(c=>({html:c,correct:c===it[1]})));return{prompt:`Uma solução tem pH = ${it[0]}.<br>Ela é...`,small:true,opts:o};}},
+ {code:"Q36",ano:"3ª série",title:"Tipos de reação",
+  concept:`<p><b>Síntese</b> (A+B→AB), <b>decomposição</b> (AB→A+B), <b>simples troca</b> (A+BC→AC+B), <b>dupla troca</b> (AB+CD→AD+CB).</p>`,
+  ex:{q:"AB → A + B",steps:["um vira dois","decomposição"],a:"decomposição"},
+  gen:()=>clsGen(s=>`${s}`,[["A + B → AB","síntese"],["AB → A + B","decomposição"],["A + BC → AC + B","simples troca"],["AB + CD → AD + CB","dupla troca"],["2H₂ + O₂ → 2H₂O","síntese"],["CaCO₃ → CaO + CO₂","decomposição"],["Zn + 2HCl → ZnCl₂ + H₂","simples troca"],["NaCl + AgNO₃ → AgCl + NaNO₃","dupla troca"]],["síntese","decomposição","simples troca","dupla troca"])},
+ {code:"Q37",ano:"3ª série",title:"Estequiometria",typed:true,
+  concept:`<p>Os coeficientes da equação dão a proporção em mol entre reagentes e produtos.</p>`,
+  ex:{q:"2H₂+O₂→2H₂O: 4 mol de H₂?",steps:["proporção 2:2 = 1:1","4 mol de H₂O"],a:"4"},
+  gen:()=>{const rs=[["2 H₂ + O₂ → 2 H₂O",2,"H₂",2,"H₂O"],["N₂ + 3 H₂ → 2 NH₃",3,"H₂",2,"NH₃"],["2 H₂O₂ → 2 H₂O + O₂",2,"H₂O₂",1,"O₂"],["C + O₂ → CO₂",1,"C",1,"CO₂"],["2 Mg + O₂ → 2 MgO",2,"Mg",2,"MgO"]];const r=choice(rs),n=r[1]*rint(1,6);return{prompt:`${r[0]}<br>De ${n} mol de ${r[2]}, quantos mol de ${r[4]}?`,small:true,answer:n*r[3]/r[1]};}},
+ {code:"Q38",ano:"3ª série",title:"Molaridade",typed:true,
+  concept:`<p>Concentração em mol por litro de solução.</p><div class="formula">M = n / V</div>`,
+  ex:{q:"4 mol em 2 L",steps:["4 ÷ 2","= 2 mol/L"],a:"2"},
+  gen:()=>{const M=rint(1,5),V=rint(1,4);return{prompt:`${M*V} mol de soluto em ${V} L de solução.<br>Molaridade (mol/L)?`,small:true,answer:M};}},
+ {code:"Q39",ano:"3ª série",title:"Química orgânica: funções",
+  concept:`<p>Grupos funcionais: <b>álcool</b> (–OH), <b>ácido carboxílico</b> (–COOH), <b>aldeído</b> (–CHO), <b>cetona</b> (C=O no meio), <b>éster</b> e <b>amina</b> (–NH₂).</p>`,
+  ex:{q:"Etanol (álcool de bebidas):",steps:["grupo –OH","álcool"],a:"álcool"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Etanol, o álcool das bebidas (–OH).","álcool"],["Ácido acético, o vinagre (–COOH).","ácido carboxílico"],["Formol, usado em conservação (–CHO).","aldeído"],["Acetona, removedor de esmalte (C=O no meio).","cetona"],["Aroma artificial de frutas (–COO–).","éster"],["Composto com grupo –NH₂.","amina"]],["álcool","ácido carboxílico","aldeído","cetona","éster","amina"])},
+ {code:"Q3A",ano:"3ª série",title:"Hidrocarbonetos: nomenclatura",
+  concept:`<p>O número de carbonos dá o prefixo: <b>1</b> met, <b>2</b> et, <b>3</b> prop, <b>4</b> but, <b>5</b> pent. Só ligações simples → sufixo -ano.</p>`,
+  ex:{q:"3 carbonos, ligação simples:",steps:["prop + ano","propano"],a:"propano"},
+  gen:()=>clsGen(s=>`Hidrocarboneto com ${s}:`,[["1 carbono (CH₄)","metano"],["2 carbonos","etano"],["3 carbonos","propano"],["4 carbonos","butano"],["5 carbonos","pentano"]],["metano","etano","propano","butano","pentano"])},
+ {code:"Q3B",ano:"3ª série",title:"Termoquímica",
+  concept:`<p><b>Exotérmica</b> libera calor (ΔH<0); <b>endotérmica</b> absorve calor (ΔH>0).</p>`,
+  ex:{q:"Combustão libera calor:",steps:["ΔH < 0","exotérmica"],a:"exotérmica"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Libera calor para o ambiente (ΔH < 0).","exotérmica"],["Absorve calor do ambiente (ΔH > 0).","endotérmica"],["Combustão da gasolina.","exotérmica"],["Fotossíntese, que absorve energia.","endotérmica"],["A reação esquenta o frasco.","exotérmica"],["A reação esfria o frasco.","endotérmica"]],["exotérmica","endotérmica"])},
+ {code:"Q3C",ano:"3ª série",title:"Oxirredução",
+  concept:`<p><b>Oxidação</b>: perde elétrons (Nox aumenta). <b>Redução</b>: ganha elétrons (Nox diminui).</p>`,
+  ex:{q:"Perder elétrons é...",steps:["Nox aumenta","oxidação"],a:"oxidação"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Perde elétrons.","oxidação"],["Ganha elétrons.","redução"],["O número de oxidação aumenta.","oxidação"],["O número de oxidação diminui.","redução"],["O ferro enferruja ao reagir com o oxigênio.","oxidação"]],["oxidação","redução"])},
+],
+};
+const BIO={
+fund1:[
+ {code:"B11",ano:"1º ano",title:"Os reinos dos seres vivos",
+  concept:`<p>Os grandes grupos: <b>animal</b>, <b>vegetal</b> (plantas), <b>fungo</b>, <b>monera</b> (bactérias) e <b>protista</b> (protozoários e algas).</p>`,
+  ex:{q:"Um cogumelo é do reino...",steps:["não é planta nem animal","fungo"],a:"fungo"},
+  gen:()=>clsGen(s=>`${s} pertence a qual reino?`,[["Um cachorro","animal"],["Uma samambaia","vegetal"],["Um cogumelo","fungo"],["Uma bactéria","monera"],["Uma ameba","protista"],["Uma águia","animal"],["Uma roseira","vegetal"],["Um bolor (mofo)","fungo"]],["animal","vegetal","fungo","monera","protista"])},
+ {code:"B12",ano:"3º ano",title:"Célula animal e vegetal",
+  concept:`<p>A célula vegetal tem <b>parede celular</b>, <b>cloroplastos</b> e um grande <b>vacúolo</b>; a animal não.</p>`,
+  ex:{q:"Cloroplasto existe na célula...",steps:["faz fotossíntese","vegetal"],a:"vegetal"},
+  gen:()=>clsGen(s=>`${s}<br>é de célula...`,[["Cloroplasto","vegetal"],["Parede celular","vegetal"],["Centríolo","animal"],["Grande vacúolo central","vegetal"],["Lisossomo (típico)","animal"]],["animal","vegetal"])},
+],
+fund2:[
+ {code:"B21",ano:"6º ano",title:"Organelas e funções",
+  concept:`<p>Cada organela tem um papel: a <b>mitocôndria</b> faz respiração; o <b>cloroplasto</b>, fotossíntese; o <b>ribossomo</b>, proteínas.</p>`,
+  ex:{q:"Quem faz a respiração celular?",steps:["produz energia (ATP)","mitocôndria"],a:"mitocôndria"},
+  gen:()=>trGen(f=>`Qual organela faz:<br>${f}?`,[["respiração celular (energia)","mitocôndria"],["fotossíntese","cloroplasto"],["síntese de proteínas","ribossomo"],["digestão intracelular","lisossomo"],["controle e guarda do DNA","núcleo"],["empacotamento e secreção","complexo de Golgi"]])},
+ {code:"B22",ano:"7º ano",title:"Cadeia alimentar",
+  concept:`<p><b>Produtores</b> (plantas) fazem o alimento; <b>consumidores</b> comem outros; <b>decompositores</b> reciclam a matéria.</p>`,
+  ex:{q:"Fungos e bactérias são...",steps:["reciclam a matéria","decompositores"],a:"decompositor"},
+  gen:()=>clsGen(s=>`${s}<br>é qual nível?`,[["Uma planta (capim)","produtor"],["Um gafanhoto (herbívoro)","consumidor"],["Uma onça (carnívoro)","consumidor"],["Fungos e bactérias","decompositor"],["Uma árvore","produtor"],["Um sapo que come insetos","consumidor"],["Um cogumelo no tronco morto","decompositor"]],["produtor","consumidor","decompositor"])},
+],
+medio:[
+ {code:"B31",ano:"1ª série",title:"Mitose e meiose",
+  concept:`<p><b>Mitose</b>: 2 células idênticas (crescimento). <b>Meiose</b>: 4 células diferentes com metade dos cromossomos (gametas).</p>`,
+  ex:{q:"Forma os gametas:",steps:["reduz à metade","meiose"],a:"meiose"},
+  gen:()=>clsGen(s=>`${s}`,[["Gera 2 células idênticas à mãe.","mitose"],["Gera 4 células com metade dos cromossomos.","meiose"],["Ocorre no crescimento e na cicatrização.","mitose"],["Produz óvulos e espermatozoides.","meiose"],["Mantém o número de cromossomos.","mitose"],["Promove variabilidade genética.","meiose"]],["mitose","meiose"])},
+ {code:"B32",ano:"1ª série",title:"Fotossíntese e respiração",
+  concept:`<p><b>Fotossíntese</b>: usa CO₂, água e luz para produzir glicose e O₂. <b>Respiração</b>: consome glicose e O₂, liberando CO₂ e energia.</p>`,
+  ex:{q:"Libera O₂ e produz glicose:",steps:["usa luz","fotossíntese"],a:"fotossíntese"},
+  gen:()=>clsGen(s=>`${s}`,[["Usa CO₂, água e luz; produz glicose e O₂.","fotossíntese"],["Consome glicose e O₂; libera CO₂ e energia.","respiração celular"],["Ocorre no cloroplasto.","fotossíntese"],["Ocorre na mitocôndria.","respiração celular"],["Capta energia luminosa.","fotossíntese"],["Libera a energia dos alimentos.","respiração celular"]],["fotossíntese","respiração celular"])},
+ {code:"B33",ano:"2ª série",title:"Genética: genótipo",
+  concept:`<p><b>Homozigoto</b> tem alelos iguais (AA ou aa); <b>heterozigoto</b> tem alelos diferentes (Aa).</p>`,
+  ex:{q:"'Aa' é...",steps:["alelos diferentes","heterozigoto"],a:"heterozigoto"},
+  gen:()=>clsGen(s=>`O genótipo "${s}" é...`,[["AA","homozigoto dominante"],["aa","homozigoto recessivo"],["Aa","heterozigoto"],["BB","homozigoto dominante"],["bb","homozigoto recessivo"],["Bb","heterozigoto"]],["homozigoto dominante","homozigoto recessivo","heterozigoto"])},
+ {code:"B34",ano:"2ª série",title:"Genética: cruzamentos",
+  concept:`<p>No cruzamento <b>Aa × Aa</b>, a prole sai 1 AA : 2 Aa : 1 aa, ou seja, <b>3 dominantes : 1 recessivo</b> (25% recessivo).</p>`,
+  ex:{q:"Aa × Aa: % de recessivos?",steps:["1 em 4","25%"],a:"25%"},
+  gen:()=>{if(Math.random()<.5)return{prompt:`Cruzamento Aa × Aa.<br>Proporção fenotípica?`,small:true,opts:strOpts("3:1",["1:1","1:2:1 fenótipo","2:1"])};return{prompt:`Aa × Aa.<br>% de descendentes recessivos?`,small:true,opts:strOpts("25%",["50%","75%","100%"])};}},
+ {code:"B35",ano:"3ª série",title:"Relações ecológicas",
+  concept:`<p><b>Mutualismo</b> (ambos ganham), <b>predação</b>, <b>competição</b>, <b>parasitismo</b> (um ganha, outro perde), <b>comensalismo</b> (um ganha, outro indiferente).</p>`,
+  ex:{q:"Carrapato no boi:",steps:["um ganha, outro perde","parasitismo"],a:"parasitismo"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Abelha e flor: poliniza e se alimenta.","mutualismo"],["Onça caça a capivara.","predação"],["Dois leões disputam a mesma presa.","competição"],["Lombriga no intestino humano.","parasitismo"],["Rêmora pega carona no tubarão sem prejudicá-lo.","comensalismo"],["Carrapato suga o sangue do boi.","parasitismo"],["Leão devora a zebra.","predação"]],["mutualismo","predação","competição","parasitismo","comensalismo"])},
+ {code:"B36",ano:"3ª série",title:"Sistemas do corpo humano",
+  concept:`<p>Cada sistema tem uma função: <b>circulatório</b> (sangue), <b>respiratório</b> (gases), <b>digestório</b> (alimentos), <b>nervoso</b> (controle).</p>`,
+  ex:{q:"Quem faz as trocas gasosas?",steps:["pulmões","respiratório"],a:"respiratório"},
+  gen:()=>trGen(f=>`Qual sistema faz:<br>${f}?`,[["bombear o sangue pelo corpo","circulatório"],["trocas gasosas (O₂ e CO₂)","respiratório"],["digerir e absorver alimentos","digestório"],["filtrar o sangue e formar urina","urinário"],["coordenar e comandar o corpo","nervoso"],["sustentar o corpo e proteger órgãos","esquelético"]])},
+ {code:"B37",ano:"3ª série",title:"Biomas brasileiros",
+  concept:`<p>Brasil: <b>Amazônia</b> (floresta úmida), <b>Cerrado</b> (savana), <b>Caatinga</b> (semiárido), <b>Mata Atlântica</b> (litoral) e <b>Pantanal</b> (planície alagada).</p>`,
+  ex:{q:"Vegetação seca do semiárido nordestino:",steps:["clima seco","Caatinga"],a:"Caatinga"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Floresta tropical úmida, maior biodiversidade.","Amazônia"],["Savana com árvores tortuosas e gramíneas.","Cerrado"],["Vegetação seca e espinhosa do semiárido.","Caatinga"],["Floresta do litoral, muito desmatada.","Mata Atlântica"],["Maior planície alagável do mundo.","Pantanal"],["Bioma de clima quente e úmido na bacia do maior rio.","Amazônia"]],["Amazônia","Cerrado","Caatinga","Mata Atlântica","Pantanal"])},
+ {code:"B38",ano:"2ª série",title:"DNA: pareamento de bases",
+  concept:`<p>No DNA, as bases pareiam: <b>A com T</b> e <b>C com G</b>.</p>`,
+  ex:{q:"A Adenina pareia com...",steps:["A–T","Timina"],a:"Timina"},
+  gen:()=>clsGen(s=>`No DNA, ${s}`,[["a Adenina pareia com a...","Timina"],["a Citosina pareia com a...","Guanina"],["a Timina pareia com a...","Adenina"],["a Guanina pareia com a...","Citosina"]],["Adenina","Timina","Citosina","Guanina"])},
+ {code:"B39",ano:"3ª série",title:"Evolução: Darwin e Lamarck",
+  concept:`<p><b>Darwin</b>: seleção natural (sobrevive o mais apto). <b>Lamarck</b>: lei do uso e desuso e herança de caracteres adquiridos (hoje rejeitada).</p>`,
+  ex:{q:"Seleção natural é de...",steps:["o mais apto sobrevive","Darwin"],a:"Darwin"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Sobrevivem os indivíduos mais adaptados ao ambiente.","Darwin"],["A lei do uso e desuso dos órgãos.","Lamarck"],["A girafa esticou o pescoço e passou isso aos filhotes.","Lamarck"],["A seleção natural atua sobre a variabilidade.","Darwin"],["Escreveu 'A Origem das Espécies' (1859).","Darwin"]],["Darwin","Lamarck"])},
+ {code:"B3A",ano:"3ª série",title:"Microbiologia e doenças",
+  concept:`<p>Agentes causadores: <b>vírus</b>, <b>bactérias</b>, <b>protozoários</b> e <b>fungos</b> — cada um causa doenças específicas.</p>`,
+  ex:{q:"A dengue é causada por um...",steps:["arbovírus","vírus"],a:"vírus"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Dengue, gripe e COVID-19.","vírus"],["Tuberculose, cólera e tétano.","bactéria"],["Malária e doença de Chagas.","protozoário"],["Micoses e candidíase.","fungo"],["A AIDS, causada pelo HIV.","vírus"],["A hanseníase (lepra).","bactéria"]],["vírus","bactéria","protozoário","fungo"])},
+ {code:"B3B",ano:"3ª série",title:"Botânica: grupos vegetais",
+  concept:`<p>Do mais simples ao mais complexo: <b>briófitas</b> (musgos), <b>pteridófitas</b> (samambaias), <b>gimnospermas</b> (pinheiros) e <b>angiospermas</b> (flores e frutos).</p>`,
+  ex:{q:"Plantas com flores e frutos:",steps:["mais evoluídas","angiospermas"],a:"angiospermas"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Plantas sem vasos condutores, como os musgos.","briófitas"],["Plantas com vasos, sem sementes, como as samambaias.","pteridófitas"],["Plantas com sementes nuas, como os pinheiros.","gimnospermas"],["Plantas com flores e frutos.","angiospermas"]],["briófitas","pteridófitas","gimnospermas","angiospermas"])},
+ {code:"B3C",ano:"3ª série",title:"Zoologia: vertebrados",
+  concept:`<p>Cinco grupos: <b>peixes</b>, <b>anfíbios</b>, <b>répteis</b>, <b>aves</b> e <b>mamíferos</b>.</p>`,
+  ex:{q:"Têm pelos e glândulas mamárias:",steps:["amamentam","mamíferos"],a:"mamíferos"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Respiram por brânquias e vivem na água.","peixes"],["Vivem na água e na terra; pele úmida.","anfíbios"],["Pele com escamas; cobras e lagartos.","répteis"],["Têm penas e bico; a maioria voa.","aves"],["Têm pelos e amamentam os filhotes.","mamíferos"]],["peixes","anfíbios","répteis","aves","mamíferos"])},
+ {code:"B3D",ano:"3ª série",title:"Tipos sanguíneos (ABO/Rh)",
+  concept:`<p>No sistema ABO/Rh: <b>O negativo</b> é o doador universal; <b>AB positivo</b> é o receptor universal.</p>`,
+  ex:{q:"Doador universal:",steps:["sem antígenos, Rh−","O negativo"],a:"O negativo"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Doador universal de sangue.","O negativo"],["Receptor universal de sangue.","AB positivo"],["Tem antígenos A e B nas hemácias.","tipo AB"],["Não tem antígenos A nem B nas hemácias.","tipo O"]],["O negativo","AB positivo","tipo AB","tipo O"])},
+],
+};
+
+const HIS={
+fund1:[
+ {code:"H11",ano:"1º ano",title:"Civilizações antigas",
+  concept:`<p><b>Egito</b> (Nilo, faraós, pirâmides), <b>Mesopotâmia</b> (escrita cuneiforme, Código de Hamurabi), <b>Grécia</b> (democracia, filosofia), <b>Roma</b> (direito, império).</p>`,
+  ex:{q:"Berço da democracia:",steps:["cidades-estado","Grécia"],a:"Grécia"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Faraós, pirâmides e o rio Nilo.","Egito"],["Código de Hamurabi e escrita cuneiforme.","Mesopotâmia"],["Democracia, filosofia e cidades-estado.","Grécia"],["Direito, legiões e um vasto império.","Roma"],["Múmias e hieróglifos.","Egito"],["Berço da filosofia ocidental.","Grécia"],["Coliseu e o latim.","Roma"]],["Egito","Mesopotâmia","Grécia","Roma"])},
+ {code:"H12",ano:"3º ano",title:"Idade Média",
+  concept:`<p>Sociedade feudal: <b>servos</b> trabalhavam a terra dos <b>senhores</b>; a <b>Igreja</b> tinha enorme poder. Marcam a época as Cruzadas e a Peste Negra.</p>`,
+  ex:{q:"Relação de trabalho do feudalismo:",steps:["servo preso à terra","servidão"],a:"servidão"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Servos presos à terra do senhor feudal.","servidão"],["A Igreja Católica como maior poder.","poder da Igreja"],["Guerras religiosas rumo à Terra Santa.","Cruzadas"],["Epidemia que dizimou a Europa no séc. XIV.","Peste Negra"],["Feudos autossuficientes e economia rural.","servidão"]],["servidão","poder da Igreja","Cruzadas","Peste Negra"])},
+],
+fund2:[
+ {code:"H21",ano:"7º ano",title:"Brasil Colônia",
+  concept:`<p>Ciclos econômicos: <b>pau-brasil</b> (escambo), <b>cana-de-açúcar</b> (engenhos e escravidão africana) e <b>ouro</b> (Minas, séc. XVIII).</p>`,
+  ex:{q:"Economia dos engenhos no Nordeste:",steps:["açúcar e escravidão","ciclo da cana"],a:"ciclo da cana"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Extração da madeira e escambo com indígenas.","ciclo do pau-brasil"],["Engenhos de açúcar e escravidão no Nordeste.","ciclo da cana"],["Mineração em Minas Gerais no século XVIII.","ciclo do ouro"],["A Inconfidência Mineira e Tiradentes.","ciclo do ouro"],["Primeiro produto explorado pelos portugueses.","ciclo do pau-brasil"]],["ciclo do pau-brasil","ciclo da cana","ciclo do ouro"])},
+ {code:"H22",ano:"8º ano",title:"Idade Moderna",
+  concept:`<p><b>Renascimento</b> (humanismo), <b>Reforma</b> (Lutero), <b>Absolutismo</b> (rei com poder total) e <b>Iluminismo</b> (a razão, séc. XVIII).</p>`,
+  ex:{q:"'Penso, logo existo' e a razão acima de tudo:",steps:["séc. XVIII","Iluminismo"],a:"Iluminismo"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Humanismo e antropocentrismo nas artes.","Renascimento"],["Lutero e as 95 teses contra a Igreja.","Reforma Protestante"],["'O Estado sou eu' — poder total do rei.","Absolutismo"],["A razão e a crítica, base da Revolução Francesa.","Iluminismo"],["Volta aos valores da Antiguidade clássica.","Renascimento"]],["Renascimento","Reforma Protestante","Absolutismo","Iluminismo"])},
+ {code:"H23",ano:"9º ano",title:"Revoluções",
+  concept:`<p><b>Revolução Industrial</b> (Inglaterra, séc. XVIII, máquina a vapor) e <b>Revolução Francesa</b> (1789, 'Liberdade, Igualdade, Fraternidade').</p>`,
+  ex:{q:"'Liberdade, Igualdade, Fraternidade' (1789):",steps:["queda da Bastilha","Revolução Francesa"],a:"Revolução Francesa"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Máquina a vapor e o sistema de fábricas.","Revolução Industrial"],["Queda da Bastilha em 1789.","Revolução Francesa"],["Fim do feudalismo e ascensão da burguesia.","Revolução Francesa"],["Êxodo rural e crescimento das cidades industriais.","Revolução Industrial"],["Lema 'Liberdade, Igualdade, Fraternidade'.","Revolução Francesa"]],["Revolução Industrial","Revolução Francesa"])},
+],
+medio:[
+ {code:"H31",ano:"1ª série",title:"Independência e Império",
+  concept:`<p>Em <b>1822</b>, D. Pedro I proclamou a independência (Grito do Ipiranga). Seguiram o Primeiro e o Segundo Reinado (D. Pedro II), até a República em 1889.</p>`,
+  ex:{q:"Ano da independência do Brasil:",steps:["Grito do Ipiranga","1822"],a:"1822"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Grito do Ipiranga por D. Pedro I.","1822 (Independência)"],["Reinado de D. Pedro II e o café.","Segundo Reinado"],["Abolição da escravatura pela Lei Áurea.","1888"],["Proclamação da República por Deodoro.","1889"]],["1822 (Independência)","Segundo Reinado","1888","1889"])},
+ {code:"H32",ano:"2ª série",title:"Guerras Mundiais",
+  concept:`<p><b>1ª Guerra</b> (1914-1918), <b>2ª Guerra</b> (1939-1945, nazismo e Holocausto) e a <b>Guerra Fria</b> (EUA × URSS, capitalismo × socialismo).</p>`,
+  ex:{q:"Conflito de 1939-1945:",steps:["nazismo, Holocausto","Segunda Guerra"],a:"Segunda Guerra Mundial"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Conflito de 1914 a 1918, trincheiras.","Primeira Guerra Mundial"],["1939-1945, nazismo e Holocausto.","Segunda Guerra Mundial"],["EUA × URSS sem confronto direto.","Guerra Fria"],["Queda do Muro de Berlim em 1989.","Guerra Fria"],["Bombas atômicas em Hiroshima e Nagasaki.","Segunda Guerra Mundial"]],["Primeira Guerra Mundial","Segunda Guerra Mundial","Guerra Fria"])},
+ {code:"H33",ano:"3ª série",title:"Era Vargas e República",
+  concept:`<p><b>Era Vargas</b> (1930-1945, Estado Novo, leis trabalhistas), <b>Ditadura Militar</b> (1964-1985, AI-5) e a <b>redemocratização</b> (Diretas Já, Constituição de 1988).</p>`,
+  ex:{q:"Período de 1964 a 1985 no Brasil:",steps:["AI-5, censura","ditadura militar"],a:"Ditadura Militar"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Estado Novo e a CLT (1930-1945).","Era Vargas"],["Regime de 1964-1985, AI-5 e censura.","Ditadura Militar"],["Movimento Diretas Já pelas eleições.","Redemocratização"],["Constituição Cidadã de 1988.","Redemocratização"],["Getúlio Vargas e o trabalhismo.","Era Vargas"]],["Era Vargas","Ditadura Militar","Redemocratização"])},
+ {code:"H34",ano:"3ª série",title:"Revoluções do século XX",
+  concept:`<p><b>Revolução Russa</b> (1917, socialismo, Lênin), <b>Revolução Chinesa</b> (1949, Mao) e <b>Revolução Cubana</b> (1959, Fidel e Che).</p>`,
+  ex:{q:"1917, Lênin e os bolcheviques:",steps:["primeiro Estado socialista","Revolução Russa"],a:"Revolução Russa"},
+  gen:()=>clsGen(s=>`"${s}"`,[["1917, Lênin e os bolcheviques.","Revolução Russa"],["1949, Mao Tsé-Tung no poder.","Revolução Chinesa"],["1959, Fidel Castro e Che Guevara.","Revolução Cubana"],["Primeiro Estado socialista do mundo.","Revolução Russa"]],["Revolução Russa","Revolução Chinesa","Revolução Cubana"])},
+],
+};
+const GEO={
+fund1:[
+ {code:"G11",ano:"2º ano",title:"Cartografia",
+  concept:`<p>Mapas usam <b>escala</b> (proporção), <b>latitude</b> (paralelos) e <b>longitude</b> (meridianos). A linha do Equador divide os hemisférios Norte e Sul.</p>`,
+  ex:{q:"Linhas que medem distância ao Equador:",steps:["paralelos","latitude"],a:"latitude"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Distância em graus ao norte ou sul do Equador.","latitude"],["Distância a leste ou oeste de Greenwich.","longitude"],["Proporção entre o mapa e a realidade.","escala"],["Linha imaginária que divide a Terra ao meio.","Equador"]],["latitude","longitude","escala","Equador"])},
+ {code:"G12",ano:"3º ano",title:"Regiões do Brasil",
+  concept:`<p>O Brasil tem <b>5 regiões</b>: Norte, Nordeste, Centro-Oeste, Sudeste e Sul, cada uma com clima, economia e cultura próprios.</p>`,
+  ex:{q:"Região da Amazônia e do clima equatorial:",steps:["maior em área","Norte"],a:"Norte"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Maior região, abriga a Amazônia.","Norte"],["Semiárido, sertão e litoral.","Nordeste"],["Cerrado e o agronegócio.","Centro-Oeste"],["Mais industrializada e populosa.","Sudeste"],["Clima subtropical e colonização europeia.","Sul"]],["Norte","Nordeste","Centro-Oeste","Sudeste","Sul"])},
+],
+fund2:[
+ {code:"G21",ano:"6º ano",title:"Relevo e seus agentes",
+  concept:`<p><b>Agentes internos</b> (tectonismo, vulcanismo, terremotos) constroem o relevo; <b>agentes externos</b> (erosão, intemperismo) o desgastam.</p>`,
+  ex:{q:"Erosão pela água e vento é agente...",steps:["desgasta o relevo","externo"],a:"externo"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Vulcanismo e movimento de placas.","agente interno"],["Erosão causada por água e vento.","agente externo"],["Terremotos e abalos sísmicos.","agente interno"],["Intemperismo que desgasta as rochas.","agente externo"]],["agente interno","agente externo"])},
+ {code:"G22",ano:"7º ano",title:"Climas",
+  concept:`<p>O Brasil tem climas variados: <b>equatorial</b> (quente e úmido), <b>tropical</b>, <b>semiárido</b> (seco) e <b>subtropical</b> (no Sul).</p>`,
+  ex:{q:"Clima seco do sertão nordestino:",steps:["pouca chuva","semiárido"],a:"semiárido"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Quente e úmido o ano todo (Amazônia).","equatorial"],["Seco, com chuvas escassas (sertão).","semiárido"],["Duas estações: seca e chuvosa.","tropical"],["Mais frio, com as quatro estações (Sul).","subtropical"]],["equatorial","semiárido","tropical","subtropical"])},
+ {code:"G23",ano:"8º ano",title:"Demografia",typed:true,
+  concept:`<p>A <b>densidade demográfica</b> é a população dividida pela área.</p><div class="formula">densidade = população / área</div>`,
+  ex:{q:"600 mil hab. em 200 km²",steps:["600000 ÷ 200","= 3000 hab/km²"],a:"3000"},
+  gen:()=>{const d=rint(10,200),A=rint(2,20)*100;return{prompt:`População ${d*A} hab. em ${A} km².<br>Densidade (hab/km²)?`,small:true,answer:d};}},
+],
+medio:[
+ {code:"G31",ano:"1ª série",title:"Urbanização",
+  concept:`<p><b>Êxodo rural</b> (campo→cidade), <b>metrópole</b> (grande centro), <b>conurbação</b> (cidades que se unem) e <b>periferização</b>.</p>`,
+  ex:{q:"Migração do campo para a cidade:",steps:["busca de trabalho","êxodo rural"],a:"êxodo rural"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Migração do campo para a cidade.","êxodo rural"],["Cidades vizinhas que se fundem numa só mancha.","conurbação"],["Grande cidade que polariza uma região.","metrópole"],["Crescimento das bordas pobres das cidades.","periferização"]],["êxodo rural","conurbação","metrópole","periferização"])},
+ {code:"G32",ano:"2ª série",title:"Espaço agrário",
+  concept:`<p><b>Agronegócio</b> (produção em larga escala para exportação), <b>agricultura familiar</b> (pequena, abastece o mercado interno) e <b>latifúndio</b>.</p>`,
+  ex:{q:"Soja para exportação em larga escala:",steps:["grande produção mecanizada","agronegócio"],a:"agronegócio"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Monocultura mecanizada para exportar.","agronegócio"],["Pequena propriedade que abastece o mercado interno.","agricultura familiar"],["Grande propriedade improdutiva ou concentrada.","latifúndio"],["Luta pela redistribuição de terras.","reforma agrária"]],["agronegócio","agricultura familiar","latifúndio","reforma agrária"])},
+ {code:"G33",ano:"3ª série",title:"Questões ambientais",
+  concept:`<p><b>Efeito estufa</b> e <b>aquecimento global</b>, <b>chuva ácida</b>, <b>desmatamento</b> e <b>ilhas de calor</b> urbanas.</p>`,
+  ex:{q:"Gases que retêm calor e aquecem o planeta:",steps:["CO₂ e metano","efeito estufa"],a:"efeito estufa"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Gases retêm calor e aquecem o planeta.","efeito estufa"],["Poluentes ácidos caem com a chuva.","chuva ácida"],["Áreas urbanas mais quentes que a vizinhança.","ilha de calor"],["Remoção da cobertura florestal.","desmatamento"]],["efeito estufa","chuva ácida","ilha de calor","desmatamento"])},
+ {code:"G34",ano:"3ª série",title:"Globalização",
+  concept:`<p>Integração mundial de economias e culturas. Blocos econômicos como <b>Mercosul</b> e <b>União Europeia</b>; divisão internacional do trabalho.</p>`,
+  ex:{q:"Bloco econômico da América do Sul:",steps:["Brasil, Argentina...","Mercosul"],a:"Mercosul"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Bloco do Brasil, Argentina, Uruguai e Paraguai.","Mercosul"],["Bloco europeu com moeda única (euro).","União Europeia"],["Países que fornecem matéria-prima barata.","divisão internacional do trabalho"],["Integração mundial de mercados e culturas.","globalização"]],["Mercosul","União Europeia","divisão internacional do trabalho","globalização"])},
+],
+};
+const FIL={
+fund1:[
+ {code:"P_F11",ano:"3º ano",title:"O que é filosofia",
+  concept:`<p>Filosofia é a busca racional por respostas sobre existência, conhecimento, valores e razão. Nasceu na Grécia, com a passagem do <b>mito</b> para a <b>razão</b>.</p>`,
+  ex:{q:"A filosofia nasceu da passagem do mito para o...",steps:["explicação racional","logos (razão)"],a:"logos (razão)"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Estuda o conhecimento e como conhecemos.","epistemologia"],["Estuda o certo e o errado, o bem agir.","ética"],["Estuda o raciocínio válido e os argumentos.","lógica"],["Estuda o ser e a existência.","metafísica"]],["epistemologia","ética","lógica","metafísica"])},
+],
+fund2:[
+ {code:"P_F21",ano:"8º ano",title:"Filosofia antiga",
+  concept:`<p><b>Sócrates</b> ('conhece-te a ti mesmo', maiêutica), <b>Platão</b> (mundo das ideias, alegoria da caverna) e <b>Aristóteles</b> (lógica, virtude).</p>`,
+  ex:{q:"'Conhece-te a ti mesmo' e a maiêutica:",steps:["o questionador de Atenas","Sócrates"],a:"Sócrates"},
+  gen:()=>clsGen(s=>`"${s}"`,[["'Conhece-te a ti mesmo' e a maiêutica.","Sócrates"],["Mundo das ideias e a alegoria da caverna.","Platão"],["Pai da lógica; a virtude como meio-termo.","Aristóteles"],["Bebeu cicuta condenado em Atenas.","Sócrates"],["Discípulo de Sócrates, escreveu 'A República'.","Platão"]],["Sócrates","Platão","Aristóteles"])},
+ {code:"P_F22",ano:"9º ano",title:"Filosofia medieval",
+  concept:`<p>Une fé e razão. <b>Santo Agostinho</b> (patrística, 'crer para entender') e <b>Tomás de Aquino</b> (escolástica, harmoniza fé e razão).</p>`,
+  ex:{q:"Escolástica e a harmonia entre fé e razão:",steps:["Suma Teológica","Tomás de Aquino"],a:"Tomás de Aquino"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Patrística: 'crer para entender'.","Santo Agostinho"],["Escolástica: harmoniza fé e razão.","Tomás de Aquino"],["Influenciado por Platão, escreveu 'Confissões'.","Santo Agostinho"],["Influenciado por Aristóteles, a 'Suma Teológica'.","Tomás de Aquino"]],["Santo Agostinho","Tomás de Aquino"])},
+],
+medio:[
+ {code:"P_F31",ano:"1ª série",title:"Filosofia moderna: razão",
+  concept:`<p><b>Descartes</b> (racionalismo, 'penso, logo existo', dúvida metódica) e <b>Bacon</b> (empirismo, método indutivo, a experiência).</p>`,
+  ex:{q:"'Penso, logo existo':",steps:["dúvida metódica","Descartes"],a:"Descartes"},
+  gen:()=>clsGen(s=>`"${s}"`,[["'Penso, logo existo' e a dúvida metódica.","Descartes"],["Conhecimento parte da experiência (empirismo).","Bacon"],["Racionalismo: a razão como fonte da verdade.","Descartes"],["Método indutivo e os 'ídolos' do saber.","Bacon"]],["Descartes","Bacon"])},
+ {code:"P_F32",ano:"1ª série",title:"Contratualistas",
+  concept:`<p>Pensam a origem do Estado: <b>Hobbes</b> ('o homem é o lobo do homem', Leviatã), <b>Locke</b> (liberalismo) e <b>Rousseau</b> (contrato social, 'bom selvagem').</p>`,
+  ex:{q:"'O homem é o lobo do homem' e o Leviatã:",steps:["Estado forte","Hobbes"],a:"Hobbes"},
+  gen:()=>clsGen(s=>`"${s}"`,[["'O homem é o lobo do homem'; o Leviatã.","Hobbes"],["Direitos naturais e o liberalismo político.","Locke"],["'O homem nasce bom'; o contrato social.","Rousseau"],["Defendeu o Estado absoluto para conter o caos.","Hobbes"],["Inspirou a Revolução Francesa.","Rousseau"]],["Hobbes","Locke","Rousseau"])},
+ {code:"P_F33",ano:"2ª série",title:"Kant e a ética",
+  concept:`<p><b>Kant</b> uniu razão e experiência (criticismo). Sua ética se baseia no <b>imperativo categórico</b>: aja segundo uma regra que poderia ser universal.</p>`,
+  ex:{q:"'Aja como se sua ação virasse lei universal':",steps:["imperativo categórico","Kant"],a:"imperativo categórico"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Aja como se sua máxima fosse lei universal.","imperativo categórico"],["Une racionalismo e empirismo no criticismo.","Kant"],["O dever pelo dever, não pelo interesse.","imperativo categórico"],["Escreveu a 'Crítica da Razão Pura'.","Kant"]],["imperativo categórico","Kant"])},
+ {code:"P_F34",ano:"3ª série",title:"Filosofia contemporânea",
+  concept:`<p><b>Marx</b> (luta de classes), <b>Nietzsche</b> ('Deus está morto', super-homem) e <b>Sartre</b> (existencialismo, 'a existência precede a essência').</p>`,
+  ex:{q:"'A existência precede a essência':",steps:["somos o que fazemos","Sartre"],a:"Sartre"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Luta de classes e materialismo histórico.","Marx"],["'Deus está morto' e o super-homem.","Nietzsche"],["'A existência precede a essência'.","Sartre"],["O existencialismo e a liberdade radical.","Sartre"],["Crítica à moral tradicional e ao rebanho.","Nietzsche"]],["Marx","Nietzsche","Sartre"])},
+],
+};
+const SOC={
+fund1:[
+ {code:"S11",ano:"3º ano",title:"O que é sociologia",
+  concept:`<p>A sociologia estuda a <b>vida em sociedade</b>: grupos, instituições e relações. Surge no séc. XIX com a Revolução Industrial.</p>`,
+  ex:{q:"A sociologia estuda principalmente...",steps:["relações coletivas","a sociedade"],a:"a sociedade"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Conjunto de valores e costumes de um povo.","cultura"],["Grupos que se mobilizam por mudanças.","movimentos sociais"],["Divisão da sociedade em camadas.","estratificação social"],["Instituição que organiza o poder e as leis.","Estado"]],["cultura","movimentos sociais","estratificação social","Estado"])},
+],
+fund2:[
+ {code:"S21",ano:"9º ano",title:"Cultura e sociedade",
+  concept:`<p><b>Etnocentrismo</b> (julgar o outro pela própria cultura), <b>relativismo cultural</b> (entender cada cultura no seu contexto) e <b>indústria cultural</b>.</p>`,
+  ex:{q:"Achar a própria cultura superior às outras:",steps:["julga o diferente","etnocentrismo"],a:"etnocentrismo"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Julgar outras culturas como inferiores à sua.","etnocentrismo"],["Compreender cada cultura em seu contexto.","relativismo cultural"],["Produção de cultura em massa pela mídia.","indústria cultural"],["Mistura de elementos de culturas diferentes.","hibridismo cultural"]],["etnocentrismo","relativismo cultural","indústria cultural","hibridismo cultural"])},
+ {code:"S22",ano:"9º ano",title:"O trabalho",
+  concept:`<p><b>Taylorismo</b> (gerência científica, tarefas cronometradas), <b>fordismo</b> (linha de montagem) e <b>toyotismo</b> (produção flexível, just-in-time).</p>`,
+  ex:{q:"Linha de montagem e produção em massa:",steps:["Henry Ford","fordismo"],a:"fordismo"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Tarefas cronometradas e gerência científica.","taylorismo"],["Linha de montagem e produção em massa.","fordismo"],["Produção flexível e estoque mínimo (just-in-time).","toyotismo"],["O operário repete um único movimento o dia todo.","fordismo"]],["taylorismo","fordismo","toyotismo"])},
+],
+medio:[
+ {code:"S31",ano:"1ª série",title:"Émile Durkheim",
+  concept:`<p><b>Durkheim</b> criou o conceito de <b>fato social</b> (externo, coercitivo, geral). Estudou a coesão social, a solidariedade e a anomia.</p>`,
+  ex:{q:"Regras externas que nos coagem são...",steps:["fato social","fato social"],a:"fato social"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Modo de agir externo e coercitivo sobre o indivíduo.","fato social"],["A ausência de normas que gera desordem.","anomia"],["O que mantém a sociedade unida.","solidariedade"],["A sociologia deve estudar os fatos como 'coisas'.","fato social"]],["fato social","anomia","solidariedade"])},
+ {code:"S32",ano:"2ª série",title:"Max Weber",
+  concept:`<p><b>Weber</b> partiu da <b>ação social</b> (dotada de sentido). Estudou os tipos ideais, a <b>burocracia</b> e a ética protestante.</p>`,
+  ex:{q:"Ação humana dotada de sentido para o outro:",steps:["base do método de Weber","ação social"],a:"ação social"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Ação individual dotada de sentido.","ação social"],["Organização racional baseada em regras e cargos.","burocracia"],["Relação entre o protestantismo e o capitalismo.","ética protestante"],["O indivíduo é o ponto de partida da análise.","ação social"]],["ação social","burocracia","ética protestante"])},
+ {code:"S33",ano:"2ª série",title:"Karl Marx",
+  concept:`<p><b>Marx</b> via a história como <b>luta de classes</b>. Conceitos: modo de produção, <b>mais-valia</b> (lucro sobre o trabalho) e <b>alienação</b>.</p>`,
+  ex:{q:"Lucro extraído do trabalho não pago:",steps:["exploração","mais-valia"],a:"mais-valia"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Conflito entre burguesia e proletariado.","luta de classes"],["Valor não pago ao trabalhador, vira lucro.","mais-valia"],["O trabalhador não se reconhece no que produz.","alienação"],["A história é movida por conflitos econômicos.","luta de classes"]],["luta de classes","mais-valia","alienação"])},
+ {code:"S34",ano:"3ª série",title:"Cidadania e direitos",
+  concept:`<p>Segundo T. H. Marshall, a cidadania tem três dimensões: <b>direitos civis</b> (liberdade), <b>políticos</b> (votar) e <b>sociais</b> (saúde, educação).</p>`,
+  ex:{q:"O direito de votar e ser votado é...",steps:["participação política","direito político"],a:"direito político"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Liberdade de ir e vir, de expressão.","direito civil"],["Votar e ser votado.","direito político"],["Saúde, educação e trabalho.","direito social"],["Igualdade perante a lei.","direito civil"]],["direito civil","direito político","direito social"])},
+],
+};
+
 /* ===================== OUTRAS MATÉRIAS (estrutura) ===================== */
 const SOON={
  port:{ico:"✍️",name:"Língua Portuguesa",
@@ -680,14 +1492,24 @@ const SOON={
 const SUBJECTS=[
  {id:"mat",ico:"∑",name:"Matemática",content:MAT},
  {id:"port",ico:"✍️",name:"Língua Portuguesa",content:PORT},
- ...Object.entries(SOON).filter(([id])=>id!=="port").map(([id,v])=>({id,ico:v.ico,name:v.name,data:v})),
+ {id:"red",ico:"📝",name:"Redação",content:RED},
+ {id:"lit",ico:"📚",name:"Literatura",content:LIT},
+ {id:"eng",ico:"🇬🇧",name:"Inglês",content:ING},
+ {id:"fis",ico:"🧲",name:"Física",content:FIS},
+ {id:"qui",ico:"⚗️",name:"Química",content:QUI},
+ {id:"bio",ico:"🧬",name:"Biologia",content:BIO},
+ {id:"his",ico:"🏛️",name:"História",content:HIS},
+ {id:"geo",ico:"🌎",name:"Geografia",content:GEO},
+ {id:"fil",ico:"🤔",name:"Filosofia",content:FIL},
+ {id:"soc",ico:"👥",name:"Sociologia",content:SOC},
+ ...Object.entries(SOON).filter(([id])=>!["port","red","lit","eng","ciencias","his","geo","fil","soc"].includes(id)).map(([id,v])=>({id,ico:v.ico,name:v.name,data:v})),
 ];
 const BANDS=[["fund1","Fundamental I · 1º–5º"],["fund2","Fundamental II · 6º–9º"],["medio","Ensino Médio · 1ª–3ª"]];
 const GOAL=5;
 const DIFF_CODES=new Set(['M12','M21','M22','M31','M32','M41','M63','M81','MA1']);
 const ALL_MAT=[...MAT.fund1,...MAT.fund2,...MAT.medio];
 const CONTENT_SUBJECTS=SUBJECTS.filter(s=>s.content);
-const ALL_TOPICS=CONTENT_SUBJECTS.flatMap(s=>[...s.content.fund1,...s.content.fund2,...s.content.medio]);
+const ALL_TOPICS=CONTENT_SUBJECTS.flatMap(s=>[...s.content.fund1,...s.content.fund2,...s.content.medio]).filter(t=>!t.tool);
 
 /* ===================== ESTADO ===================== */
 const KEY="miolo.vest.v1"; let persistent=true;
@@ -808,6 +1630,8 @@ function renderSoon(sid,bk,name){
 }
 function renderLesson(sid,bk,i){
   const lv=SUBJECTS.find(x=>x.id===sid).content[bk][i];
+  if(lv.tool==="oficina"){renderOficina(sid,bk,i);return;}
+  if(lv.tool==="fichas"){renderFichas(sid,bk,i);return;}
   view.innerHTML=`<button class="back" id="bk">‹ voltar</button>
     <div class="lesson"><div class="code">${lv.code} · ${lv.ano}</div><h2>${lv.title}</h2>
     <div class="concept">${lv.concept}</div>
