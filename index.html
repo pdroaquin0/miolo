@@ -39,6 +39,12 @@
   .view::-webkit-scrollbar{display:none;}
 
   .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .review-card{display:flex;align-items:center;gap:12px;background:linear-gradient(180deg,rgba(255,210,125,.16),rgba(255,125,104,.10));border:1px solid var(--gold);border-radius:16px;padding:15px;margin-bottom:14px;cursor:pointer;transition:.14s;}
+  .review-card:active{transform:scale(.99);}
+  .review-card .rl{flex:1;min-width:0;}
+  .review-card .rt{font-weight:800;font-size:15px;color:var(--gold);}
+  .review-card .rd{font-size:11.5px;color:var(--mute);margin-top:3px;}
+  .review-card .rn{flex:0 0 auto;font-family:var(--mono);font-weight:700;font-size:22px;color:var(--gold);}
   .subj{background:var(--panel); border:1px solid var(--edge); border-radius:16px; padding:15px; cursor:pointer; transition:.14s; position:relative;}
   .subj:active{transform:scale(.98);}
   .subj.soon{opacity:.62;}
@@ -100,6 +106,19 @@
   .opt.correct{background:var(--mint); color:#08251c; border-color:var(--mint);}
   .opt.wrong{background:var(--wrong); color:#2a0810; border-color:var(--wrong);}
   sup,sub{font-size:.7em;}
+  .frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.04;margin:0 .18em;}
+  .frac i{font-style:normal;padding:0 .35em;}
+  .frac i:first-child{border-bottom:1.6px solid currentColor;}
+  .rad{display:inline-block;border-top:1.6px solid currentColor;padding:1px 3px 0 2px;margin-left:.55em;position:relative;}
+  .rad::before{content:"√";position:absolute;left:-.52em;top:-2px;font-size:1.05em;}
+  .mat{display:inline-grid;grid-template-columns:auto auto;gap:1px 14px;padding:3px 10px;margin:0 .25em;position:relative;vertical-align:middle;}
+  .mat i{font-style:normal;text-align:right;min-width:1.1em;}
+  .mat::before,.mat::after{content:"";position:absolute;top:1px;bottom:1px;width:6px;border:1.7px solid currentColor;}
+  .mat::before{left:0;border-right:none;border-radius:3px 0 0 3px;}
+  .mat::after{right:0;border-left:none;border-radius:0 3px 3px 0;}
+  .mat.m3{grid-template-columns:auto auto auto;}
+  .lvtag{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);white-space:nowrap;}
+  .lvtag b{color:var(--coral);}
   .answer{font-family:var(--mono); font-weight:700; font-size:30px; text-align:center; min-height:42px; color:var(--mint); letter-spacing:.08em; margin:2px 0 12px;}
   .answer .ph{color:var(--mute);}
   .answer.correct{color:var(--mint);} .answer.wrong{color:var(--wrong);}
@@ -143,6 +162,20 @@ const sub=n=>String(n).split('').map(c=>SB[c]||c).join('');
 const neg=n=>n<0?'−'+(-n):String(n);
 function term(a,n){if(n===0)return String(a);const base=n===1?'x':'x'+sup(n);if(a===1)return base;if(a===-1)return '−'+base;return a+base;}
 function fr(n,d){const g=gcd(n,d);return `${n/g}/${d/g}`;}
+function fracH(n,d){return `<span class="frac"><i>${n}</i><i>${d}</i></span>`;}
+function radH(x){return `<span class="rad">${x}</span>`;}
+function matH(a,b,c,d){return `<span class="mat"><i>${a}</i><i>${b}</i><i>${c}</i><i>${d}</i></span>`;}
+function matH3(v){return `<span class="mat m3">${v.map(x=>`<i>${x}</i>`).join('')}</span>`;}
+function piCoef(num,den){const g=gcd(Math.abs(num),den);num/=g;den/=g;return (den===1?String(num):fracH(num,den))+'π';}
+// renderiza valores trigonométricos/frações comuns de forma bonita
+function pretty(v){
+  if(v[0]==='−'||v[0]==='-')return '−'+pretty(v.slice(1));
+  const map={"1/2":fracH(1,2),"√2/2":fracH(radH(2),2),"√3/2":fracH(radH(3),2),"√3/3":fracH(radH(3),3),"√3":radH(3),"1":"1"};
+  if(map[v]!==undefined)return map[v];
+  const m=v.match(/^(√?\d+)\/(\d+)$/); if(m)return fracH(m[1].startsWith('√')?radH(m[1].slice(1)):m[1],m[2]);
+  return v;
+}
+const dscale=(D,lo,hi,step)=>rint(lo,hi+(D-1)*step);
 function numOpts(ans,spread){
   const set=new Set([ans]),out=[];let g=0;
   while(out.length<3&&g++<300){const d=ans+rint(1,Math.max(2,spread))*(Math.random()<.5?-1:1);if(!set.has(d)){set.add(d);out.push(d);}}
@@ -169,31 +202,31 @@ fund1:[
  {code:"M12",ano:"1º ano",title:"Soma sem reserva",typed:true,
   concept:`<p>Somar é <b>juntar</b>. Some unidade com unidade e dezena com dezena. Aqui nenhuma coluna passa de 9.</p><div class="formula">34 + 25 → 9 e 5 → 59</div>`,
   ex:{q:"52 + 36",steps:["2+6=8","5+3=8","= 88"],a:"88"},
-  gen:()=>{const u1=rint(0,5),u2=rint(0,9-u1),t1=rint(1,4),t2=rint(1,9-t1);const a=t1*10+u1,b=t2*10+u2;return{prompt:`${a} + ${b}`,answer:a+b};}},
+  gen:(D=1)=>{const t1=rint(1,Math.min(3+D,8)),t2=rint(1,9-t1),u1=rint(0,5),u2=rint(0,9-u1);const a=t1*10+u1,b=t2*10+u2;return{prompt:`${a} + ${b}`,answer:a+b};}},
  {code:"M21",ano:"2º ano",title:"Soma com reserva",typed:true,
   concept:`<p>Quando a coluna passa de 9, o excedente <b>"vai um"</b> para a próxima.</p><div class="formula">27 + 15 → 7+5=12 (vai 1) → 42</div>`,
   ex:{q:"48 + 35",steps:["8+5=13 (vai 1)","4+3+1=8","= 83"],a:"83"},
-  gen:()=>{const u1=rint(1,9),u2=rint(10-u1,9),t1=rint(1,7),t2=rint(1,7);const a=t1*10+u1,b=t2*10+u2;return{prompt:`${a} + ${b}`,answer:a+b};}},
+  gen:(D=1)=>{const u1=rint(1,9),u2=rint(10-u1,9),t1=rint(1,Math.min(4+D,8)),t2=rint(1,Math.min(4+D,8));const a=t1*10+u1,b=t2*10+u2;return{prompt:`${a} + ${b}`,answer:a+b};}},
  {code:"M22",ano:"2º ano",title:"Subtração",typed:true,
   concept:`<p>Subtrair é <b>tirar</b>, o <b>inverso</b> da soma. Confira somando o resultado de volta.</p><div class="formula">a + b = c ⇒ c − b = a</div>`,
   ex:{q:"73 − 48",steps:["48+2=50; 50+23=73","Faltam 2+23","= 25"],a:"25"},
-  gen:()=>{const a=rint(25,95),b=rint(8,a-1);return{prompt:`${a} − ${b}`,answer:a-b};}},
+  gen:(D=1)=>{const a=rint(20,30+D*30),b=rint(8,a-1);return{prompt:`${a} − ${b}`,answer:a-b};}},
  {code:"M31",ano:"3º ano",title:"Tabuada",typed:true,
   concept:`<p>Multiplicar é <b>soma repetida</b>: 4×3 = 4+4+4.</p><div class="formula">a × b = a somado b vezes</div>`,
   ex:{q:"7 × 8",steps:["7×4=28","28+28","= 56"],a:"56"},
-  gen:()=>{const a=rint(2,9),b=rint(2,9);return{prompt:`${a} × ${b}`,answer:a*b};}},
+  gen:(D=1)=>{const a=rint(2,9),b=rint(2,Math.min(9+(D-1)*2,12));return{prompt:`${a} × ${b}`,answer:a*b};}},
  {code:"M32",ano:"3º ano",title:"Divisão",typed:true,
   concept:`<p>Dividir é <b>repartir igualmente</b>, o inverso de multiplicar.</p><div class="formula">a × b = c ⇒ c ÷ b = a</div>`,
   ex:{q:"72 ÷ 9",steps:["9×8=72","= 8"],a:"8"},
-  gen:()=>{const b=rint(2,9),q=rint(2,12);return{prompt:`${b*q} ÷ ${b}`,answer:q};}},
+  gen:(D=1)=>{const b=rint(2,9),q=rint(2,6+D*3);return{prompt:`${b*q} ÷ ${b}`,answer:q};}},
  {code:"M41",ano:"4º ano",title:"Multiplicação (2 dígitos)",typed:true,
   concept:`<p>Quebre em partes: 23×4 = 20×4 + 3×4.</p><div class="formula">= 80 + 12 = 92</div>`,
   ex:{q:"24 × 6",steps:["20×6=120","4×6=24","= 144"],a:"144"},
-  gen:()=>{const a=rint(2,9),b=rint(11,29);return{prompt:`${b} × ${a}`,answer:a*b};}},
+  gen:(D=1)=>{const a=rint(2,9),b=rint(11,19+D*9);return{prompt:`${b} × ${a}`,answer:a*b};}},
  {code:"M42",ano:"4º ano",title:"Frações",
-  concept:`<p>Fração é <b>parte de um todo</b>. <b>Simplificar</b> é dividir cima e baixo pelo mesmo número.</p><div class="formula">6/8 = 3/4</div>`,
+  concept:`<p>Fração é <b>parte de um todo</b>. <b>Simplificar</b> é dividir cima e baixo pelo mesmo número.</p><div class="formula">${fracH(6,8)} = ${fracH(3,4)}</div>`,
   ex:{q:"Simplifique 8/12",steps:["Divisor comum: 4","8÷4=2, 12÷4=3","= 2/3"],a:"2/3"},
-  gen:()=>{const q=rint(2,6);let p=rint(1,q-1);while(gcd(p,q)!==1)p=rint(1,q-1);const k=rint(2,5);const n=p*k,d=q*k;return{prompt:`Simplifique<br>${n}/${d}`,small:true,opts:strOpts(`${p}/${q}`,[`${n}/${d}`,`${p}/${d}`,`${n}/${q}`])};}},
+  gen:()=>{const q=rint(2,6);let p=rint(1,q-1);while(gcd(p,q)!==1)p=rint(1,q-1);const k=rint(2,5);const n=p*k,d=q*k;const o=strOpts(`${p}/${q}`,[`${n}/${d}`,`${p}/${d}`,`${n}/${q}`]);o.forEach(x=>x.html=pretty(x.html));return{prompt:`Simplifique ${fracH(n,d)}`,small:true,opts:o};}},
  {code:"M51",ano:"5º ano",title:"Decimais",
   concept:`<p>O número depois da vírgula são <b>décimos, centésimos…</b> Alinhe as vírgulas para somar.</p><div class="formula">0,4 + 0,3 = 0,7</div>`,
   ex:{q:"0,6 + 0,5",steps:["6 décimos + 5 décimos = 11 décimos","= 1,1"],a:"1,1"},
@@ -217,11 +250,11 @@ fund2:[
  {code:"M62",ano:"6º ano",title:"Raízes",typed:true,
   concept:`<p>Raiz quadrada é o <b>inverso</b> do quadrado.</p><div class="formula">b² = a ⇒ √a = b</div>`,
   ex:{q:"√169",steps:["13×13=169","= 13"],a:"13"},
-  gen:()=>{const k=rint(2,15);return{prompt:`√${k*k}`,answer:k};}},
+  gen:(D=1)=>{const k=rint(2,9+D*3);return{prompt:`${radH(k*k)}`,answer:k};}},
  {code:"M63",ano:"6º ano",title:"Ordem das operações",typed:true,
   concept:`<p>Primeiro <b>× e ÷</b>, depois <b>+ e −</b>.</p><div class="formula">2 + 3 × 4 = 14</div>`,
   ex:{q:"5 + 6 × 2",steps:["6×2=12","5+12=17"],a:"17"},
-  gen:()=>{const a=rint(2,9),b=rint(2,9),c=rint(2,6);return{prompt:`${a} + ${b} × ${c}`,answer:a+b*c};}},
+  gen:(D=1)=>{const a=rint(2,5+D*3),b=rint(2,5+D*2),c=rint(2,4+D);return{prompt:`${a} + ${b} × ${c}`,answer:a+b*c};}},
  {code:"M71",ano:"7º ano",title:"Números inteiros",typed:true,
   concept:`<p>Abaixo do zero existem os <b>negativos</b>. Sinais iguais somam; sinais diferentes "se cancelam".</p><div class="formula">−7 + 3 = −4 · 5 − 8 = −3</div>`,
   ex:{q:"−6 + 9",steps:["9 − 6 = 3","sinal do maior (+)","= 3"],a:"3"},
@@ -233,7 +266,7 @@ fund2:[
  {code:"M81",ano:"8º ano",title:"Equação do 1º grau",typed:true,
   concept:`<p>Isole o x: tire o que soma, depois divida pelo que multiplica.</p><div class="formula">2x + 3 = 11 → x = 4</div>`,
   ex:{q:"3x + 5 = 20",steps:["3x = 15","x = 5"],a:"5"},
-  gen:()=>{const x=rint(2,9),a=rint(2,6),b=rint(1,12);return{prompt:`${a}x + ${b} = ${a*x+b}`,answer:x};}},
+  gen:(D=1)=>{const x=rint(2,5+D*3),a=rint(2,4+D),b=rint(1,8+D*3);return{prompt:`${a}x + ${b} = ${a*x+b}`,answer:x};}},
  {code:"M82",ano:"8º ano",title:"Regra de três",typed:true,
   concept:`<p>Em grandezas <b>proporcionais</b>, ache o valor de 1 e multiplique. Esse é o coração da regra de três.</p><div class="formula">3 → 6 · 1 → 2 · 5 → 10</div>`,
   ex:{q:"3 cadernos custam 12. E 5?",steps:["1 caderno: 12÷3 = 4","5 × 4 = 20"],a:"20"},
@@ -264,7 +297,7 @@ medio:[
  {code:"MA1",ano:"1ª série",title:"Função afim",typed:true,
   concept:`<p>f(x)=ax+b cresce a uma <b>taxa constante</b> a (a inclinação da reta). Substitua x para achar o valor.</p><div class="formula">f(x)=2x+1 → f(3)=7</div>`,
   ex:{q:"f(x)=3x+2, f(4)",steps:["3×4=12","12+2=14"],a:"14"},
-  gen:()=>{const a=rint(2,5),b=rint(1,9),k=rint(1,6);return{prompt:`f(x)=${a}x+${b}<br>f(${k}) = ?`,small:true,answer:a*k+b};}},
+  gen:(D=1)=>{const a=rint(2,3+D),b=rint(1,5+D*3),k=rint(1,4+D);return{prompt:`f(x)=${a}x+${b}<br>f(${k}) = ?`,small:true,answer:a*k+b};}},
  {code:"MA2",ano:"1ª série",title:"Função quadrática",typed:true,
   concept:`<p>f(x)=ax²+bx+c desenha uma <b>parábola</b>. Para avaliar, substitua x e respeite as potências.</p><div class="formula">f(x)=x²+2x+1 → f(2)=9</div>`,
   ex:{q:"f(x)=x²+3x+2, f(2)",steps:["2²=4","4+6+2=12"],a:"12"},
@@ -286,12 +319,13 @@ medio:[
   ex:{q:"log₃(81)",steps:["3⁴=81","= 4"],a:"4"},
   gen:()=>{const b=rint(2,5),k=rint(2,b<=3?4:3);return{prompt:`log<sub>${b}</sub>(${b**k}) = ?`,answer:k};}},
  {code:"MB4",ano:"2ª série",title:"Trigonometria (notáveis)",
-  concept:`<p>Os ângulos 30°, 45° e 60° têm valores fixos que valem decorar.</p><div class="formula">sen30=1/2 · sen45=√2/2 · sen60=√3/2</div>`,
+  concept:`<p>Os ângulos 30°, 45° e 60° têm valores fixos que valem decorar.</p><div class="formula">sen30=${fracH(1,2)} · sen45=${fracH(radH(2),2)} · sen60=${fracH(radH(3),2)}</div>`,
   ex:{q:"cos 60°",steps:["Tabela dos notáveis","cos 60° = 1/2"],a:"1/2"},
   gen:()=>{const T={sen:{30:"1/2",45:"√2/2",60:"√3/2"},cos:{30:"√3/2",45:"√2/2",60:"1/2"},tan:{30:"√3/3",45:"1",60:"√3"}};
     const fn=choice(['sen','cos','tan']),ang=choice([30,45,60]);const correct=T[fn][ang];
     const pool=["1/2","√2/2","√3/2","√3/3","1","√3"].filter(v=>v!==correct);
-    return{prompt:`${fn} ${ang}° = ?`,opts:strOpts(correct,shuffle(pool).slice(0,3))};}},
+    const o=strOpts(correct,shuffle(pool).slice(0,3));o.forEach(x=>x.html=pretty(x.html));
+    return{prompt:`${fn} ${ang}° = ?`,opts:o};}},
  {code:"MC1",ano:"3ª série",title:"Análise combinatória",typed:true,
   concept:`<p>Para <b>ordenar</b> n objetos distintos há n! maneiras (n × (n−1) × … × 1).</p><div class="formula">P(n) = n!</div>`,
   ex:{q:"Ordenar 4 livros (4!)",steps:["4×3×2×1","= 24"],a:"24"},
@@ -301,7 +335,8 @@ medio:[
   ex:{q:"Sair par num dado",steps:["Favoráveis: 2,4,6 → 3","3/6 = 1/2"],a:"1/2"},
   gen:()=>{const evs=[["número par",3],["múltiplo de 3",2],["maior que 4",2],["o número 6",1],["menor que 3",2]];const e=choice(evs);const correct=fr(e[1],6);
     const pool=[fr(6-e[1],6),`${e[1]}/3`,`${e[1]}`,"1/3","1/2","2/3"].filter(v=>v!==correct);
-    return{prompt:`Num dado, P(${e[0]})?`,small:true,opts:strOpts(correct,shuffle([...new Set(pool)]).slice(0,3))};}},
+    const o=strOpts(correct,shuffle([...new Set(pool)]).slice(0,3));o.forEach(x=>x.html=pretty(x.html));
+    return{prompt:`Num dado, P(${e[0]})?`,small:true,opts:o};}},
  {code:"MC3",ano:"3ª série",title:"Geometria analítica",typed:true,
   concept:`<p>A distância entre dois pontos é o Pitágoras aplicado às diferenças de x e de y.</p><div class="formula">d = √((Δx)² + (Δy)²)</div>`,
   ex:{q:"(0,0) e (3,4)",steps:["Δx=3, Δy=4","√(9+16)=√25","= 5"],a:"5"},
@@ -337,7 +372,7 @@ medio:[
  {code:"MB7",ano:"2ª série",title:"Matrizes: determinante 2×2",typed:true,
   concept:`<p>O determinante de uma matriz 2×2 é o produto da <b>diagonal principal</b> menos o da <b>secundária</b>.</p><div class="formula">det = a·d − b·c</div>`,
   ex:{q:"[2  3 ; 1  4]",steps:["2·4 − 3·1","= 8 − 3 = 5"],a:"5"},
-  gen:()=>{const a=rint(-5,5),b=rint(-5,5),c=rint(-5,5),d=rint(-5,5);return{prompt:`Determinante:<br>| ${a}&nbsp;&nbsp;${b} |<br>| ${c}&nbsp;&nbsp;${d} |`,small:true,answer:a*d-b*c,neg:true};}},
+  gen:()=>{const a=rint(-5,5),b=rint(-5,5),c=rint(-5,5),d=rint(-5,5);return{prompt:`det ${matH(a,b,c,d)}`,small:true,answer:a*d-b*c,neg:true};}},
  {code:"MC7",ano:"3ª série",title:"Combinação",typed:true,
   concept:`<p>A <b>combinação</b> conta grupos onde a <b>ordem não importa</b> (diferente da permutação).</p><div class="formula">C(n,k) = n! / (k!·(n−k)!)</div>`,
   ex:{q:"C(4,2)",steps:["4!/(2!·2!) = 24/4","= 6"],a:"6"},
@@ -358,6 +393,112 @@ medio:[
   concept:`<p>O <b>módulo</b> de a+bi é a distância dele até a origem no plano — Pitágoras de novo.</p><div class="formula">|a + bi| = √(a² + b²)</div>`,
   ex:{q:"|3 + 4i|",steps:["√(3²+4²) = √25","= 5"],a:"5"},
   gen:()=>{const t=choice([[3,4,5],[6,8,10],[5,12,13],[8,15,17]]);const a=t[0]*(Math.random()<.5?1:-1),b=t[1]*(Math.random()<.5?1:-1);return{prompt:`|${neg(a)} ${b<0?'−':'+'} ${Math.abs(b)}i| = ?`,small:true,answer:t[2]};}},
+ {code:"MV1",ano:"3ª série",title:"Volume (cubo e bloco)",typed:true,
+  concept:`<p>Volume é o espaço em 3D: <b>comprimento × largura × altura</b>. No cubo, as três medidas são iguais.</p><div class="formula">V▭ = a·b·c · V⬛ = a³</div>`,
+  ex:{q:"Cubo de aresta 3",steps:["3 × 3 × 3","= 27"],a:"27"},
+  gen:()=>{if(Math.random()<.5){const a=rint(2,8);return{prompt:`Cubo de aresta ${a}.<br>Volume?`,small:true,answer:a**3};}const a=rint(2,6),b=rint(2,6),c=rint(2,6);return{prompt:`Bloco ${a} × ${b} × ${c}.<br>Volume?`,small:true,answer:a*b*c};}},
+ {code:"MV2",ano:"3ª série",title:"Volume do cilindro",
+  concept:`<p>O cilindro é uma base circular (área <b>πr²</b>) esticada por uma altura h.</p><div class="formula">V = πr²·h</div>`,
+  ex:{q:"r=2, h=3",steps:["base = π·2² = 4π","×3 = 12π"],a:"12π"},
+  gen:()=>{const r=rint(1,5),h=rint(2,6);return{prompt:`Cilindro r=${r}, h=${h}.<br>Volume?`,small:true,opts:strOpts(`${r*r*h}π`,[`${4*r*r*h}π`,`${r*r}π`,`${2*r*r*h}π`])};}},
+ {code:"MT1",ano:"2ª série",title:"Graus e radianos",
+  concept:`<p>Uma volta inteira é 360° ou 2π rad. A meia-volta, 180° = π. O resto é só proporção.</p><div class="formula">180° = π rad</div>`,
+  ex:{q:"90° em radianos",steps:["90 é metade de 180","= π/2"],a:"π/2"},
+  gen:()=>{const T={30:"π/6",45:"π/4",60:"π/3",90:"π/2",180:"π",360:"2π"};const deg=choice([30,45,60,90,180,360]);const correct=T[deg];
+    const pool=Object.values(T).filter(v=>v!==correct);return{prompt:`${deg}° em radianos?`,opts:strOpts(correct,shuffle(pool).slice(0,3))};}},
+ {code:"MT2",ano:"2ª série",title:"Trig: redução de quadrante",
+  concept:`<p>Fora do 1º quadrante, o valor é o do <b>ângulo de referência</b>, com o <b>sinal do quadrante</b>.</p><div class="formula">sen150° = sen30° = 1/2</div>`,
+  ex:{q:"cos 120°",steps:["referência 60°, 2º quadrante","cosseno é negativo lá","= −1/2"],a:"−1/2"},
+  gen:()=>{const tab=[["sen 150°","1/2"],["sen 120°","√3/2"],["sen 135°","√2/2"],["cos 120°","−1/2"],["cos 150°","−√3/2"],["cos 135°","−√2/2"],["sen 210°","−1/2"],["sen 300°","−√3/2"],["cos 240°","−1/2"]];
+    const e=choice(tab);const pool=["1/2","√2/2","√3/2","−1/2","−√2/2","−√3/2"].filter(v=>v!==e[1]);
+    const o=strOpts(e[1],shuffle(pool).slice(0,3));o.forEach(x=>x.html=pretty(x.html));return{prompt:`${e[0]} = ?`,opts:o};}},
+ {code:"MT3",ano:"2ª série",title:"Relação fundamental",
+  concept:`<p>Para qualquer ângulo, <b>sen²x + cos²x = 1</b>. Conhecendo um, o Pitágoras dá o outro.</p><div class="formula">sen²x + cos²x = 1</div>`,
+  ex:{q:"sen x = 3/5",steps:["cos²x = 1 − 9/25 = 16/25","cos x = 4/5"],a:"4/5"},
+  gen:()=>{const t=choice([[3,4,5],[6,8,10],[5,12,13],[8,15,17]]);const o=strOpts(`${t[1]}/${t[2]}`,[`${t[0]}/${t[2]}`,`${t[2]}/${t[1]}`,`${t[0]}/${t[1]}`]);o.forEach(x=>x.html=pretty(x.html));return{prompt:`Se sen x = ${pretty(t[0]+"/"+t[2])} (x agudo),<br>cos x = ?`,small:true,opts:o};}},
+ {code:"MF1",ano:"1ª série",title:"Função composta",typed:true,
+  concept:`<p>Em f(g(x)), aplique a função <b>de dentro primeiro</b> e use o resultado na de fora.</p><div class="formula">f(g(x))</div>`,
+  ex:{q:"f(x)=2x+1, g(x)=x+3, f(g(2))",steps:["g(2)=5","f(5)=2·5+1=11"],a:"11"},
+  gen:()=>{const a=rint(1,5),b=rint(1,5),k=rint(1,5);return{prompt:`f(x)=2x+${a}, g(x)=x+${b}<br>f(g(${k})) = ?`,small:true,answer:2*(k+b)+a};}},
+ {code:"MF2",ano:"1ª série",title:"Domínio de função",
+  concept:`<p>O domínio é onde a função <b>existe</b>: raiz exige radicando <b>≥ 0</b>; fração exige denominador <b>≠ 0</b>.</p><div class="formula">√(x−5): x ≥ 5 · 1/(x−3): x ≠ 3</div>`,
+  ex:{q:"Domínio de √(x−5)",steps:["radicando ≥ 0","x − 5 ≥ 0","x ≥ 5"],a:"x ≥ 5"},
+  gen:()=>{const k=rint(2,8);if(Math.random()<.5)return{prompt:`Domínio de<br>√(x − ${k}) ?`,small:true,opts:strOpts(`x ≥ ${k}`,[`x > ${k}`,`x ≤ ${k}`,`x ≠ ${k}`])};return{prompt:`Domínio de<br>1/(x − ${k}) ?`,small:true,opts:strOpts(`x ≠ ${k}`,[`x = ${k}`,`x ≥ ${k}`,`x > ${k}`])};}},
+ {code:"MF3",ano:"1ª série",title:"Discriminante (Δ)",typed:true,
+  concept:`<p>O <b>discriminante</b> Δ = b² − 4ac diz quantas raízes reais a equação tem — e alimenta a fórmula de Bhaskara.</p><div class="formula">Δ = b² − 4ac</div>`,
+  ex:{q:"x² − 5x + 6",steps:["b=−5, c=6","Δ = 25 − 24","= 1"],a:"1"},
+  gen:()=>{const b=rint(1,6)*(Math.random()<.5?1:-1),c=rint(1,6)*(Math.random()<.5?1:-1);return{prompt:`Δ de x² ${b<0?'−':'+'} ${Math.abs(b)}x ${c<0?'−':'+'} ${Math.abs(c)}`,small:true,answer:b*b-4*c,neg:true};}},
+ {code:"ME1",ano:"3ª série",title:"Juros compostos",typed:true,
+  concept:`<p>Nos juros <b>compostos</b>, cada período rende sobre o total acumulado — juros sobre juros.</p><div class="formula">M = C·(1+i)ᵗ</div>`,
+  ex:{q:"R$ 100, 10%/mês, 2 meses",steps:["1º mês: 110","2º mês: 110×1,1 = 121"],a:"121"},
+  gen:()=>{const C=rint(1,9)*100,i=choice([10,20,50,100]);const f=1+i/100;return{prompt:`R$ ${C}, ${i}% ao mês, 2 meses<br>(compostos). Montante?`,small:true,answer:Math.round(C*f*f)};}},
+ {code:"ME2",ano:"2ª série",title:"Soma da PG finita",typed:true,
+  concept:`<p>A soma dos n primeiros termos de uma PG tem fórmula fechada.</p><div class="formula">Sₙ = a₁·(qⁿ − 1)/(q − 1)</div>`,
+  ex:{q:"a₁=1, q=2, n=4",steps:["1·(2⁴−1)/(2−1)","= 15"],a:"15"},
+  gen:()=>{const a1=rint(1,3),q=2,n=rint(3,6);return{prompt:`Soma dos ${n} termos:<br>PG a₁=${a1}, q=${q}`,small:true,answer:a1*(q**n-1)/(q-1)};}},
+ {code:"ME3",ano:"3ª série",title:"Arranjo",typed:true,
+  concept:`<p>No <b>arranjo</b>, a <b>ordem importa</b> (pódio, senhas). Conta-se quantas sequências de k entre n.</p><div class="formula">A(n,k) = n!/(n−k)!</div>`,
+  ex:{q:"A(4,2)",steps:["4!/2! = 24/2","= 12"],a:"12"},
+  gen:()=>{const n=rint(3,6),k=rint(2,n-1);return{prompt:`A(${n}, ${k}) = ?<br><span style="font-size:.65em">(arranjo)</span>`,small:true,answer:fact(n)/fact(n-k)};}},
+ {code:"ME4",ano:"3ª série",title:"Princípio da contagem",typed:true,
+  concept:`<p>Se uma escolha tem m opções e a seguinte tem n, o total é o <b>produto</b> m × n.</p><div class="formula">total = m × n × …</div>`,
+  ex:{q:"3 blusas, 4 calças",steps:["cada blusa com cada calça","3 × 4 = 12"],a:"12"},
+  gen:()=>{const m=rint(2,6),n=rint(2,6);return{prompt:`${m} camisetas e ${n} calças.<br>Quantos looks diferentes?`,small:true,answer:m*n};}},
+ {code:"ME5",ano:"3ª série",title:"Probabilidade da união",
+  concept:`<p>Para eventos que <b>não se sobrepõem</b>, a probabilidade da união é a <b>soma</b> das probabilidades.</p><div class="formula">P(A ou B) = P(A) + P(B)</div>`,
+  ex:{q:"Tirar 1 ou 2 num dado",steps:["1/6 + 1/6","= 2/6 = 1/3"],a:"1/3"},
+  gen:()=>{const tab=[["1 ou 2","1/3"],["par ou 5","2/3"],["1, 2 ou 3","1/2"],["múltiplo de 3 ou 1","1/2"],["5 ou 6","1/3"]];const e=choice(tab);
+    const pool=["1/6","1/3","1/2","2/3","5/6"].filter(v=>v!==e[1]);const o=strOpts(e[1],shuffle(pool).slice(0,3));o.forEach(x=>x.html=pretty(x.html));
+    return{prompt:`Num dado, P(${e[0]})?`,small:true,opts:o};}},
+ {code:"MG1",ano:"3ª série",title:"Volume da esfera",
+  concept:`<p>A esfera tem volume dado por uma fórmula com r³.</p><div class="formula">V = (4/3)·π·r³</div>`,
+  ex:{q:"r = 3",steps:["4·27/3","= 36π"],a:"36π"},
+  gen:()=>{const r=rint(1,4);return{prompt:`Esfera de raio ${r}.<br>Volume?`,small:true,opts:strOpts(piCoef(4*r**3,3),[piCoef(4*r**3,1),piCoef(2*r**3,3),piCoef(2*r**3,1)])};}},
+ {code:"MG2",ano:"3ª série",title:"Volume do cone",
+  concept:`<p>O cone é <b>um terço</b> do cilindro de mesma base e altura.</p><div class="formula">V = (π·r²·h)/3</div>`,
+  ex:{q:"r=3, h=4",steps:["π·9·4 = 36π","÷3 = 12π"],a:"12π"},
+  gen:()=>{const r=rint(2,5),h=rint(2,6);return{prompt:`Cone r=${r}, h=${h}.<br>Volume?`,small:true,opts:strOpts(piCoef(r*r*h,3),[piCoef(r*r*h,1),piCoef(2*r*r*h,3),piCoef(2*r*r*h,1)])};}},
+ {code:"MG3",ano:"3ª série",title:"Volume da pirâmide",typed:true,
+  concept:`<p>Como o cone, a pirâmide é <b>um terço</b> do prisma de mesma base e altura.</p><div class="formula">V = (área da base · altura)/3</div>`,
+  ex:{q:"base quadrada lado 4, altura 3",steps:["base = 16","16·3/3 = 16"],a:"16"},
+  gen:()=>{const L=rint(2,7),h=choice([3,6]);return{prompt:`Pirâmide base quadrada (lado ${L}),<br>altura ${h}. Volume?`,small:true,answer:L*L*h/3};}},
+ {code:"MT4",ano:"2ª série",title:"Lei dos cossenos",typed:true,
+  concept:`<p>Generaliza Pitágoras para qualquer ângulo. Com 60°, cos = 1/2, e a fórmula vira a²=b²+c²−bc.</p><div class="formula">a² = b² + c² − 2bc·cos A</div>`,
+  ex:{q:"lados 3 e 8, ângulo 60°",steps:["a² = 9+64−24 = 49","a = 7"],a:"7"},
+  gen:()=>{const t=choice([[3,8,7],[5,8,7],[8,15,13]]);return{prompt:`Lados ${t[0]} e ${t[1]}, ângulo 60°<br>entre eles. Terceiro lado?`,small:true,answer:t[2]};}},
+ {code:"MMx",ano:"2ª série",title:"Multiplicação de matrizes",typed:true,
+  concept:`<p>Cada elemento de A·B é a <b>linha de A vezes a coluna de B</b> (soma dos produtos).</p><div class="formula">(AB)₁₁ = a₁₁·b₁₁ + a₁₂·b₂₁</div>`,
+  ex:{q:"[1 2;..]·[3 ..;4 ..], (1,1)",steps:["1·3 + 2·4","= 11"],a:"11"},
+  gen:()=>{const a=rint(1,5),b=rint(1,5),c=rint(1,5),d=rint(1,5);return{prompt:`${matH(a,b,'·','·')} · ${matH(c,'·',d,'·')}<br>elemento (1,1) = ?`,small:true,answer:a*c+b*d};}},
+ {code:"M33",ano:"2ª série",title:"Determinante 3×3 (Sarrus)",typed:true,
+  concept:`<p>Por <b>Sarrus</b>: some as três diagonais ↘ e subtraia as três ↙.</p><div class="formula">repita as 2 primeiras colunas e diagonalize</div>`,
+  ex:{q:"diagonal simples",steps:["produtos ↘ menos ↙"],a:"—"},
+  gen:()=>{const m=[];for(let i=0;i<9;i++)m.push(rint(0,3));const det=m[0]*(m[4]*m[8]-m[5]*m[7])-m[1]*(m[3]*m[8]-m[5]*m[6])+m[2]*(m[3]*m[7]-m[4]*m[6]);return{prompt:`det ${matH3(m)}`,small:true,answer:det,neg:true};}},
+ {code:"MD3",ano:"3ª série",title:"Complexos: argumento",
+  concept:`<p>O <b>argumento</b> é o ângulo do número no plano. Localize o quadrante e use os ângulos notáveis.</p><div class="formula">arg(1+i) = 45°</div>`,
+  ex:{q:"−1 + i",steps:["2º quadrante, 45° de referência","= 135°"],a:"135°"},
+  gen:()=>{const tab=[["1 + i","45°"],["−1 + i","135°"],["−1 − i","225°"],["1 − i","315°"],["i","90°"],["−i","270°"]];const e=choice(tab);
+    const pool=["45°","90°","135°","225°","270°","315°","180°"].filter(v=>v!==e[1]);return{prompt:`Argumento de ${e[0]} ?`,small:true,opts:strOpts(e[1],shuffle(pool).slice(0,3))};}},
+ {code:"MGA1",ano:"3ª série",title:"Coeficiente angular",typed:true,
+  concept:`<p>A inclinação de uma reta é a variação de y dividida pela de x entre dois pontos.</p><div class="formula">m = (y₂−y₁)/(x₂−x₁)</div>`,
+  ex:{q:"(1,2) e (3,8)",steps:["(8−2)/(3−1) = 6/2","= 3"],a:"3"},
+  gen:()=>{const x1=rint(0,3),x2=x1+rint(1,3),m=rint(-3,4),y1=rint(0,5);return{prompt:`Reta por (${x1},${y1}) e (${x2},${y1+m*(x2-x1)}).<br>Coeficiente angular?`,small:true,answer:m,neg:true};}},
+ {code:"MGA2",ano:"3ª série",title:"Equação da circunferência",
+  concept:`<p>Centro (a,b) e raio r: a equação eleva ao quadrado a distância ao centro.</p><div class="formula">(x−a)² + (y−b)² = r²</div>`,
+  ex:{q:"centro (1,2), raio 3",steps:["(x−1)²+(y−2)²","= 9"],a:"(x−1)² + (y−2)² = 9"},
+  gen:()=>{const a=rint(1,5),b=rint(1,5),r=rint(3,5);return{prompt:`Centro (${a}, ${b}), raio ${r}.<br>Equação?`,small:true,opts:strOpts(`(x−${a})² + (y−${b})² = ${r*r}`,[`(x−${a})² + (y−${b})² = ${r}`,`(x+${a})² + (y+${b})² = ${r*r}`,`(x−${a})² + (y−${b})² = ${2*r}`])};}},
+ {code:"MB6b",ano:"2ª série",title:"Logaritmo: quociente",typed:true,
+  concept:`<p>A <b>diferença</b> de logs de mesma base é o log do <b>quociente</b> — aqui, a diferença dos expoentes.</p><div class="formula">logᵦx − logᵦy = logᵦ(x/y)</div>`,
+  ex:{q:"log₂(16) − log₂(2)",steps:["4 − 1","= 3"],a:"3"},
+  gen:()=>{const b=2,p=rint(2,5),q=rint(1,p-1);return{prompt:`log<sub>${b}</sub>(${b**p}) − log<sub>${b}</sub>(${b**q}) = ?`,small:true,answer:p-q};}},
+ {code:"MC8b",ano:"3ª série",title:"Estatística: moda",typed:true,
+  concept:`<p>A <b>moda</b> é o valor que <b>mais se repete</b> num conjunto.</p><div class="formula">moda = o mais frequente</div>`,
+  ex:{q:"3, 5, 5, 7, 9",steps:["o 5 aparece 2×","moda = 5"],a:"5"},
+  gen:()=>{const m=rint(2,9);const others=shuffle([1,2,3,4,5,6,7,8,9].filter(x=>x!==m)).slice(0,3);const arr=shuffle([m,m,...others]);return{prompt:`Moda de:<br>${arr.join(',  ')}`,small:true,answer:m};}},
+ {code:"MC8c",ano:"3ª série",title:"Média ponderada",typed:true,
+  concept:`<p>Cada nota conta conforme o seu <b>peso</b>: some nota×peso e divida pela soma dos pesos.</p><div class="formula">M = Σ(nota·peso) / Σpeso</div>`,
+  ex:{q:"6 (peso 2), 9 (peso 1)",steps:["(12+9)/3 = 21/3","= 7"],a:"7"},
+  gen:()=>{let g1,g2;const w1=2,w2=1;do{g1=rint(2,9);g2=rint(2,9);}while((g1*w1+g2*w2)%(w1+w2)!==0);return{prompt:`Nota ${g1} (peso ${w1}) e ${g2} (peso ${w2}).<br>Média ponderada?`,small:true,answer:(g1*w1+g2*w2)/(w1+w2)};}},
 ],
 };
 
@@ -402,26 +543,81 @@ const SUBJECTS=[
 ];
 const BANDS=[["fund1","Fundamental I · 1º–5º"],["fund2","Fundamental II · 6º–9º"],["medio","Ensino Médio · 1ª–3ª"]];
 const GOAL=5;
+const DIFF_CODES=new Set(['M12','M21','M22','M31','M32','M41','M63','M81','MA1']);
 const ALL_MAT=[...MAT.fund1,...MAT.fund2,...MAT.medio];
 
 /* ===================== ESTADO ===================== */
 const KEY="miolo.vest.v1"; let persistent=true;
 function load(){try{const v=localStorage.getItem(KEY);return v?JSON.parse(v):null;}catch(e){persistent=false;return null;}}
-function persist(){try{localStorage.setItem(KEY,JSON.stringify({mastered:[...mastered]}));}catch(e){persistent=false;}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify({mastered:[...mastered],missed}));}catch(e){persistent=false;}}
 let mastered=new Set((load()||{}).mastered||[]);
+let missed=(load()||{}).missed||[];
+function recordMiss(lv,p){
+  if(missed.some(x=>x.prompt===p.prompt))return;
+  missed.unshift({code:lv.code,title:lv.title,prompt:p.prompt,small:!!p.small,typed:!!lv.typed,answer:p.answer,opts:p.opts?p.opts.map(o=>({html:o.html,correct:o.correct})):null,streak:0});
+  if(missed.length>60)missed.pop();
+  persist();
+}
 function updateProg(){$("progN").textContent=ALL_MAT.filter(t=>mastered.has(t.code)).length;$("progT").textContent=ALL_MAT.length;}
 
 /* ===================== TELAS ===================== */
 function renderHome(){
   updateProg();
-  let html=`<div class="grid">`;
+  let html="";
+  if(missed.length) html+=`<div class="review-card" id="revcard"><div class="rl"><div class="rt">↺ Revisar erros</div><div class="rd">${missed.length} questão${missed.length>1?'ões':''} que você errou · acerte 2× pra sair da pilha</div></div><div class="rn">${missed.length}</div></div>`;
+  html+=`<div class="grid">`;
   SUBJECTS.forEach(s=>{
     const tag=s.math?`<div class="tg on">● preenchida</div>`:`<div class="tg off">○ estrutura</div>`;
     html+=`<div class="subj ${s.math?'':'soon'}" data-s="${s.id}"><div class="ico">${s.ico}</div><div class="nm">${s.name}</div>${tag}</div>`;
   });
   html+=`</div>`;
   view.innerHTML=html;
+  if(missed.length)$("revcard").onclick=renderReview;
   view.querySelectorAll(".subj").forEach(el=>el.onclick=()=>renderSubject(el.dataset.s));
+  view.scrollTop=0;
+}
+function renderReview(){
+  if(!missed.length){view.innerHTML=`<button class="back" id="bk">‹ matérias</button><div class="done-screen"><div class="big">✨</div><h2>Pilha de revisão vazia</h2><p>Você revisou tudo que tinha errado. Mandou bem.</p></div>`;$("bk").onclick=renderHome;return;}
+  let locked=false,cur=null;
+  view.innerHTML=`<button class="back" id="bk">‹ matérias</button><div class="crumb">↺ Revisão · ${missed.length} na pilha</div>
+    <div class="qcard" id="q"></div><div class="why" id="why"></div>
+    <div id="zone"></div>`;
+  $("bk").onclick=renderHome;
+  const qEl=$("q"),whyEl=$("why"),zone=$("zone");
+  function clearItem(it,ok){
+    const idx=missed.findIndex(x=>x.prompt===it.prompt);
+    if(idx<0)return;
+    if(ok){missed[idx].streak=(missed[idx].streak||0)+1; if(missed[idx].streak>=2)missed.splice(idx,1);}
+    else missed[idx].streak=0;
+    persist();
+  }
+  function nextItem(){
+    if(!missed.length){renderReview();return;}
+    locked=false; whyEl.textContent="";
+    cur=missed[rint(0,missed.length-1)];
+    qEl.className="qcard"+(cur.small?" small":""); qEl.innerHTML=cur.prompt;
+    zone.innerHTML="";
+    if(cur.typed){
+      let buf="";
+      zone.innerHTML=`<div class="answer" id="ans"><span class="ph">?</span></div><div class="keypad" id="kp"></div>`;
+      const kp=$("kp"),ans=$("ans");
+      ['1','2','3','4','5','6','7','8','9','±','0','⌫'].forEach(k=>{const b=document.createElement("button");b.className="key"+(k==='⌫'?' del':k==='±'?' sign':'');b.textContent=k;
+        b.onclick=()=>{if(locked)return; if(k==='⌫')buf=buf.slice(0,-1); else if(k==='±')buf=buf.startsWith('-')?buf.slice(1):'-'+buf; else if(buf.replace('-','').length<6)buf+=k; ans.innerHTML=buf===''||buf==='-'?'<span class="ph">?</span>':buf.replace('-','−');};
+        kp.appendChild(b);});
+      const ok=document.createElement("button");ok.className="key ok";ok.textContent="OK";
+      ok.onclick=()=>{if(locked||buf===''||buf==='-')return;locked=true;const correct=parseInt(buf,10)===cur.answer;ans.className="answer "+(correct?"correct":"wrong");
+        if(!correct)whyEl.innerHTML=`Era <b>${neg(cur.answer)}</b>.`; clearItem(cur,correct); if(navigator.vibrate)navigator.vibrate(correct?8:[20,40,20]); setTimeout(nextItem,correct?720:1300);};
+      kp.appendChild(ok);
+    }else{
+      zone.innerHTML=`<div class="opts" id="opts"></div>`;const optsEl=$("opts");
+      cur.opts.forEach(o=>{const b=document.createElement("button");b.className="opt";b.innerHTML=o.html;
+        b.onclick=()=>{if(locked)return;locked=true;[...optsEl.children].forEach((x,idx)=>{x.disabled=true;if(cur.opts[idx].correct)x.classList.add("correct");});
+          if(!o.correct){b.classList.remove("correct");b.classList.add("wrong");whyEl.innerHTML=`Veja a correta (em verde).`;}
+          clearItem(cur,o.correct); if(navigator.vibrate)navigator.vibrate(o.correct?8:[20,40,20]); setTimeout(nextItem,o.correct?720:1300);};
+        optsEl.appendChild(b);});
+    }
+  }
+  nextItem();
   view.scrollTop=0;
 }
 function renderSubject(sid){
@@ -480,9 +676,10 @@ function renderLesson(bk,i){
   view.scrollTop=0;
 }
 function renderPractice(bk,i){
-  const lv=MAT[bk][i]; let got=0,locked=false,p=null,buf=""; const typed=!!lv.typed;
+  const lv=MAT[bk][i]; let got=0,locked=false,p=null,buf=""; const typed=!!lv.typed; const scales=DIFF_CODES.has(lv.code);
   view.innerHTML=`<button class="back" id="bk">‹ ${lv.title}</button>
     <div class="pbar"><div class="track"><div class="fill" id="fill"></div></div><div class="cnt" id="cnt">0/${GOAL}</div></div>
+    ${scales?'<div class="lvtag" id="lvtag" style="text-align:center;margin:-8px 0 12px">nível <b>1</b></div>':''}
     <div class="qcard" id="q"></div><div class="why" id="why"></div>
     ${typed?`<div class="answer" id="ans"><span class="ph">?</span></div><div class="keypad" id="kp"></div>`:`<div class="opts" id="opts"></div>`}`;
   $("bk").onclick=()=>renderLesson(bk,i);
@@ -493,14 +690,15 @@ function renderPractice(bk,i){
     else{qEl.classList.add("shake");if(navigator.vibrate)navigator.vibrate([20,40,20]);setTimeout(load,1500);}
   }
   function load(){
-    locked=false;buf="";whyEl.textContent="";p=lv.gen();
+    locked=false;buf="";whyEl.textContent="";const D=scales?Math.min(1+Math.floor(got*0.8),4):1;p=lv.gen(D);
+    if(scales){const lt=$("lvtag");if(lt)lt.innerHTML=`nível <b>${D}</b>`;}
     qEl.className="qcard"+(p.small?" small":"");qEl.innerHTML=p.prompt;
     if(typed){const ans=$("ans");ans.className="answer";ans.innerHTML='<span class="ph">?</span>';}
     else{const optsEl=$("opts");optsEl.innerHTML="";
       p.opts.forEach(o=>{const b=document.createElement("button");b.className="opt";b.innerHTML=o.html;
         b.onclick=()=>{if(locked)return;locked=true;
           [...optsEl.children].forEach((x,idx)=>{x.disabled=true;if(p.opts[idx].correct)x.classList.add("correct");});
-          if(!o.correct){b.classList.remove("correct");b.classList.add("wrong");whyEl.innerHTML=`Era <b>${p.opts.find(z=>z.correct).html.replace(/<[^>]+>/g,'')}</b> — veja o porquê e siga.`;}
+          if(!o.correct){b.classList.remove("correct");b.classList.add("wrong");whyEl.innerHTML=`Veja a correta (em verde) e siga.`;recordMiss(lv,p);}
           resolve(o.correct);};
         optsEl.appendChild(b);});}
   }
@@ -517,7 +715,7 @@ function renderPractice(bk,i){
     const ok=document.createElement("button");ok.className="key ok";ok.textContent="OK";
     ok.onclick=()=>{if(locked||buf===''||buf==='-')return;locked=true;
       const correct=parseInt(buf,10)===p.answer;ans.className="answer "+(correct?"correct":"wrong");
-      if(!correct)whyEl.innerHTML=`Era <b>${neg(p.answer)}</b> — confira e siga.`;resolve(correct);};
+      if(!correct){whyEl.innerHTML=`Era <b>${neg(p.answer)}</b> — confira e siga.`;recordMiss(lv,p);}resolve(correct);};
     kp.appendChild(ok);
   }
   load();
