@@ -140,7 +140,7 @@
 <div class="app">
   <header>
     <div class="brand"><span class="t">Mio<b>lo</b></span><span class="s">treino para o vestibular</span></div>
-    <div class="prog"><b id="progN">0</b>/<span id="progT">0</span><br>matemática</div>
+    <div class="prog"><b id="progN">0</b>/<span id="progT">0</span><br>dominados</div>
   </header>
   <div class="view" id="view"></div>
   <div class="note">estrutura inspirada na grade Avenues SP · matemática preenchida · offline</div>
@@ -502,6 +502,100 @@ medio:[
 ],
 };
 
+/* ===================== LÍNGUA PORTUGUESA (conteúdo real) ===================== */
+function clsGen(pf,bank,cats){const it=choice(bank);const pool=shuffle(cats.filter(x=>x!==it[1])).slice(0,3);const opts=shuffle([it[1],...pool].map(c=>({html:c,correct:c===it[1]})));return{prompt:pf(it[0]),small:true,opts};}
+function trGen(pf,bank){const it=choice(bank);const others=shuffle(bank.filter(x=>x[1]!==it[1])).map(x=>x[1]);return{prompt:pf(it[0]),small:true,opts:strOpts(it[1],[...new Set(others)].slice(0,3))};}
+function fcGen(items){const it=choice(items);return{prompt:it.q||"Qual frase está correta?",small:true,opts:shuffle(it.o.map((s,i)=>({html:s,correct:i===it.c})))};}
+const PORT={
+fund1:[
+ {code:"P11",ano:"1º ano",title:"Sílabas",
+  concept:`<p>Sílaba é cada "pedaço" de som que pronunciamos numa palavra. <b>Ca-sa</b> tem duas; <b>a-ba-ca-xi</b> tem quatro.</p>`,
+  ex:{q:"Quantas sílabas em 'cavalo'?",steps:["ca-va-lo","três sílabas"],a:"3"},
+  gen:()=>{const b=[["casa",2],["bola",2],["cavalo",3],["abacaxi",4],["sol",1],["mar",1],["janela",3],["computador",4],["livro",2],["amizade",4],["escola",3],["borboleta",4],["flor",1],["caderno",3],["chocolate",4]];const it=choice(b);return{prompt:`Quantas sílabas em<br>"${it[0]}"?`,small:true,opts:numOpts(it[1],2)};}},
+ {code:"P12",ano:"1º ano",title:"Substantivo, adjetivo ou verbo",
+  concept:`<p><b>Substantivo</b> nomeia (casa, amor); <b>adjetivo</b> caracteriza (bonito, azul); <b>verbo</b> indica ação (correr, pular).</p>`,
+  ex:{q:"'correr' é...",steps:["indica ação","é verbo"],a:"verbo"},
+  gen:()=>clsGen(w=>`"${w}" é qual classe?`,[["cachorro","substantivo"],["bonito","adjetivo"],["correr","verbo"],["felicidade","substantivo"],["rápido","adjetivo"],["pular","verbo"],["mesa","substantivo"],["azul","adjetivo"],["cantar","verbo"],["amor","substantivo"],["grande","adjetivo"],["dormir","verbo"],["cidade","substantivo"],["alegre","adjetivo"],["estudar","verbo"]],["substantivo","adjetivo","verbo"])},
+ {code:"P13",ano:"2º ano",title:"Plural",
+  concept:`<p>Em geral o plural ganha <b>-s</b>, mas há regras: palavras em <b>-ão</b> mudam (pão→pães), em <b>-l</b> trocam (animal→animais).</p>`,
+  ex:{q:"Plural de 'animal'",steps:["-al vira -ais","animais"],a:"animais"},
+  gen:()=>trGen(w=>`Plural de "${w}"?`,[["flor","flores"],["animal","animais"],["pão","pães"],["cão","cães"],["mão","mãos"],["limão","limões"],["papel","papéis"],["sol","sóis"],["coração","corações"],["cidadão","cidadãos"],["mulher","mulheres"],["fácil","fáceis"],["jornal","jornais"],["irmão","irmãos"]])},
+ {code:"P14",ano:"2º ano",title:"Masculino e feminino",
+  concept:`<p>Muitos pares mudam totalmente de palavra: <b>homem→mulher</b>, <b>boi→vaca</b>, <b>rei→rainha</b>.</p>`,
+  ex:{q:"Feminino de 'rei'",steps:["par próprio","rainha"],a:"rainha"},
+  gen:()=>trGen(w=>`Feminino de "${w}"?`,[["homem","mulher"],["boi","vaca"],["galo","galinha"],["pai","mãe"],["rei","rainha"],["cavalo","égua"],["herói","heroína"],["ator","atriz"],["genro","nora"],["bode","cabra"],["carneiro","ovelha"],["padrasto","madrasta"]])},
+ {code:"P15",ano:"3º ano",title:"Sinônimos",
+  concept:`<p><b>Sinônimos</b> são palavras de sentido <b>parecido</b>: alegre e contente, rápido e veloz.</p>`,
+  ex:{q:"Sinônimo de 'belo'",steps:["mesmo sentido","bonito"],a:"bonito"},
+  gen:()=>trGen(w=>`Sinônimo de "${w}"?`,[["alegre","contente"],["bonito","belo"],["rápido","veloz"],["esperto","inteligente"],["triste","melancólico"],["grande","enorme"],["medo","receio"],["casa","lar"],["falar","dizer"],["bravo","irritado"],["início","começo"],["fim","término"]])},
+ {code:"P16",ano:"3º ano",title:"Antônimos",
+  concept:`<p><b>Antônimos</b> são palavras de sentido <b>oposto</b>: alto e baixo, claro e escuro.</p>`,
+  ex:{q:"Antônimo de 'feliz'",steps:["sentido oposto","triste"],a:"triste"},
+  gen:()=>trGen(w=>`Antônimo de "${w}"?`,[["alto","baixo"],["claro","escuro"],["feliz","triste"],["grande","pequeno"],["rápido","lento"],["quente","frio"],["cheio","vazio"],["forte","fraco"],["dia","noite"],["amor","ódio"],["começo","fim"],["fácil","difícil"]])},
+],
+fund2:[
+ {code:"P21",ano:"6º ano",title:"Classes gramaticais",
+  concept:`<p>São <b>10 classes</b>: substantivo, adjetivo, verbo, advérbio, pronome, numeral, preposição, conjunção, artigo e interjeição.</p>`,
+  ex:{q:"'rapidamente' é...",steps:["modifica o verbo","advérbio"],a:"advérbio"},
+  gen:()=>clsGen(w=>`"${w}" é qual classe?`,[["liberdade","substantivo"],["veloz","adjetivo"],["estudar","verbo"],["rapidamente","advérbio"],["ela","pronome"],["dois","numeral"],["de","preposição"],["mas","conjunção"],["a","artigo"],["ai","interjeição"],["amizade","substantivo"],["bonito","adjetivo"],["correr","verbo"],["muito","advérbio"],["nós","pronome"],["primeiro","numeral"],["com","preposição"],["porque","conjunção"],["uma","artigo"],["oba","interjeição"]],["substantivo","adjetivo","verbo","advérbio","pronome","numeral","preposição","conjunção","artigo","interjeição"])},
+ {code:"P22",ano:"6º ano",title:"Sílaba tônica",
+  concept:`<p>A sílaba mais forte classifica a palavra: <b>oxítona</b> (última), <b>paroxítona</b> (penúltima), <b>proparoxítona</b> (antepenúltima).</p>`,
+  ex:{q:"'médico'",steps:["MÉ-di-co, força na antepenúltima","proparoxítona"],a:"proparoxítona"},
+  gen:()=>clsGen(w=>`"${w}" é...`,[["café","oxítona"],["sofá","oxítona"],["urubu","oxítona"],["mesa","paroxítona"],["livro","paroxítona"],["fácil","paroxítona"],["médico","proparoxítona"],["lâmpada","proparoxítona"],["sábado","proparoxítona"],["você","oxítona"],["caderno","paroxítona"],["árvore","proparoxítona"],["jacaré","oxítona"],["açúcar","paroxítona"],["público","proparoxítona"]],["oxítona","paroxítona","proparoxítona"])},
+ {code:"P23",ano:"7º ano",title:"Os porquês",
+  concept:`<p><b>Por que</b> (pergunta/separado), <b>porque</b> (resposta), <b>por quê</b> (fim de frase), <b>porquê</b> (substantivo, com artigo).</p>`,
+  ex:{q:'"Não fui ___ chovia."',steps:["é resposta, junto e sem acento","porque"],a:"porque"},
+  gen:()=>fcGen([{q:'"Não fui ___ estava doente."',o:["porque","por que","porquê","por quê"],c:0},{q:'"___ você não veio?"',o:["Por que","Porque","Porquê","Por quê"],c:0},{q:'"Ele não disse o ___."',o:["porquê","porque","por que","por quê"],c:0},{q:'"Você não veio ___?"',o:["por quê","porque","por que","porquê"],c:0}])},
+ {code:"P24",ano:"7º ano",title:"Mau × Mal",
+  concept:`<p><b>Mau</b> é adjetivo (oposto de bom); <b>mal</b> é advérbio (oposto de bem).</p>`,
+  ex:{q:"Ele é um ___ aluno",steps:["oposto de bom → adjetivo","mau"],a:"mau"},
+  gen:()=>fcGen([{o:["Ele é um mau aluno.","Ele é um mal aluno.","Ele é um mais aluno.","Ele é um máu aluno."],c:0},{o:["Ela passou mal.","Ela passou mau.","Ela passou mais.","Ela passou máu."],c:0},{o:["Que mau humor!","Que mal humor!","Que mais humor!","Que máu humor!"],c:0},{o:["Ele se sente mal.","Ele se sente mau.","Ele se sente mais.","Ele se sente máu."],c:0}])},
+ {code:"P25",ano:"8º ano",title:"Tempos verbais",
+  concept:`<p>O verbo situa a ação no tempo: <b>presente</b> (agora), <b>pretérito</b> (passado), <b>futuro</b> (depois).</p>`,
+  ex:{q:"'correrei' está no...",steps:["ação que ainda vai ocorrer","futuro"],a:"futuro"},
+  gen:()=>clsGen(w=>`"${w}" está no...`,[["corri","pretérito"],["correrei","futuro"],["corro","presente"],["estudei","pretérito"],["estudarei","futuro"],["estudo","presente"],["fui","pretérito"],["irei","futuro"],["vou","presente"],["comia","pretérito"],["comerei","futuro"],["como","presente"],["falei","pretérito"],["falarei","futuro"]],["presente","pretérito","futuro"])},
+ {code:"P26",ano:"9º ano",title:"Concordância",
+  concept:`<p>O verbo concorda com o sujeito; verbos <b>impessoais</b> (haver = existir, fazer = tempo) ficam no singular.</p>`,
+  ex:{q:"___ dois anos.",steps:["'fazer' de tempo é impessoal","Faz dois anos."],a:"Faz dois anos."},
+  gen:()=>fcGen([{o:["Faz dois anos.","Fazem dois anos.","Fazem dois ano.","Faz dois ano."],c:0},{o:["Houve muitos problemas.","Houveram muitos problemas.","Houve muito problemas.","Houveram muito problema."],c:0},{o:["Os alunos estudaram.","Os alunos estudou.","O alunos estudaram.","Os aluno estudaram."],c:0},{o:["Existem várias razões.","Existe várias razões.","Existem várias razão.","Existe várias razão."],c:0}])},
+],
+medio:[
+ {code:"P31",ano:"1ª série",title:"Tipos de sujeito",
+  concept:`<p><b>Simples</b> (um núcleo), <b>composto</b> (dois+), <b>oculto</b> (subentendido) e <b>indeterminado</b> (não se sabe quem).</p>`,
+  ex:{q:"'Roubaram minha bike.'",steps:["não se sabe quem","indeterminado"],a:"sujeito indeterminado"},
+  gen:()=>clsGen(s=>`"${s}"`,[["O menino correu.","sujeito simples"],["João e Maria chegaram.","sujeito composto"],["Cheguei cedo hoje.","sujeito oculto"],["Roubaram minha bicicleta.","sujeito indeterminado"],["A flor murchou.","sujeito simples"],["O pai e o filho saíram.","sujeito composto"],["Estudamos muito.","sujeito oculto"],["Bateram à porta.","sujeito indeterminado"],["Os pássaros voaram.","sujeito simples"],["Falaram mal de você.","sujeito indeterminado"]],["sujeito simples","sujeito composto","sujeito oculto","sujeito indeterminado"])},
+ {code:"P32",ano:"1ª série",title:"Transitividade verbal",
+  concept:`<p><b>Intransitivo</b> (sentido completo), <b>transitivo direto</b> (objeto sem preposição), <b>transitivo indireto</b> (objeto com preposição).</p>`,
+  ex:{q:"'Gosto de música.'",steps:["pede preposição 'de'","transitivo indireto"],a:"transitivo indireto"},
+  gen:()=>clsGen(s=>`"${s}"<br>O verbo é...`,[["O bebê dormiu.","intransitivo"],["Comprei um livro.","transitivo direto"],["Gosto de música.","transitivo indireto"],["Ela chegou.","intransitivo"],["Vi o filme.","transitivo direto"],["Preciso de ajuda.","transitivo indireto"],["O sol nasceu.","intransitivo"],["Comi a maçã.","transitivo direto"],["Acredito em você.","transitivo indireto"]],["intransitivo","transitivo direto","transitivo indireto"])},
+ {code:"P33",ano:"2ª série",title:"Figuras de linguagem",
+  concept:`<p>Recursos de expressão: <b>metáfora</b>, <b>comparação</b>, <b>hipérbole</b> (exagero), <b>personificação</b>, <b>ironia</b>, <b>metonímia</b>.</p>`,
+  ex:{q:"'Chorei rios de lágrimas.'",steps:["exagero proposital","hipérbole"],a:"hipérbole"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Seus olhos são duas estrelas.","metáfora"],["Ele é forte como um touro.","comparação"],["Já disse um milhão de vezes.","hipérbole"],["O vento sussurrava entre as folhas.","personificação"],["Que ótimo, choveu no meu casamento!","ironia"],["Li Machado de Assis inteiro.","metonímia"],["A vida é um sopro.","metáfora"],["Dormiu como uma pedra.","comparação"],["Estou morrendo de fome.","hipérbole"],["A natureza chorava.","personificação"],["Bebeu o copo todo.","metonímia"]],["metáfora","comparação","hipérbole","personificação","ironia","metonímia"])},
+ {code:"P34",ano:"2ª série",title:"Funções da linguagem",
+  concept:`<p>O foco da mensagem: <b>referencial</b> (informar), <b>emotiva</b> (emissor), <b>apelativa</b> (convencer), <b>poética</b> (forma), <b>fática</b> (contato), <b>metalinguística</b> (a própria língua).</p>`,
+  ex:{q:"'Compre já!'",steps:["foco em convencer o receptor","apelativa"],a:"apelativa"},
+  gen:()=>clsGen(s=>`"${s}"`,[["A água ferve a 100°C.","referencial"],["Ai, que saudade de você!","emotiva"],["Compre já! Não perca!","apelativa"],["Auriverde pendão de minha terra.","poética"],["Alô? Está me ouvindo?","fática"],["Substantivo é o que nomeia.","metalinguística"],["O Brasil tem 26 estados.","referencial"],["Estou tão feliz hoje!","emotiva"],["Vote no candidato!","apelativa"]],["referencial","emotiva","apelativa","poética","fática","metalinguística"])},
+ {code:"P35",ano:"2ª série",title:"Crase",
+  concept:`<p>Crase é a fusão <b>a + a</b> (preposição + artigo), marcada por <b>à</b>. Não ocorre antes de palavra masculina ou de verbo.</p>`,
+  ex:{q:"Vou ___ escola.",steps:["a (prep) + a (artigo)","Vou à escola."],a:"Vou à escola."},
+  gen:()=>fcGen([{o:["Vou à escola.","Vou a escola.","Vou à pé.","Vou na à escola."],c:0},{o:["Entreguei o livro à professora.","Entreguei o livro a professora.","Entreguei o livro à professor.","Entreguei o livro às professora."],c:0},{o:["Saí às oito horas.","Saí as oito horas.","Saí à oito horas.","Saí a oito horas."],c:0},{o:["Refiro-me àquela aluna.","Refiro-me aquela aluna.","Refiro-me à aquela aluna.","Refiro-me a àquela aluna."],c:0}])},
+ {code:"P36",ano:"3ª série",title:"Variação linguística",
+  concept:`<p>A língua varia conforme a situação: registro <b>formal</b>, <b>informal</b> ou marca <b>regional</b>. Nenhuma é "errada" — cada uma cabe num contexto.</p>`,
+  ex:{q:"'Solicito deferimento.'",steps:["linguagem de documento","formal"],a:"formal"},
+  gen:()=>clsGen(s=>`"${s}"`,[["Vossa Senhoria poderia comparecer?","formal"],["E aí, mano, beleza?","informal"],["Bah, tchê, tá tri legal!","regional"],["Solicito deferimento.","formal"],["Tô morrendo de sono.","informal"],["Oxe, menino, que isso!","regional"],["Agradeço a atenção dispensada.","formal"],["Cê viu isso?","informal"]],["formal","informal","regional"])},
+ {code:"P37",ano:"3ª série",title:"Interpretação de texto",
+  concept:`<p>Interpretar é ir além das palavras: identificar <b>ideia principal</b>, <b>intenção</b> e o que está <b>subentendido</b>. (Aqui há uma amostra de textos — não é gerado.)</p>`,
+  ex:{q:"Ler e inferir",steps:["pergunte: o que o autor quer dizer?"],a:"—"},
+  gen:()=>{const items=[
+    {t:'"De tanto adiar o sonho, ele virou só lembrança de um plano."',q:"O texto sugere que:",o:["adiar pode matar um projeto","o sonho se realizou","planejar é inútil","a memória falha"],c:0},
+    {t:'"Não era rico, mas dividia o pouco que tinha — e por isso nunca se sentiu pobre."',q:"A ideia central é:",o:["generosidade traz uma forma de riqueza","ele era rico","pobreza é boa","dividir empobrece"],c:0},
+    {t:'"O celular conecta o mundo todo, menos quem está sentado ao seu lado."',q:"O texto critica:",o:["o isolamento causado pela tecnologia","a falta de internet","o preço dos celulares","a conexão global"],c:0},
+    {t:'"Plantou a árvore sabendo que não veria a sombra."',q:"Isso representa:",o:["pensar nas próximas gerações","arrependimento","desperdício de tempo","medo do futuro"],c:0}];
+    const it=choice(items);return{prompt:`${it.t}<br><br><span style="font-size:.8em;color:var(--mute)">${it.q}</span>`,small:true,opts:shuffle(it.o.map((s,i)=>({html:s,correct:i===it.c})))};}},
+],
+};
+
 /* ===================== OUTRAS MATÉRIAS (estrutura) ===================== */
 const SOON={
  port:{ico:"✍️",name:"Língua Portuguesa",
@@ -538,13 +632,16 @@ const SOON={
   medio:["Filosofia antiga","Ética e moral","Sociologia clássica","Cultura e sociedade","Política e cidadania"]},
 };
 const SUBJECTS=[
- {id:"mat",ico:"∑",name:"Matemática",math:true},
- ...Object.entries(SOON).map(([id,v])=>({id,ico:v.ico,name:v.name,math:false,data:v})),
+ {id:"mat",ico:"∑",name:"Matemática",content:MAT},
+ {id:"port",ico:"✍️",name:"Língua Portuguesa",content:PORT},
+ ...Object.entries(SOON).filter(([id])=>id!=="port").map(([id,v])=>({id,ico:v.ico,name:v.name,data:v})),
 ];
 const BANDS=[["fund1","Fundamental I · 1º–5º"],["fund2","Fundamental II · 6º–9º"],["medio","Ensino Médio · 1ª–3ª"]];
 const GOAL=5;
 const DIFF_CODES=new Set(['M12','M21','M22','M31','M32','M41','M63','M81','MA1']);
 const ALL_MAT=[...MAT.fund1,...MAT.fund2,...MAT.medio];
+const CONTENT_SUBJECTS=SUBJECTS.filter(s=>s.content);
+const ALL_TOPICS=CONTENT_SUBJECTS.flatMap(s=>[...s.content.fund1,...s.content.fund2,...s.content.medio]);
 
 /* ===================== ESTADO ===================== */
 const KEY="miolo.vest.v1"; let persistent=true;
@@ -558,7 +655,7 @@ function recordMiss(lv,p){
   if(missed.length>60)missed.pop();
   persist();
 }
-function updateProg(){$("progN").textContent=ALL_MAT.filter(t=>mastered.has(t.code)).length;$("progT").textContent=ALL_MAT.length;}
+function updateProg(){$("progN").textContent=ALL_TOPICS.filter(t=>mastered.has(t.code)).length;$("progT").textContent=ALL_TOPICS.length;}
 
 /* ===================== TELAS ===================== */
 function renderHome(){
@@ -567,8 +664,8 @@ function renderHome(){
   if(missed.length) html+=`<div class="review-card" id="revcard"><div class="rl"><div class="rt">↺ Revisar erros</div><div class="rd">${missed.length} questão${missed.length>1?'ões':''} que você errou · acerte 2× pra sair da pilha</div></div><div class="rn">${missed.length}</div></div>`;
   html+=`<div class="grid">`;
   SUBJECTS.forEach(s=>{
-    const tag=s.math?`<div class="tg on">● preenchida</div>`:`<div class="tg off">○ estrutura</div>`;
-    html+=`<div class="subj ${s.math?'':'soon'}" data-s="${s.id}"><div class="ico">${s.ico}</div><div class="nm">${s.name}</div>${tag}</div>`;
+    const tag=s.content?`<div class="tg on">● preenchida</div>`:`<div class="tg off">○ estrutura</div>`;
+    html+=`<div class="subj ${s.content?'':'soon'}" data-s="${s.id}"><div class="ico">${s.ico}</div><div class="nm">${s.name}</div>${tag}</div>`;
   });
   html+=`</div>`;
   view.innerHTML=html;
@@ -624,7 +721,7 @@ function renderSubject(sid){
   const s=SUBJECTS.find(x=>x.id===sid);
   let html=`<button class="back" id="bk">‹ matérias</button><div class="crumb">${s.ico} ${s.name}</div>`;
   BANDS.forEach(([bk,bl])=>{
-    const topics = s.math?MAT[bk]:(s.data[bk]||[]);
+    const topics = s.content?s.content[bk]:(s.data[bk]||[]);
     const n = topics.filter(t=>t!=="—").length;
     html+=`<div class="row ${n?'':'soon'}" data-s="${sid}" data-b="${bk}"><div class="badge">${bl.split('·')[0].trim().slice(0,6)}</div>
       <div class="meta"><div class="ti">${bl}</div><div class="de">${n} tópico${n!==1?'s':''}</div></div><div class="st">›</div></div>`;
@@ -637,13 +734,13 @@ function renderSubject(sid){
 function renderBand(sid,bk){
   const s=SUBJECTS.find(x=>x.id===sid); const bl=BANDS.find(b=>b[0]===bk)[1];
   let html=`<button class="back" id="bk">‹ ${s.name}</button><div class="crumb">${s.name} · ${bl}</div>`;
-  if(s.math){
-    MAT[bk].forEach((t,i)=>{const done=mastered.has(t.code);
+  if(s.content){
+    s.content[bk].forEach((t,i)=>{const done=mastered.has(t.code);
       html+=`<div class="row ${done?'done':''}" data-i="${i}"><div class="badge">${t.ano.split(' ')[0]}</div>
         <div class="meta"><div class="ti">${t.title}</div><div class="de">${t.ano}</div></div><div class="st">${done?'✓':'▶'}</div></div>`;});
     view.innerHTML=html;
     $("bk").onclick=()=>renderSubject(sid);
-    view.querySelectorAll(".row").forEach(el=>el.onclick=()=>renderLesson(bk,+el.dataset.i));
+    view.querySelectorAll(".row").forEach(el=>el.onclick=()=>renderLesson(sid,bk,+el.dataset.i));
   }else{
     (s.data[bk]||[]).filter(t=>t!=="—").forEach(name=>{
       html+=`<div class="row soon"><div class="badge">○</div><div class="meta"><div class="ti">${name}</div><div class="de">estrutura pronta</div></div><div class="st">em breve</div></div>`;});
@@ -663,28 +760,28 @@ function renderSoon(sid,bk,name){
   $("bk").onclick=()=>renderBand(sid,bk);
   view.scrollTop=0;
 }
-function renderLesson(bk,i){
-  const lv=MAT[bk][i];
+function renderLesson(sid,bk,i){
+  const lv=SUBJECTS.find(x=>x.id===sid).content[bk][i];
   view.innerHTML=`<button class="back" id="bk">‹ voltar</button>
     <div class="lesson"><div class="code">${lv.code} · ${lv.ano}</div><h2>${lv.title}</h2>
     <div class="concept">${lv.concept}</div>
     <div class="ex"><div class="lab">Exemplo resolvido</div><div class="q">${lv.ex.q}</div>
       <ol>${lv.ex.steps.map(s=>`<li>${s}</li>`).join("")}</ol><div class="ans">Resposta: ${lv.ex.a}</div></div>
     <button class="cta" id="go">Praticar →</button></div>`;
-  $("bk").onclick=()=>renderBand("mat",bk);
-  $("go").onclick=()=>renderPractice(bk,i);
+  $("bk").onclick=()=>renderBand(sid,bk);
+  $("go").onclick=()=>renderPractice(sid,bk,i);
   view.scrollTop=0;
 }
-function renderPractice(bk,i){
-  const lv=MAT[bk][i]; let got=0,locked=false,p=null,buf=""; const typed=!!lv.typed; const scales=DIFF_CODES.has(lv.code);
+function renderPractice(sid,bk,i){
+  const lv=SUBJECTS.find(x=>x.id===sid).content[bk][i]; let got=0,locked=false,p=null,buf=""; const typed=!!lv.typed; const scales=DIFF_CODES.has(lv.code);
   view.innerHTML=`<button class="back" id="bk">‹ ${lv.title}</button>
     <div class="pbar"><div class="track"><div class="fill" id="fill"></div></div><div class="cnt" id="cnt">0/${GOAL}</div></div>
     ${scales?'<div class="lvtag" id="lvtag" style="text-align:center;margin:-8px 0 12px">nível <b>1</b></div>':''}
     <div class="qcard" id="q"></div><div class="why" id="why"></div>
     ${typed?`<div class="answer" id="ans"><span class="ph">?</span></div><div class="keypad" id="kp"></div>`:`<div class="opts" id="opts"></div>`}`;
-  $("bk").onclick=()=>renderLesson(bk,i);
+  $("bk").onclick=()=>renderLesson(sid,bk,i);
   const qEl=$("q"),whyEl=$("why"),fill=$("fill"),cnt=$("cnt");
-  function advance(){if(got>=GOAL)setTimeout(()=>finish(bk,i),650);else setTimeout(load,650);}
+  function advance(){if(got>=GOAL)setTimeout(()=>finish(sid,bk,i),650);else setTimeout(load,650);}
   function resolve(correct){
     if(correct){got++;cnt.textContent=`${Math.min(got,GOAL)}/${GOAL}`;fill.style.width=`${Math.min(got/GOAL*100,100)}%`;if(navigator.vibrate)navigator.vibrate(8);advance();}
     else{qEl.classList.add("shake");if(navigator.vibrate)navigator.vibrate([20,40,20]);setTimeout(load,1500);}
@@ -720,15 +817,15 @@ function renderPractice(bk,i){
   }
   load();
 }
-function finish(bk,i){
-  const lv=MAT[bk][i];const wasNew=!mastered.has(lv.code);mastered.add(lv.code);persist();updateProg();
-  const band=MAT[bk];const next=band[i+1];
+function finish(sid,bk,i){
+  const lv=SUBJECTS.find(x=>x.id===sid).content[bk][i];const wasNew=!mastered.has(lv.code);mastered.add(lv.code);persist();updateProg();
+  const band=SUBJECTS.find(x=>x.id===sid).content[bk];const next=band[i+1];
   view.innerHTML=`<div class="done-screen"><div class="big">🎉</div><h2>${lv.title} dominado!</h2>
     <p>${wasNew?"Tópico marcado como dominado.":"Você já dominava este tópico."}</p>
     ${next?`<button class="cta" id="nx">Próximo: ${next.title} →</button>`:""}
     <button class="back" id="bk" style="margin-top:14px">‹ voltar aos tópicos</button></div>`;
-  if(next)$("nx").onclick=()=>renderLesson(bk,i+1);
-  $("bk").onclick=()=>renderBand("mat",bk);
+  if(next)$("nx").onclick=()=>renderLesson(sid,bk,i+1);
+  $("bk").onclick=()=>renderBand(sid,bk);
 }
 if(!persistent){document.querySelector(".note").textContent="aviso: progresso não será salvo (abra via URL no Safari pra salvar)";}
 renderHome();
