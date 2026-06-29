@@ -231,6 +231,17 @@
   .reschk.bl .ri{color:var(--mute);}
   .reschk.an{background:rgba(250,204,21,.08);border-color:rgba(250,204,21,.30);}
   .reschk.an .ri{color:var(--gold);}
+
+  .simq{background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:14px;margin-bottom:12px;}
+  .simqn{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
+  .simqe{font-size:14px;line-height:1.5;margin-bottom:12px;}
+  .qalts{display:flex;flex-direction:column;gap:7px;}
+  .qa{display:flex;align-items:flex-start;gap:10px;text-align:left;background:var(--tile);border:1px solid var(--edge);border-radius:10px;padding:11px 12px;cursor:pointer;color:var(--txt);font-size:13.5px;line-height:1.4;transition:transform .15s,background .15s;}
+  .qa:active{transform:scale(.99);}
+  .qa .qal{flex:0 0 auto;font-family:var(--mono);font-weight:700;color:var(--mute);}
+  .qa.sel{background:linear-gradient(135deg,rgba(0,212,255,.16),rgba(91,62,255,.16));border-color:var(--coral);}
+  .qa.sel .qal{color:var(--accent);}
+  .qpdf{flex:0 0 auto;align-self:center;font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--mute);border:1px solid var(--edge);border-radius:6px;padding:3px 6px;}
 </style>
 </head>
 <body>
@@ -1980,8 +1991,48 @@ function updateProg(){$("progN").textContent=ALL_TOPICS.filter(t=>mastered.has(t
 const SIMULADOS=[{
   id:"ita2026", nome:"ITA 2026 · 1ª fase", n:48,
   areas:[{nome:"Matemática",a:1,b:12},{nome:"Física",a:13,b:24},{nome:"Química",a:25,b:36},{nome:"Inglês",a:37,b:48}],
-  gab:["D","B","E","C","D","*","A","B","D","E","A","B","B","A","D","C","A","E","B","C","D","E","C","C","A","E","D","B","E","B","E","A","B","A","A","C","D","C","C","B","A","D","C","B","B","B","D","C"]
-}];
+  gab:["D","B","E","C","D","*","A","B","D","E","A","B","B","A","D","C","A","E","B","C","D","E","C","C","A","E","D","B","E","B","E","A","B","A","A","C","D","C","C","B","A","D","C","B","B","B","D","C"], media:"As notas de Matemática, Física e Química compõem a média da 1ª fase."},
+ { id:"ita2025", nome:"ITA 2025 · 1ª fase", n:48,
+  areas:[{nome:"Matemática",a:1,b:12},{nome:"Física",a:13,b:24},{nome:"Química",a:25,b:36},{nome:"Inglês",a:37,b:48}],
+  media:"As notas de Matemática, Física e Química compõem a média da 1ª fase.",
+  q:{
+   1:{e:"Seja z = a + 2i um número complexo, com a ∈ ℝ positivo. O valor de a para que as representações de 1, z e z² no plano de Argand-Gauss formem um triângulo de área 200 é:",o:["14","15","16","17","18"]},
+   2:{e:"Considere as afirmações:<br><b>I.</b> Existe um poliedro com 3 faces triangulares e as demais quadrangulares.<br><b>II.</b> Existe um poliedro não convexo com 5 vértices, 9 arestas e 6 faces.<br><b>III.</b> Existe um poliedro convexo com 7 vértices, 16 arestas e 11 faces.<br>Está(ão) correta(s):",o:["I e II","I e III","II e III","apenas III","apenas II"]},
+   3:{e:"O termo independente da expansão de (x + 1/x)⁶ · (x − 2/x)⁵ é:",o:["−18","−12","0","12","18"]},
+   4:{e:"Sejam f(x) e g(x) reais para todo x ∈ ℝ. Se para todo x > 0 vale g(x²) = f(2x² − x + 1), podemos afirmar que:",o:["f não é sobrejetora.","f não é injetora.","g não é sobrejetora.","g não é injetora.","f(a) ≠ g(a) para todo a > 0."]},
+   5:{e:"Sejam (aₙ) e (bₙ) sequências tais que Sₙ = a₁+…+aₙ = bₙ₊₁ − b₁ para todo n ∈ ℕ.<br><b>I.</b> Se (bₙ) é PG, então (aₙ) é PG.<br><b>II.</b> Se (aₙ) é PG, então (bₙ) é PG.<br><b>III.</b> Se (aₙ) é PA, então (Sₙ) é PA.<br>Está(ão) correta(s):",o:["I e II","II e III","I e III","apenas I","nenhuma"]},
+   6:{e:"O conjunto de todos os a ∈ ℝ para os quais 9ˣ − (3a+4)·3ˣ + 2a² + 9a − 5 = 0 tem duas soluções reais distintas é:",o:["(6; +∞)","(1/2; +∞) ∖ {6}","(3/2; +∞) ∖ {6}","ℝ ∖ {6}","ℝ"]},
+   7:{e:"Os sistemas<br>I: x+y+z=1; x+2y−z=2; 2x+y+4z=1<br>II: x+y+z=1; x+my+nz=5; kx+y−z=3m+2n<br>são equivalentes (mesmo conjunto solução). O valor de k é:",o:["1/3","1/2","1","2","3"]},
+   8:{e:"Seja f(x) = √[ (2·sen2x + 2·senx − 2·cosx − 1) ⁄ (8(cos2x + 1)) ]. Seja I = (a; b) o maior intervalo contido em [−π; 2π] onde f está definida. O valor de a + b é:",o:["0","π/3","2π/3","5π/6","13π/6"]},
+   9:{e:"Duas circunferências de centros O₁ e O₂, raio 5 cm, interceptam-se em P e Q, com corda comum PQ = 6 cm. As interseções com o segmento O₁O₂ dão R em C₁ e S em C₂. O volume do sólido de revolução da rotação do triângulo P·O₁·R em torno de O₁O₂, em cm³, é:",o:["π","3π","4π","6π","9π"]},
+   10:{e:"Uma raiz comum aos polinômios p(x) = x⁵ − x³ + 12x − 18 e q(x) = x⁴ − x³ + 5x − 3 é:",o:["−1 + √2·i","√2 + √2·i","√2 + i","1 + √2·i","−√2 + i"]},
+   11:{e:"Seja H uma hipérbole cujos focos coincidem com os da elipse E: x²/4 + y² = 1. Seja P uma interseção de E e H no 1º quadrante e O a origem. Se OP forma ângulo θ com Ox, com tan θ = √3/6, a excentricidade de H é:",o:["2√3/3","√6/2","3√3/4","2√6/3","3√3/2"]},
+   12:{e:"Um número m ∈ ℕ, multiplicado por 16, resulta num número com 231 divisores inteiros positivos.<br><b>I.</b> m é par.<br><b>II.</b> m é quadrado perfeito.<br><b>III.</b> 16m tem 3 fatores primos distintos.<br>É(São) VERDADEIRA(S):",o:["apenas I","apenas II","I e II","I e III","II e III"]},
+   13:{e:"Uma partícula tem posição x(t) = √(D² + (V·t − D)²), com V e D constantes positivas. Seja v̄(t) a velocidade média entre t₀ = 0 e um instante t. A distância percorrida desde o início até o instante em que v̄(t) = 0 é:",o:["(√2 − 1)D","2(√2 − 1)D","√2·D","2D","2√2·D"]},
+   15:{e:"Num planeta de massa igual à da Terra, o intervalo entre as fases cheia e nova de seu satélite é 58 dias terrestres (massa do satélite desprezível). A distância estimada entre planeta e satélite é:",o:["8×10⁸ m","1×10⁹ m","2×10⁹ m","4×10⁹ m","6×10⁹ m"]},
+   16:{e:"Três osciladores massa-mola independentes (massa m; constantes k₁, k₂, k₃). O tempo de 1 oscilação do sistema 1 é igual ao de 2 oscilações do 2 e ao de 3 oscilações do 3. As três molas são acopladas em série com um objeto de massa 4m. A razão entre a frequência do sistema 1 e a do sistema em série é ≈:",o:["7,5","3,8","2,7","2,3","1,0"]},
+   20:{e:"Sobre o arco-íris:<br><b>I.</b> Cada comprimento de onda emerge da gotícula com o mesmo ângulo de espalhamento.<br><b>II.</b> São necessárias tanto refração quanto reflexão da luz.<br><b>III.</b> O efeito resulta de a luz solar ser policromática e de a água ser dispersiva no visível.<br>Está(ão) correta(s):",o:["apenas I","apenas I e II","apenas I e III","apenas II e III","I, II e III"]},
+   23:{e:"Um campo magnético diminui a uma taxa fixa de (20î − 10ĵ + 12k̂) T/s. Uma circunferência de material com resistência 3 Ω/m passa pela origem e pelos pontos (4,0,0) e (2,2,0) m. A corrente que flui pela circunferência é:",o:["2,0 A","3,3 A","4,0 A","6,7 A","8,5 A"]},
+   24:{e:"Efeito Raman: um fóton de 620 nm é espalhado por um cristal, gerando um fóton de 590 nm (temperatura ambiente). Se o cristal for mantido perto do zero absoluto (apenas um modo vibracional no espalhamento inelástico), o comprimento de onda do fóton espalhado é:",o:["565 nm","590 nm","602 nm","640 nm","653 nm"]},
+   25:{e:"Sobre processos de combustão:<br><b>I.</b> A velocidade de propagação da chama é a velocidade com que a frente de chama se move através de uma mistura reagente.<br><b>II.</b> Um combustível pode gerar chama azul ou amarela, sendo esta última a de maior energia.<br><b>III.</b> A detonação é uma combustão a alta pressão e temperatura, com onda de choque supersônica.<br><b>IV.</b> Reações de combustão não sofrem efeitos catalíticos.<br>Estão CORRETAS:",o:["apenas I e II","apenas I e III","apenas II e III","apenas II e IV","apenas III e IV"]},
+   26:{e:"Para a reação C₈H₁₆ → CH₃(CH₂)₃COOH + Y (KMnO₄ conc., a quente):<br><b>I.</b> O produto Y é, majoritariamente, o propanal.<br><b>II.</b> O alqueno reagente pode ser o cis-oct-3-eno.<br><b>III.</b> O alqueno reagente pode ser o trans-oct-3-eno.<br><b>IV.</b> A reação é de oxidação, levando a compostos oxidados.<br>Assinale as afirmações ERRADAS:",o:["Apenas I","Apenas I e II","Apenas I, III e IV","Apenas II e IV","Apenas III e IV"]},
+   27:{e:"Propriedades periódicas:<br><b>I.</b> Os gases nobres não tendem a receber elétrons.<br><b>II.</b> O raio iônico do As³⁻ é menor que o do Se²⁻.<br><b>III.</b> A 1ª energia de ionização do P é menor que a do S.<br><b>IV.</b> O raio atômico do Na é maior que o do Mg.<br>Assinale as CORRETAS:",o:["Apenas I, II e IV","Apenas I e IV","Apenas II e III","Apenas III","Todas"]},
+   28:{e:"400 mL de ar a 0,8 atm e 30 °C são transferidos para condições ambiente (25 °C, 1 atm). O volume aproximado, em mL, é:",o:["267","300","315","325","492"]},
+   29:{e:"Titulação de ácido ascórbico (C₆H₈O₆) com I₂ e Na₂S₂O₃ (ambos 0,005 mol/L; 20 mL de tiossulfato):<br><b>I.</b> É oxirredução: o ascórbico é redutor e o I₂ é oxidante.<br><b>II.</b> Há ≈ 0,08 g de ácido ascórbico na amostra.<br><b>III.</b> No ponto de equivalência o pH é maior que 7,0.<br><b>IV.</b> O I₂ pode ser substituído por Br₂ como titulante.<br>Estão CORRETAS:",o:["apenas I e II","apenas I, II e IV","apenas I e III","apenas III e IV","todas"]},
+   30:{e:"Fe₂O₃(s) + C(s) → Fe(s) + CO₂(g). Com os dados de entalpia e entropia fornecidos na prova, a temperatura mínima (°C) para a reação ser espontânea é:",o:["541,8","554,8","560,8","564,8","585,8"]},
+   31:{e:"As reações A e B têm mesma ordem e mesmo fator pré-exponencial k₀. A energia de ativação de A é 8,31 kJ/mol maior que a de B. A 227 °C, a relação entre as constantes de velocidade é:",o:["Kᴀ = e⁻⁰ᐟ⁰⁰² · Kʙ","Kᴀ = e⁻² · Kʙ","Kᴀ = e⁻²⁰ · Kʙ","Kᴀ = e⁺⁰ᐟ⁰⁰² · Kʙ","Kᴀ = e⁺²⁰ · Kʙ"]},
+   32:{e:"Substituindo 2 átomos de Cℓ do PCℓ₅ por 2 de F (considerando todas as possibilidades), a proporção de moléculas apolares e polares, respectivamente, é:",o:["1/10 e 9/10","2/10 e 8/10","3/10 e 7/10","4/10 e 6/10","5/10 e 5/10"]},
+   33:{e:"Purificação de sais (lavagem com água gelada; dissolução a quente; filtração a quente; resfriamento sob agitação). Assinale a afirmação ERRADA:",o:["A lavagem com água gelada remove impurezas solúveis em água, evitando perdas do sal.","A curva de solubilidade é fundamental para definir a temperatura de aquecimento.","A filtração a quente remove impurezas solúveis em água, evitando perdas do sal.","O controle do resfriamento e da agitação define o formato e a granulometria dos cristais.","O processo pode ser usado na recristalização de sais."]},
+   34:{e:"Processos termodinâmicos — assinale a afirmação ERRADA:",o:["ΔU = 0 na expansão isotérmica de um gás ideal.","ΔG < 0 na precipitação a partir de uma solução supersaturada.","ΔH é igual ao calor trocado na compressão isobárica.","A variação de entropia de fusão independe da temperatura, a pressão constante.","ΔS da vizinhança = 0 numa expansão adiabática."]},
+   35:{e:"Assinale o valor ERRADO do número de oxidação (Nox) do carbono:",o:["−4 no metano","+4 no dióxido de carbono","+3 no carbono da nitrila, na propanonitrila","+2 no carbono da cetona, na propanona","+3 no ácido metanoico"]},
+   36:{e:"Gases A₂ e B₂ reagem sob luz; a energia mínima do fóton é 2,3 eV. (violeta 405 nm, verde 532 nm, vermelho 650 nm). O laser de menor energia que possibilita a reação é:",o:["Ultravioleta","Violeta","Verde","Vermelho","Infravermelho"]}
+  },
+  gab:["B","E","C","D","D","B","A","E","*","D","A","C","B","A","B","D","B","*","C","D","A","B","C","E","B","A","B","C","B","D","B","A","C","D","E","C","C","B","D","B","D","A","C","E","E","B","C","E"] },
+ { id:"ita2024", nome:"ITA 2024 · 1ª fase", n:60,
+  areas:[{nome:"Física",a:1,b:12},{nome:"Português",a:13,b:24},{nome:"Inglês",a:25,b:36},{nome:"Matemática",a:37,b:48},{nome:"Química",a:49,b:60}],
+  media:"As notas de Física, Português, Matemática e Química compõem a média da 1ª fase.",
+  gab:["D","D","C","B","B","B","E","A","E","*","C","C","E","D","D","B","B","B","D","C","D","D","D","C","B","A","D","C","E","D","E","C","D","C","A","B","B","E","A","B","D","C","E","D","C","D","A","C","C","C","E","E","D","A","A","B","C","B","D","B"] }
+];
 let simStore={};
 try{simStore=JSON.parse(localStorage.getItem("miolo.sim")||"{}");}catch(e){simStore={};}
 function simSave(){try{localStorage.setItem("miolo.sim",JSON.stringify(simStore));}catch(e){}}
@@ -2038,10 +2089,13 @@ function renderSimResult(id){
     else{cls="er";info="✗ marcou "+a+" · era "+g;}
     listHtml+=`<div class="reschk ${cls}"><span class="rq">${q}</span><span class="ri">${info}</span></div>`;
   }
+  const _an=[];for(let q=1;q<=sim.n;q++)if(sim.gab[q-1]==="*")_an.push(q);
+  const _media=sim.media||"As notas de Matemática, Física e Química compõem a média da 1ª fase.";
+  const _anTxt=_an.length?(" Questã"+(_an.length>1?"es":"o")+" anulada"+(_an.length>1?"s":"")+": "+_an.join(", ")+" — vale"+(_an.length>1?"m":"")+" ponto pra todos."):"";
   view.innerHTML=`<button class="back" id="bk">‹ refazer</button><div class="crumb">${sim.nome} · resultado</div>
     <div style="text-align:center;padding:6px 0 2px"><div class="bigscore">${tot}<span>/${totQ}</span></div><p style="color:var(--mute);margin:4px 0 0;font-size:13px">acertos no total</p></div>
     <div class="resbox">${areaHtml}</div>
-    <div class="simnote">No ITA, as notas de Matemática, Física e Química compõem a média da 1ª fase. A questão 6 foi anulada e vale ponto pra todos.</div>
+    <div class="simnote">${_media}${_anTxt}</div>
     <div class="reslist">${listHtml}</div>
     <button class="cta" id="again" style="margin-top:16px">Refazer marcações</button>`;
   $("bk").onclick=()=>renderCartao(id);
